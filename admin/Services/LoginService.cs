@@ -14,22 +14,21 @@ namespace admin.Services
 {
     public partial class LoginService: ILoginService
     {
-        TreAContext _ctx;
+        private readonly TreAContext _ctx;
+
         public LoginService(TreAContext ctx)
         {
             _ctx = ctx;
         }
 
-        public virtual bool IsAdmin(AdministratorModel adminUser)
+        public bool IsAdmin(AdministratorModel model)
         {
-            var admin = _ctx.Admins.Where(c => c.user == adminUser.email && c.password == adminUser.password );
-            if(admin != null)
+            var admin = _ctx.administrator.Where(c => c.user == model.email && c.password == model.password );
+            if(admin.Any())
             {
                 return true;
             }
-            else {
-                return false;
-            }
+            return false;
         }
     }
 }

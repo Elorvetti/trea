@@ -6,20 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using admin.Data;
 using admin.Models;
+using admin.Services;
+
 
 namespace admin.Controllers
 {
-    public class HomeController : Controller
+    public partial class HomeController : Controller
     {
-        public IActionResult Login()
-        {
-            var model = new AdministratorModel();
-
-            return View(model);
-        }
-
+        [Authorize]
         public IActionResult Index()
         {
             return View();

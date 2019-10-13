@@ -8,7 +8,7 @@ namespace admin.Data
     public class TreAContext: DbContext
     {
         public TreAContext(DbContextOptions<TreAContext> o ) : base(o) {}
-        public virtual DbSet<Administrator> Admins { get; set; }
+        public virtual DbSet<Administrator> administrator { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
             optionsBuilder

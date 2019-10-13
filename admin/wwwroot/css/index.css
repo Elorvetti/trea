@@ -44,6 +44,8 @@ p,li,a { font-size: 22px; line-height: 27px;  color: #2E2B33; font-family: "Open
 .color-black{ color:  #212121!important; }
 .text-center{ text-align: center!important; }
 .text-left{ text-align: left!important; }
+.font-weight-600{ font-weight: 600!important; }
+.font-weight-500{ font-weight: 500!important; }
 .margin-bottom-xsmall{ margin-bottom: 10px!important; }
 .margin-right-xsmall{ margin-right: 10px!important; }
 .margin-top-small{ margin-top: 20px!important; }
@@ -72,8 +74,7 @@ form{
 
 input{
     position: relative;
-    display: block;
-    padding: 10px 20px;
+    padding: 10px 5px;
     left: 10%;
     width: 80%;
     font-size: 16px;

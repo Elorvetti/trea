@@ -4,7 +4,7 @@ using admin.Models;
 
 namespace admin.Services
 {
-    public partial interface ILoginService
+    public interface ILoginService
     {
         bool IsAdmin(AdministratorModel adminUser);
     }

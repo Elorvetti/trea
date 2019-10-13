@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using admin.Data;
-
+using admin.Services;
 
 namespace admin
 {
@@ -37,10 +38,16 @@ namespace admin
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<TreAContext>( o => {
-                o.UseSqlServer(Configuration.GetConnectionString("trea"));
+                o.UseSqlServer(Configuration.GetConnectionString("TreADatabase"));
             });
+
+            services.AddScoped<ILoginService, LoginService>();
+
+            services.AddDefaultIdentity<Administrator>()
+                .AddEntityFrameworkStores<TreAContext>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,11 +68,13 @@ namespace admin
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Login}/{id?}");
+                    name: "Login",
+                    template: "{controller=Login}/{action=Index}/{id?}");
             });
         }
     }
