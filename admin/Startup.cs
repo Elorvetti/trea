@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnotics;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using admin.Data;
 
 
@@ -37,8 +38,8 @@ namespace admin
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<AppContext>( o => {
-                o.UseSqlServer(configuration.GetConnectionString("trea"));
+            services.AddDbContext<TreAContext>( o => {
+                o.UseSqlServer(Configuration.GetConnectionString("trea"));
             });
         }
 

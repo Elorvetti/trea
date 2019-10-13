@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace admin.Data
 {
-    public class AppContext: DbContext
+    public class TreAContext: DbContext
     {
-        public AppContext(DbContextOptions<AppContext> o ) : base(o) {}
+        public TreAContext(DbContextOptions<TreAContext> o ) : base(o) {}
         public virtual DbSet<Administrator> Admins { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
