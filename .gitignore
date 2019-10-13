@@ -19,7 +19,7 @@ jboss/server/minimal/work/**/*
 *.DEPLOYED
 
 #DOC
-DOC/LEGGIMI.txt
+DOC/*
 
 #Conn String
 admin/appsettings.json

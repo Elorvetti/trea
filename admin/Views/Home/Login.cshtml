@@ -1,1 +1,17 @@
-<h1> SONO LA PAGINA DI LOGIN </h1>
+@model AdministratorModel;
+
+<div class="form-container">
+  
+    <form method="POST" class="login">
+        @Html.AntiForgeryToken()
+        
+        <h3 class="text-center margin-remove"> TREA IN VIAGGIO </h3>
+        <input asp-for="email" class="name" placeholder="Email">
+        <span asp-validation-for="email" class="text-danger"></span>
+
+        <input asp-for="password" type="password" class="password" placeholder="Prassword">
+        <span asp-validation-for="password" class="text-danger"></span>
+
+        <input type="submit" class="btn btn-submit text-center color-white" value="Accedi">
+    </form>
+</div>

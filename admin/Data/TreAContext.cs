@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace admin.Data
 {
@@ -15,9 +16,9 @@ namespace admin.Data
                     warnings.Throw(RelationalEventId.QueryClientEvaluationWarning));
         }
 
-        protected override void OnModelCreating(ModelBuilder mb)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            mb.Entity<Administrator>(entity => {
+            modelBuilder.Entity<Administrator>(entity => {
 
                 entity.HasKey(e => e.id);
                 entity.Property(e => e.user);
