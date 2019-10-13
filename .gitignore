@@ -17,3 +17,18 @@ jboss/server/minimal/work/**/*
 # deployed package files #
 
 *.DEPLOYED
+
+#DOC
+DOC/LEGGIMI.txt
+
+#Conn String
+admin/appsettings.json
+client/appsettings.json
+
+#file bin
+admin/obj/*
+admin/bin/*
+admin/Properties/*
+client/obj/*
+client/bin/*
+client/Properties/*
