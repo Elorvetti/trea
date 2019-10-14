@@ -34,13 +34,12 @@ namespace admin.Controllers
         {
             if(ModelState.IsValid){
                var isAdmin = _loginService.IsAdmin(model);
-               if(isAdmin){
-                  return  RedirectToAction("Index", "Home");
+               if(!isAdmin){
+                    return View();
                }
             }
-            
-            return View();
-        }
 
+            return  RedirectToAction("Index", "Home");
+        }
     }
 }

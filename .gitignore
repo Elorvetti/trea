@@ -32,3 +32,6 @@ admin/Properties/*
 client/obj/*
 client/bin/*
 client/Properties/*
+
+#image
+admin/wwwroot/img/*

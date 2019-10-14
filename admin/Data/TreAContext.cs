@@ -23,6 +23,7 @@ namespace admin.Data
                 entity.HasKey(e => e.id);
                 entity.Property(e => e.user);
                 entity.Property(e => e.password); 
+                entity.Property(e => e.IsActive);
             });
         }
 

@@ -1,17 +1,19 @@
 @model AdministratorModel;
 
 <div class="form-container">
-  
-    <form method="POST" class="login">
+    <section class="error margin-top-small box-shadow border-radius-small background-color-red padding-top-xsmall padding-bottom-xsmall hidden"> 
+        <p class="text-center color-white"> Email o Password errata </p>
+    </section>
+    <form method="POST" class="login box-shadow border-radius-small">
         @Html.AntiForgeryToken()
         
         <h3 class="text-center margin-remove font-weight-600"> TREA IN VIAGGIO </h3>
         <input asp-for="email" class="name" placeholder="Email">
-        <span asp-validation-for="email" class="text-danger"></span>
+        <span asp-validation-for="email" class="text-danger color-red"></span>
 
         <input asp-for="password" type="password" class="password" placeholder="Prassword">
-        <span asp-validation-for="password" class="text-danger"></span>
+        <span asp-validation-for="password" class="text-danger color-red"></span>
 
-        <input type="submit" class="btn btn-submit text-center color-white" value="Accedi">
+        <input type="submit" id="login" class="btn btn-submit text-center color-white box-shadow background-color-blue-light" value="Accedi">
     </form>
 </div>

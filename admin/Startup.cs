@@ -42,10 +42,10 @@ namespace admin
                 o.UseSqlServer(Configuration.GetConnectionString("TreADatabase"));
             });
 
+            //Custom services
             services.AddScoped<ILoginService, LoginService>();
-
-            services.AddDefaultIdentity<Administrator>()
-                .AddEntityFrameworkStores<TreAContext>();
+            
+            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -67,8 +67,6 @@ namespace admin
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
-            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

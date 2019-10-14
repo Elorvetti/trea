@@ -23,7 +23,7 @@ namespace admin.Services
 
         public bool IsAdmin(AdministratorModel model)
         {
-            var admin = _ctx.administrator.Where(c => c.user == model.email && c.password == model.password );
+            var admin = _ctx.administrator.Where(c => c.user == model.email && c.password == model.password && c.IsActive);
             if(admin.Any())
             {
                 return true;
