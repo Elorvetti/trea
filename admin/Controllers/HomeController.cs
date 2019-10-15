@@ -16,6 +16,7 @@ namespace admin.Controllers
 {
     public partial class HomeController : Controller
     {
+        [Authorize]
         public IActionResult Index()
         {
             return View();

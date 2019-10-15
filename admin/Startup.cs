@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.SqlServer;
@@ -41,12 +42,15 @@ namespace admin
             services.AddDbContext<TreAContext>( o => {
                 o.UseSqlServer(Configuration.GetConnectionString("TreADatabase"));
             });
+            
+            //Identity user services
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<TreAContext>()
+                .AddDefaultTokenProviders();  
 
             //Custom services
             services.AddScoped<ILoginService, LoginService>();
             
-            
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -67,7 +71,8 @@ namespace admin
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseAuthentication();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

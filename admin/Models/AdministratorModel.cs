@@ -14,8 +14,12 @@ namespace admin.Models
         public string email { get; set; }
 
         [Required(ErrorMessage = "Il campo Password è obbligatorio")]
+        [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string password { get; set; }
+
+        [Display(Name="Rember me")]
+        public bool rememberMe { get; set; }
 
     }
 }

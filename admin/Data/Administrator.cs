@@ -8,5 +8,6 @@ namespace admin.Data
         public string user { get; set; }
         public string password { get; set; }
         public bool IsActive { get; set; }
+        public bool rememberMe { get; set; }
     }
 }
