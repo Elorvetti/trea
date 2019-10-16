@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using admin.Models;
 using admin.Data;
 using admin.Services;
 
@@ -44,16 +45,16 @@ namespace admin
             });
             
             //Identity user services
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<TreAContext>()
-                .AddDefaultTokenProviders();  
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<TreAContext>();
+
 
             //Custom services
             services.AddScoped<ILoginService, LoginService>();
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -71,6 +72,7 @@ namespace admin
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
             app.UseAuthentication();
             
             app.UseMvc(routes =>

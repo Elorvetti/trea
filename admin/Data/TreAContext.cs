@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace admin.Data
 {
-    public class TreAContext: IdentityDbContext<IdentityUser>
+    public class TreAContext: IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public TreAContext(DbContextOptions<TreAContext> o ) : base(o) {}
         public virtual DbSet<Administrator> administrator { get; set; }
-
+  
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
             optionsBuilder
                 .ConfigureWarnings(warnings => 
@@ -30,6 +30,7 @@ namespace admin.Data
                 entity.Property(e => e.IsActive);
                 entity.Property(e => e.rememberMe);
             });
+
         }
 
     }

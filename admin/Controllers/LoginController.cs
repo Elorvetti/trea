@@ -41,9 +41,9 @@ namespace admin.Controllers
             if(ModelState.IsValid){
                var isAdmin = _loginService.IsAdmin(model);
                if(isAdmin){
-                    var result = await _signInManager.PasswordSignInAsync(model.email, model.password, model.rememberMe, false);
+                   var result = await _signInManager.PasswordSignInAsync(model.email, model.password, model.rememberMe, false);
 
-                    if(result.Succeeded){
+                   if(result.Succeeded){
                         return RedirectToAction("Index", "Home");
                     }
 
@@ -58,6 +58,17 @@ namespace admin.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> RegisterUserIdentity(AdministratorModel model){
+            var user = new IdentityUser{ UserName = model.email, Email = model.email };
+            var result = await _userManager.CreateAsync(user, model.password);
+            if(result.Succeeded){
+               await _signInManager.SignInAsync(user, isPersistent: false );
+               return Json("");
+            }
+
+            return Json("");
         }
 
     }
