@@ -6,8 +6,8 @@ using admin.Data;
 
 namespace admin.Services
 {
-    public partial interface ILoginService
+    public partial interface IUserService
     {
-        bool IsAdmin(AdministratorModel adminUser);
+        void InsertUser(Administrator model);
     }
 }

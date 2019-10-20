@@ -47,11 +47,17 @@ namespace admin
             //Identity user services
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<TreAContext>();
-
+                
+            services.ConfigureApplicationCookie(o => {
+                o.Cookie.HttpOnly = true;
+                o.LoginPath = "/Login/Index";
+                o.AccessDeniedPath = "/Login/Index";
+            });
 
             //Custom services
             services.AddScoped<ILoginService, LoginService>();
-            
+            services.AddScoped<IUserService, UserService>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
       
         }
@@ -80,6 +86,11 @@ namespace admin
                 routes.MapRoute(
                     name: "Login",
                     template: "{controller=Login}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "User",
+                    template: "{Controller=User}/{action=Index}/{id?}"
+                );
             });
         }
     }

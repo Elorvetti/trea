@@ -16,16 +16,15 @@ namespace admin.Controllers
 {
     public partial class LoginController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILoginService _loginService;
 
-        public LoginController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILoginService loginService)
+        public LoginController(SignInManager<IdentityUser> signInManager, ILoginService loginService)
         {
             this._signInManager = signInManager;
-            this._userManager = userManager;
             this._loginService = loginService;
         }
+        
         [AllowAnonymous]
         public IActionResult Index()
         {
@@ -41,10 +40,11 @@ namespace admin.Controllers
             if(ModelState.IsValid){
                var isAdmin = _loginService.IsAdmin(model);
                if(isAdmin){
-                   var result = await _signInManager.PasswordSignInAsync(model.email, model.password, model.rememberMe, false);
+                   var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
                    if(result.Succeeded){
-                        return RedirectToAction("Index", "Home");
+                       ViewBag.User = model.Email;
+                        return RedirectToAction("Index", "User");
                     }
 
                }
@@ -52,24 +52,5 @@ namespace admin.Controllers
             }
             return View(model);
         }
-
-        [NonAction]
-        public async Task<IActionResult> LogOut(){
-            await _signInManager.SignOutAsync();
-
-            return RedirectToAction("Index");
-        }
-
-        public async Task<IActionResult> RegisterUserIdentity(AdministratorModel model){
-            var user = new IdentityUser{ UserName = model.email, Email = model.email };
-            var result = await _userManager.CreateAsync(user, model.password);
-            if(result.Succeeded){
-               await _signInManager.SignInAsync(user, isPersistent: false );
-               return Json("");
-            }
-
-            return Json("");
-        }
-
     }
 }

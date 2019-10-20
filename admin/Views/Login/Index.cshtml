@@ -7,16 +7,17 @@
         @Html.ValidationMessage("LoginError")
 
         <h3 class="text-center margin-remove font-weight-600"> TREA IN VIAGGIO </h3>
-        <input asp-for="email" class="name" placeholder="Email">
-        <span asp-validation-for="email" class="text-danger color-red"></span>
+       
+        <input asp-for="Email" class="name" placeholder="Email">
+        <span asp-validation-for="Email" class="text-danger color-red"></span>
 
-        <input asp-for="password" type="password" class="password" placeholder="Prassword">
-        <span asp-validation-for="password" class="text-danger color-red"></span>
+        <input asp-for="Password" type="password" class="password" placeholder="Prassword">
+        <span asp-validation-for="Password" class="text-danger color-red"></span>
 
-        <input asp-for="rememberMe" type="checkbox" class="remember-me btn-switch">
-        <label for="rememberMe" data-off="non ricordarmi" data-on="ricordami"></label>
+        <input asp-for="RememberMe" type="checkbox" class="remember-me btn-switch">
+        <label for="RememberMe" data-off="non ricordarmi" data-on="ricordami"></label>
 
 
-        <input type="submit" id="login" class="btn btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Accedi">
+        <input type="submit" id="login" class="btn btn-rounded btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Accedi">
     </form>
 </div>

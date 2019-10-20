@@ -19,8 +19,11 @@
     <meta property="og:title" content="TreA" />
 </head>
 <body>
+    @if(User.Identity.IsAuthenticated){
+        <partial name="~/Views/Menu/_Header.cshtml" />
+        <partial name="~/Views/Menu/_Sidebar.cshtml" />
+    }
 
-    
     <main role="main">
         @RenderBody()
     </main>

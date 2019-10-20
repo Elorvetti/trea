@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 
 namespace admin.Data
 {
-    public class Administrator
+    public partial class Administrator
     {
         public int id { get; set; }
         public string user { get; set; }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using admin.Models;
 using admin.Data;
-
 
 namespace admin.Services
 {
@@ -23,12 +23,13 @@ namespace admin.Services
 
         public bool IsAdmin(AdministratorModel model)
         {
-            var admin = _ctx.administrator.Where(c => c.user == model.email && c.password == model.password && c.IsActive);
+            var admin = _ctx.administrator.Where(c => c.user == model.Email && c.password == model.Password && c.IsActive);
             if(admin.Any())
             {
                 return true;
             }
             return false;
         }
+
     }
 }
