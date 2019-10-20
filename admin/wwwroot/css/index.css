@@ -107,9 +107,11 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .btn{ padding: 0px; left: unset;  border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background-size: contain; background-position: center center; background-repeat: no-repeat; }
 .btn:hover{ opacity: .8; }
 
+.btn.close{ background-image: url('../img/close.png'); }
 .btn.add{ background-image: url('../img/plus.png'); }
 .btn.remove{ background-image: url('../img/delete.png'); }
-
+.btn.edit{ background-image: url('../img/edit.png'); }
+.btn.logout{ background-image: url('../img/logout.png'); background-position: center center; background-repeat: no-repeat; }
 
 .btn-rounded{ border-radius: 40px; }
 .btn-circle{ border-radius: 50%; }
@@ -139,14 +141,16 @@ span.field-validation-error{
     border-radius: 5px;
 }
 
-main{ position: relative; display: inline-block; width: 100%; height: 100%; overflow-x: hidden; }
+main{ position: relative; display: inline-block; margin-top: 20px; width: 100%; height: 100%; overflow-x: hidden; }
 
 /*** Login ***/
 div.form-container{ position: relative; display: inline-block; width: 100%; height: 100%; }
 section.error{ position: relative; margin: 0 auto; width: 90%; max-width: 500px; }
-form{ position: relative; margin: 0 auto; padding: 20px 0px; top: 20px; width: 90%; max-width: 500px; height: auto; }
+form, div#overlay > div{ position: relative; margin: 0 auto; padding: 20px 0px; top: 20px; width: 90%; max-width: 500px; height: auto; }
 input{ position: relative; margin: 0 auto; padding: 10px 5px; width: 80%; font-size: 16px; background-color: transparent; border: 1px solid transparent; border-bottom: 1px solid #1C2E3D; }
 input:hover, input:active{ border-bottom: 2px solid #73AFBA; } 
+input[disabled]{ opacity: .7; cursor: default; }
+input[disabled]:hover{ border-bottom: 1px solid #1C2E3D; }
 span.text-danger{ position: relative; display: inline-block; padding: 5px 10px; width: 80%; font-size: 13px; line-height: 21px; }
 input + span.text-danger{ background-color: transparent; }
 form.login input.btn-submit{ position: relative; display: inline-block; left: 28%; bottom: 20px; right: 10%; width: 120px; height: 40px; font-size: 16px; line-height: 24px; }
@@ -182,11 +186,13 @@ span.user-image{
     border-radius: 50%;
     margin: 0 auto;
 }
+#logout{ position: absolute; width: 40px; height: 40px; top: 75px; right: 105px; background-size: 26px;  }
 section p{ display: block; }
 
-section.manage ul li{ cursor: pointer; line-height: 45px; background-position: 10px center; background-repeat: no-repeat; background-size: 28px; }
+section.manage ul li{ margin-bottom: 10px; cursor: pointer; line-height: 45px; background-position: 10px center; background-repeat: no-repeat; background-size: 28px; }
+section.manage ul li.active{ background-color: #73AFBA; }
+section.manage ul li.active:hover{ border: 0; }
 section.manage ul li:hover{ border: 1px solid #fff; }
-
 
 li#users{ background-image: url('../img/account.png');}
 li#arguments{ background-image: url('../img/arguments.png');}
@@ -194,14 +200,16 @@ li#posts{ background-image: url('../img/post.png');}
 li#photos{ background-image: url('../img/image.png');}
 li#videos{ background-image: url('../img/video.png');}
 
+
+
 @media(max-width: 768px){
     .show-tablet{display: inline-block!important; }
     .hidden-tablet{ transform: translateX(770px) }
 }
 @media(min-width: 1024px){
     div#sidebar{ top: 0; left: 0; bottom: 0; width: 300px; }
-    div.content{ position: absolute; top: 0; left: 300px; right: 0; bottom: 0; width: unset; height: unset; }
- 
+    #sidebar + main{ position: absolute; top: 50px; left: 300px; right: 0; bottom: 0; width: unset; height: unset; }
+    #logout{ right: 95px; }
 }
 
 section{ margin: 0 5px; }
@@ -210,30 +218,48 @@ section h2 + .btn.add{ margin: 10px 0; float: right; z-index: 9998; }
 section .btn.add{ position: relative; display: inline-block; width: 40px; height: 40px; }
 
 /** Add element struct **/
-div#overlay{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,.2); text-align: center; z-index: 9999; }
-div#overlay > span{ position: relative; display: inline-block; top: 135px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
-span#close{ background-image: url('../img/close.png'); }
-div#overlay > form{ position: relative; margin: 0 auto; top: 135px; }
-div#overlay > form > div{ margin: 0 auto; width: 80%; }
+div#overlay{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,.9); text-align: center; z-index: 9999; }
+div#overlay > span{ position: relative; display: inline-block; top: 100px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
+div#overlay > span.success{ height: 80px; font-size: 18px; line-height: 80px; font-weight: 600; background-color: #4caf50; }
+div#overlay > form, div#overlay > div{ position: relative; margin: 0 auto; top: 100px; }
+div#overlay > form > div, div#overlay > div > div{ margin: 0 auto; width: 80%; }
 div#overlay > form input{ display: block; margin-bottom: 10px; }
+div#overlay > form input.btn, div#overlay > div input.btn{ display: inline-block; margin-left: 10px; max-width: 120px; line-height: 40px; }
 div#overlay > form input + label{ position: relative; display: block; margin: 0 auto; max-width: 80%; color: #E8594E; }
+div#overlay > form .update-psw{ margin-right: 60px; font-size: 16px; text-decoration: underline; cursor: pointer; }
+div#overlay > form .update-psw:hover{ color: #1C2E3D; }
 
-input#save{ max-width: 150px; line-height: 40px; }
+div#overlay p.confirm{ padding: 20px 0; }
 
 @media(min-width: 1024px){
     div#overlay > span{ top: 40px; } 
-    div#overlay > form{ top: 40px; }
-       section h2 + .btn.add{ float: none; margin-left: 20px; }
+    div#overlay > form, div#overlay > div{ top: 40px; }
+    section h2 + .btn.add{ float: none; margin-left: 20px; }
+    div#overlay > form input.btn{ margin-left: 15px; max-width: 150px; }
 }
 
+ul#user li{ background-image: url('../img/account-blue.png'); }
+ul.list li{ 
+    margin: 0 auto 15px;
+    padding-left: 30px; 
+    height: 40px; 
+    width: 90%;
+    border-bottom: 1px solid #73AFBA; 
+    background-size: 25px; 
+    background-position: 5px center; 
+    background-repeat: no-repeat; 
+}
+ul.list li:hover{ border-bottom: 2px solid #73AFBA; }
+ul.list li p{ position: relative; display: inline-block; width: auto; overflow: hidden; line-height: 40px; }
+ul.list li p[active]{ padding-left: 30px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
+ul.list li p[active="true"]{ background-image: url('../img/is-active.png'); }
+ul.list li p[active="false"]{ background-image: url('../img/disabled.png'); }
+ul.list li span{ float: right; margin-right: 10px; width: 35px; height: 35px; background-size: 26px; }
 
+@media(min-width: 1024px){
+    ul.list li span{ margin-right: 15px; }
+}
 
-
-form > ul > li{ margin-bottom: 15px; padding-left: 25px; border-bottom: 1px solid #1C2E3D; }
-form > ul > li:active{ border-bottom: 2px solid #73AFBA; }
-form > ul > li.user { background-image: url('../img/account-blue.png'); background-size: 25px; background-position: 5px center; background-repeat: no-repeat; }
-form > ul > li > input, form > ul > li > input:active, form > ul > li > input:hover{ border-bottom: 1px solid transparent; }
-form#user > ul > li > input{ width: 85%; }
-form > ul > li > input + span{ margin-right: 10px; }
-form > ul > li > input + span.delete{ margin-right: 0; }
-form > ul > li > span{ display: inline-block; margin-bottom: 5px; width: 35px; height: 35px; background-size: 22px!important; }
+@media(max-width: 325px){
+    ul.list li p{ max-width: 150px; }
+}

@@ -45,7 +45,9 @@ namespace admin
             });
             
             //Identity user services
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(o => {
+                o.User.RequireUniqueEmail = true;
+            })
                 .AddEntityFrameworkStores<TreAContext>();
                 
             services.ConfigureApplicationCookie(o => {
@@ -84,13 +86,14 @@ namespace admin
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "Login",
-                    template: "{controller=Login}/{action=Index}/{id?}");
-
-                routes.MapRoute(
                     name: "User",
                     template: "{Controller=User}/{action=Index}/{id?}"
                 );
+                
+                routes.MapRoute(
+                    name: "Login",
+                    template: "{controller=Login}/{action=Index}/{id?}");
+
             });
         }
     }

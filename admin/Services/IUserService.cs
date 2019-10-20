@@ -9,5 +9,8 @@ namespace admin.Services
     public partial interface IUserService
     {
         void InsertUser(Administrator model);
+        IList<Administrator> GetAllUser();
+        Administrator GetUserById(int id);
+        void UpdateUser(int id, Administrator model);
     }
 }

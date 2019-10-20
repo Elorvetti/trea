@@ -62,6 +62,35 @@ namespace admin.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IList<Administrator> GetAllUsers(){
+            
+            var users = _userService.GetAllUser();
+
+            return users;
+        }
+
+        [HttpPost]
+        public Administrator GetUserById(int id){
+            return _userService.GetUserById(id);
+        }
+
+        [HttpPost]
+        public void UpdateUser(int id, IFormCollection data)
+        {
+            var model = new Administrator();
+            if(data["active"] == "on")
+            { 
+                model.IsActive = true;
+            } 
+            else
+            {
+                model.IsActive = false;
+            }
+          _userService.UpdateUser(id, model);
+        }
+
+
         [NonAction]
         public async Task<IActionResult> InsertUser(AddAdministratorModel model){
             
@@ -87,10 +116,9 @@ namespace admin.Controllers
             return Json("");
         }
 
+        
 
-
-        [NonAction]
-        public async Task<IActionResult> LogOut(){
+        public async Task<IActionResult> Logout(){
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Login");

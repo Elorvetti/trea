@@ -23,7 +23,20 @@ using admin.Data;
          public void InsertUser(Administrator admin){
             _ctx.administrator.Add(admin);
             _ctx.SaveChanges(); 
-             
+         }
+
+         public virtual IList<Administrator> GetAllUser(){
+            return _ctx.administrator.ToList();
+         }
+
+         public virtual Administrator GetUserById(int id){
+            return  _ctx.administrator.First(u => u.id == id);
+         }
+
+         public void UpdateUser(int id, Administrator model){
+             var user = _ctx.administrator.Find(id);
+             user.IsActive = model.IsActive;
+             _ctx.SaveChanges();
          }
      }
  }

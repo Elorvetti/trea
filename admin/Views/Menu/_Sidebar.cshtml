@@ -1,6 +1,8 @@
 <div id="sidebar" class="background-color-blue hidden-tablet">
     <section class="user-data text-center margin-top-small margin-bottom-small">
         <span class="user-image background-color-white"></span>
+        <a id="logout" class="btn btn-circle logout background-color-red" asp-area="" asp-controller="User" asp-action="Logout"></a>
+        </span>
         <p class="color-white text-center margin-top-xsmall">
             @ViewBag.User
         </p>
