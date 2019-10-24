@@ -84,12 +84,24 @@ namespace admin.Controllers
                 model.IsActive = true;
             } 
             else
+            if(data["password"] == data["confirmPassword"])
             {
                 model.IsActive = false;
             }
           _userService.UpdateUser(id, model);
         }
 
+        [NonAction]
+        public async Task<bool> UpdateUserPassword(string email, string oldPassword, string newPassord)
+        {
+            //Get current user
+            var user = await _userManager.FindByEmailAsync(email);
+
+            //Update user password
+            var update = await _userManager.ChangePasswordAsync(user, oldPassword, newPassord);
+            return update.Succeeded;
+            
+        }
 
         [NonAction]
         public async Task<IActionResult> InsertUser(AddAdministratorModel model){
@@ -115,8 +127,6 @@ namespace admin.Controllers
 
             return Json("");
         }
-
-        
 
         public async Task<IActionResult> Logout(){
             await _signInManager.SignOutAsync();

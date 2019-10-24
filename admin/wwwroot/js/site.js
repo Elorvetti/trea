@@ -36,30 +36,37 @@ var appController = (function(){
      
     var editElement = function(event){
         var id = parseInt($(this).parent().attr('id'));
-        var overlay = createOverlay();
 
         event.data = {
             id: id,
             url: '/User/GetUserById/' + id,
-            listContainer: overlay,
             updateList: false
         };
         callbackServer(event);
     }
 
-    var removeElementConfirm = function(){
+    var removeElementConfirm = function(id, userName){
+        var element = '';
+        
+        $overlay = createOverlay();
+        
+        element = '<p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p>';
 
+        $overlay.after(element);
+        
+        var url = 'User/Delete/' + id;
+        createBtnForm($overlay, removeOverlay, { post: true, url: url, callbackSuccess: updateUserList }, callbackServer )
     }
 
     var createEdit = function(obj){
-        var element = '<input name="email" class="name" autocomplete="off" value="'+  obj.user + '" disabled />'
+        var element = '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
         if(obj.isActive === true){
-            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>'
+            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';
         } else {
-            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">'
+            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">';
         }
-        element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>'
-        element = element + '<p class="update-psw text-underline color-blue-light text-right margin-top-small"> aggiorna password </p>'
+        element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
+        
         return element;
     }
 
@@ -75,7 +82,6 @@ var appController = (function(){
 
     var feedbackEvent = function(success, message){
         var element;
-        var $overlay = createOverlay();
         
         if(success){
             element = '<span class="box-shadow border-radius-small success text-center color-white">';    
@@ -85,7 +91,7 @@ var appController = (function(){
         element = element + message;
         element = element + '</span>';
 
-        $overlay.after(element);
+        return element;
         
     }
 
@@ -95,22 +101,27 @@ var appController = (function(){
         $('#overlay').remove();
         $('ul#user li').remove();
 
-        var overlay = createOverlay();
-
+        if($('#overlay').length === 0){
+           var $overlay = createOverlay();
+        }
+    
         event.data = {
             url: '/User/GetAllUsers/',
-            listContainer: overlay,
+            listContainer: $('div.content > ul'),
             updateList: true
         };
 
+
         if($('ul#user li').length === 0){
             callbackServer(event)
-            
+            var feedback = '';
+
             //2.1.3 remove overlay
-            feedbackEvent(true, 'Utente aggiunto');
+            feedback = feedbackEvent(true, 'Utente aggiunto');
         } else {
-            feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
+            feedback = feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
         } 
+        $overlay.after(feedback);
     }
 
     var callbackServer = function(event){
@@ -123,14 +134,14 @@ var appController = (function(){
         
         if(event.data.post){
             event.preventDefault();
-            
+
             //1. Get form from DOM
             var $form = $(this).parent().parent();
             var id = $form.attr('id');
 
             //2. check if we need form validate 
             if(id === 'add'){
-                var state = validateAddUser($form);
+                var state = validateAddUser($form, true);
                 if (state.invalid.email === true || state.invalid.password === true || state.invalid.confirmPassword === false) {
                     if($('form#add > span').length === 0) {
     
@@ -150,8 +161,8 @@ var appController = (function(){
                 method: 'POST',
                 data: data,
                 url: parameter.url,
-                success: function(result){
-                    event.data.callbackSuccess()
+                success: function (result) {
+                    event.data.callbackSuccess(event);
                 }
             })
         } else {
@@ -167,16 +178,16 @@ var appController = (function(){
                             } else {
                                 var $overlay = createOverlay();
                                 var element = createEdit(data);
-                                
-                                //addEditForm($overlay, data, element);
+                                addEditForm($overlay, data, element);
                             }
                         })
                 })
-
-            //Add event listener on list btn
-            $(document).on('click', '.btn.edit', editElement);
-            $(document).on('click', '.btn.remove', removeElementConfirm);
         }
+
+        //Add event listener on list btn
+        $(document).on('click', '.btn.edit', editElement);
+        $(document).on('click', '.btn.remove', removeElementConfirm);
+
     }
 
     var addEditForm = function($overlay, data, element){
@@ -188,14 +199,16 @@ var appController = (function(){
         //get form selector and append data
         var $form = $('#overlay > form');
         $form.append(element);
-        
+
+        //add btn 
         var url = '/User/UpdateUser/' + data.id;
         createBtnForm($form, removeOverlay, {post: true, url: url, callbackSuccess: updateUserList} ,callbackServer);
+
+        //append validation
+        validateAddUser($form, false);
     }
 
     var addUserForm = function(event){
-        console.log('add btn pressed');
-
         //1. Get section id and form add element
         var sectionId = $(event.data.sectionId).attr('id');
         var form = event.data.formData;
@@ -219,7 +232,7 @@ var appController = (function(){
         createBtnForm($form, removeOverlay, { post: true, url: '/User/Index', callbackSuccess: updateUserList } ,callbackServer)
         
         //4. Add validation to form
-        validateAddUser($form);
+        validateAddUser($form, true);
      
     }
 
@@ -236,7 +249,7 @@ var appController = (function(){
         $(document).on('click', '#save', callbackSaveParams ,callbackSave);
     }
 
-    var validateAddUser = function(form){
+    var validateAddUser = function(form, pswRequired){
         
         $.validator.addMethod('password_regex', function(value, element, regex){
             return regex.test(value)
@@ -249,13 +262,13 @@ var appController = (function(){
                         email: true
                     },
                     password: {
-                        required: true,
+                        required: pswRequired,
                         minlength: 8,
                         password_regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
                     }, 
                     confirmPassword: {
-                        required: true,
+                        required: pswRequired,
                         equalTo: '#password'
                     }
                 },
@@ -277,10 +290,10 @@ var appController = (function(){
 
     }
 
-    var createOverlay = function(){
+    var createOverlay = function(event){
         var overlay = '';
         var overlay = '<div id="overlay"><span id="close" class="btn close"></span></div>';
-        
+    
         //append overlay to DOM
         $('body').append(overlay);
 
@@ -291,7 +304,6 @@ var appController = (function(){
         var $selector = $('#close');
 
         return $selector;
-
     }
 
     var removeOverlay = function(){

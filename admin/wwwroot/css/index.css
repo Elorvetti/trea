@@ -206,7 +206,7 @@ li#videos{ background-image: url('../img/video.png');}
     .show-tablet{display: inline-block!important; }
     .hidden-tablet{ transform: translateX(770px) }
 }
-@media(min-width: 1024px){
+@media(min-width: 768px){
     div#sidebar{ top: 0; left: 0; bottom: 0; width: 300px; }
     #sidebar + main{ position: absolute; top: 50px; left: 300px; right: 0; bottom: 0; width: unset; height: unset; }
     #logout{ right: 95px; }
@@ -219,15 +219,13 @@ section .btn.add{ position: relative; display: inline-block; width: 40px; height
 
 /** Add element struct **/
 div#overlay{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,.9); text-align: center; z-index: 9999; }
-div#overlay > span{ position: relative; display: inline-block; top: 100px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
+div#overlay > span{ position: relative; display: block; margin: 0 auto; top: 100px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
 div#overlay > span.success{ height: 80px; font-size: 18px; line-height: 80px; font-weight: 600; background-color: #4caf50; }
 div#overlay > form, div#overlay > div{ position: relative; margin: 0 auto; top: 100px; }
 div#overlay > form > div, div#overlay > div > div{ margin: 0 auto; width: 80%; }
 div#overlay > form input{ display: block; margin-bottom: 10px; }
 div#overlay > form input.btn, div#overlay > div input.btn{ display: inline-block; margin-left: 10px; max-width: 120px; line-height: 40px; }
 div#overlay > form input + label{ position: relative; display: block; margin: 0 auto; max-width: 80%; color: #E8594E; }
-div#overlay > form .update-psw{ margin-right: 60px; font-size: 16px; text-decoration: underline; cursor: pointer; }
-div#overlay > form .update-psw:hover{ color: #1C2E3D; }
 
 div#overlay p.confirm{ padding: 20px 0; }
 
