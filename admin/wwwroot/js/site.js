@@ -2,60 +2,22 @@
 
 var appController = (function(){
     
-
-    var removeElementToListConfirm = function(){
-        var $li = $(this).parent();
-        var id = $li.attr('id');
-        var userName = $li.find('p').text();
-
-        var element = '<div id="overlay"><span class="btn close"></span>';
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white">';
-        element = element + '<p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p>';
-        element = element + '<div class="text-right">'
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
-        element = element + '<input type="button" id="delete" class="btn btn-rounded delete text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">'
-        element = element + '</div></div></div>'
-
-        $('body').append(element);
-
-        $(document).on('click', '#delete', {id: id},  removeElementToList);
-        $(document).on('click', '#return, .btn.close', removeOverlay);
-    }
-
-    var removeElementToList = function(event){
-        var id = event.data.id;
-        console.log(id);
-        //$.ajax({
-        //    method: 'POST',
-        //    url: '/User/DeleteUser/' + id,
-        //    success: function(){
-        //            
-        //    }
-        //})
-    }
-     
-    var editElement = function(event){
-        var id = parseInt($(this).parent().attr('id'));
-
-        event.data = {
-            id: id,
-            url: '/User/GetUserById/' + id,
-            updateList: false
-        };
-        callbackServer(event);
-    }
-
-    var removeElementConfirm = function(id, userName){
+    var removeElementConfirm = function(event){
+        var userName = $(this).prev().prev().text();
+        var id = $(this).parent().attr('id');
+        console.log(id)
         var element = '';
         
-        $overlay = createOverlay();
+        var $overlay = createOverlay();
         
-        element = '<p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p>';
+        element = '<div class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p></div>';
 
         $overlay.after(element);
+
+        var url = 'User/DeleteUser/' + id;
+        var $selectorToAppendBtn = $('#overlay > div');
         
-        var url = 'User/Delete/' + id;
-        createBtnForm($overlay, removeOverlay, { post: true, url: url, callbackSuccess: updateUserList }, callbackServer )
+        createBtnForm($selectorToAppendBtn, removeOverlay, { post: true, url: url, callbackSuccess: updateUserList }, callbackServer )
     }
 
     var createEdit = function(obj){
@@ -70,6 +32,18 @@ var appController = (function(){
         return element;
     }
 
+    var editElement = function(event){
+        var id = parseInt($(this).parent().attr('id'));
+
+        event.data = {
+            post: false,
+            id: id,
+            url: '/User/GetUserById/' + id,
+            updateList: false
+        };
+        callbackServer(event);
+    }
+
     var createList = function(obj, i){
         var element = '<li class="list" id="' + obj[i].id +'">'
         var element = element + '<p active="' + obj[i].isActive + '">' + obj[i].user + '</p>';
@@ -78,6 +52,36 @@ var appController = (function(){
         var element = element + '</li>';
 
         return element;
+    }
+
+    var updateUserList = function(event){
+        
+        //remove element to DOM
+        $('#overlay').remove();
+        $('ul#user li').remove();
+
+        if($('#overlay').length === 0){
+           var $overlay = createOverlay();
+        }
+    
+        event.data = {
+            post: false,
+            url: '/User/GetAllUsers/',
+            listContainer: $('div.content > ul'),
+            updateList: true
+        };
+
+
+        if($('ul#user li').length === 0){
+            callbackServer(event)
+            var feedback = '';
+
+            //2.1.3 remove overlay
+            feedback = feedbackEvent(true, 'Utente aggiornato');
+        } else {
+            feedback = feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
+        } 
+        $overlay.after(feedback);
     }
 
     var feedbackEvent = function(success, message){
@@ -95,35 +99,6 @@ var appController = (function(){
         
     }
 
-    var updateUserList = function(event){
-        
-        //remove element to DOM
-        $('#overlay').remove();
-        $('ul#user li').remove();
-
-        if($('#overlay').length === 0){
-           var $overlay = createOverlay();
-        }
-    
-        event.data = {
-            url: '/User/GetAllUsers/',
-            listContainer: $('div.content > ul'),
-            updateList: true
-        };
-
-
-        if($('ul#user li').length === 0){
-            callbackServer(event)
-            var feedback = '';
-
-            //2.1.3 remove overlay
-            feedback = feedbackEvent(true, 'Utente aggiunto');
-        } else {
-            feedback = feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
-        } 
-        $overlay.after(feedback);
-    }
-
     var callbackServer = function(event){
         event.preventDefault();
 
@@ -131,7 +106,7 @@ var appController = (function(){
             post : event.data.post,
             url: event.data.url,
         }
-        
+
         if(event.data.post){
             event.preventDefault();
 
@@ -236,19 +211,6 @@ var appController = (function(){
      
     }
 
-    var createBtnForm = function($form, callbackReturn, callbackSaveParams,callbackSave){
-        var element = '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-white box-shadow background-color-red margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="save" class="btn btn-rounded btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';
-        element = element + '</div>';
-
-        $form.append(element);
-
-        //trigger btn events
-        $(document).on('click', '#return', callbackReturn);
-        $(document).on('click', '#save', callbackSaveParams ,callbackSave);
-    }
-
     var validateAddUser = function(form, pswRequired){
         
         $.validator.addMethod('password_regex', function(value, element, regex){
@@ -290,20 +252,43 @@ var appController = (function(){
 
     }
 
-    var createOverlay = function(event){
-        var overlay = '';
-        var overlay = '<div id="overlay"><span id="close" class="btn close"></span></div>';
+    var createBtnForm = function($form, callbackReturn, callbackSaveParams,callbackSave){
+        var element = '<div class="text-right">';
+       
+        if(!$form.hasClass('delete')){
+            element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-white box-shadow background-color-red margin-top-small" value="Indietro">';
+            element = element + '<input type="submit" id="save" class="btn btn-rounded btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';    
+        }  else {
+            element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
+            element = element + '<input type="submit" id="save" class="btn btn-rounded btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        }
+        
+        element = element + '</div>';
+
+        $form.append(element);
+
+        //trigger btn events
+        $(document).on('click', '#return', callbackReturn);
+        $(document).on('click', '#save', callbackSaveParams ,callbackSave);
+    }
+
+    var createOverlay = function(){
+        if($('#overlay').length === 0){
+            var overlay = '';
+            var overlay = '<div id="overlay"><span id="close" class="btn close"></span></div>';
+        
+            //append overlay to DOM
+            $('body').append(overlay);
     
-        //append overlay to DOM
-        $('body').append(overlay);
-
-        //trigger close click
-        $(document).on('click', '#close', removeOverlay);
-
-        //return selector for append element to overlay
-        var $selector = $('#close');
-
-        return $selector;
+            //trigger close click
+            $(document).on('click', '#close', removeOverlay);
+    
+            //return selector for append element to overlay
+            var $selector = $('#close');
+    
+            return $selector;
+        }
+        
     }
 
     var removeOverlay = function(){

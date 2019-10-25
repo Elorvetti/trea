@@ -12,5 +12,6 @@ namespace admin.Services
         IList<Administrator> GetAllUser();
         Administrator GetUserById(int id);
         void UpdateUser(int id, Administrator model);
+        void DeleteUser(int id);
     }
 }

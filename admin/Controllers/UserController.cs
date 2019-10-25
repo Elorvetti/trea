@@ -75,34 +75,6 @@ namespace admin.Controllers
             return _userService.GetUserById(id);
         }
 
-        [HttpPost]
-        public void UpdateUser(int id, IFormCollection data)
-        {
-            var model = new Administrator();
-            if(data["active"] == "on")
-            { 
-                model.IsActive = true;
-            } 
-            else
-            if(data["password"] == data["confirmPassword"])
-            {
-                model.IsActive = false;
-            }
-          _userService.UpdateUser(id, model);
-        }
-
-        [NonAction]
-        public async Task<bool> UpdateUserPassword(string email, string oldPassword, string newPassord)
-        {
-            //Get current user
-            var user = await _userManager.FindByEmailAsync(email);
-
-            //Update user password
-            var update = await _userManager.ChangePasswordAsync(user, oldPassword, newPassord);
-            return update.Succeeded;
-            
-        }
-
         [NonAction]
         public async Task<IActionResult> InsertUser(AddAdministratorModel model){
             
@@ -132,6 +104,54 @@ namespace admin.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Login");
+        }
+
+        [HttpPost]
+        public void UpdateUser(int id, IFormCollection data)
+        {
+            var model = new Administrator();
+            if(data["active"] == "on")
+            { 
+                model.IsActive = true;
+            } 
+            else
+            if(data["password"] == data["confirmPassword"])
+            {
+                model.IsActive = false;
+            }
+          _userService.UpdateUser(id, model);
+        }
+
+        [NonAction]
+        public async Task<bool> UpdateUserPassword(string email, string oldPassword, string newPassord)
+        {
+            //Get current user
+            var user = await _userManager.FindByEmailAsync(email);
+
+            //Update user password
+            var update = await _userManager.ChangePasswordAsync(user, oldPassword, newPassord);
+            return update.Succeeded;
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            //Get user by ID
+            Administrator admin = GetUserById(id);
+            
+            //Get user Identity
+            var user = await _userManager.FindByEmailAsync(admin.user);
+
+            if(user == null){
+                return Json("Error");
+            } else {
+                var result = await _userManager.DeleteAsync(user);
+                if(result.Succeeded){
+                    _userService.DeleteUser(id);
+                }
+            }
+            return Json("deleted done");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

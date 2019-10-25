@@ -38,5 +38,11 @@ using admin.Data;
              user.IsActive = model.IsActive;
              _ctx.SaveChanges();
          }
+
+         public void DeleteUser(int id){
+            var user = _ctx.administrator.First(u => u.id == id);
+             _ctx.administrator.Remove(user);
+            _ctx.SaveChanges();
+         }
      }
  }

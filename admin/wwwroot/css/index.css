@@ -105,7 +105,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .border-radius-small{ border-radius: 5px; }
 
 .btn{ padding: 0px; left: unset;  border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background-size: contain; background-position: center center; background-repeat: no-repeat; }
-.btn:hover{ opacity: .8; }
+.btn:hover{ opacity: .8; border-bottom: 1px solid transparent;}
 
 .btn.close{ background-image: url('../img/close.png'); }
 .btn.add{ background-image: url('../img/plus.png'); }
