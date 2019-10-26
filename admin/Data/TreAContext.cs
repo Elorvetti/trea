@@ -11,7 +11,8 @@ namespace admin.Data
     {
         public TreAContext(DbContextOptions<TreAContext> o ) : base(o) {}
         public virtual DbSet<Administrator> administrator { get; set; }
-  
+        public virtual DbSet<Argument> argument { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
             optionsBuilder
                 .ConfigureWarnings(warnings => 
@@ -29,6 +30,11 @@ namespace admin.Data
                 entity.Property(e => e.password); 
                 entity.Property(e => e.IsActive);
                 entity.Property(e => e.rememberMe);
+            });
+
+            modelBuilder.Entity<Argument>(entity => {
+                entity.HasKey(e => e.id);
+                entity.Property(e => e.path);
             });
 
         }

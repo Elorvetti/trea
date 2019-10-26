@@ -46,7 +46,7 @@ namespace admin.Controllers
             model.Email = data["email"];
             model.Password = data["password"];
             model.ConfirmPassword = data["confirmPassword"];
-            
+
             //User Is Active
             if(data["active"] == "on")
             {
@@ -56,27 +56,31 @@ namespace admin.Controllers
             {
                 model.IsActive = false;
             }
+            if(model.Email == "" || model.Password == "" || model.ConfirmPassword == "")
+            {
+                return Json("Error");
+            }
 
-            await InsertUser(model);
+            await Insert(model);
 
             return View();
         }
 
         [HttpPost]
-        public IList<Administrator> GetAllUsers(){
+        public IList<Administrator> GetAll(){
             
-            var users = _userService.GetAllUser();
+            var users = _userService.GetAll();
 
             return users;
         }
 
         [HttpPost]
-        public Administrator GetUserById(int id){
-            return _userService.GetUserById(id);
+        public Administrator GetById(int id){
+            return _userService.GetById(id);
         }
 
         [NonAction]
-        public async Task<IActionResult> InsertUser(AddAdministratorModel model){
+        public async Task<IActionResult> Insert(AddAdministratorModel model){
             
             // 1. Add data to interface of repository
             var admin = new Administrator();
@@ -92,7 +96,7 @@ namespace admin.Controllers
                await _signInManager.SignInAsync(user, isPersistent: false );
                
                // 2.1. Update repository
-                _userService.InsertUser(admin);
+                _userService.Insert(admin);
                
                return Json("Inser ok");
             }
@@ -107,23 +111,21 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public void UpdateUser(int id, IFormCollection data)
-        {
+        public void Update(int id, IFormCollection data){
             var model = new Administrator();
             if(data["active"] == "on")
             { 
                 model.IsActive = true;
             } 
             else
-            if(data["password"] == data["confirmPassword"])
             {
                 model.IsActive = false;
             }
-          _userService.UpdateUser(id, model);
+          _userService.Update(id, model);
         }
 
         [NonAction]
-        public async Task<bool> UpdateUserPassword(string email, string oldPassword, string newPassord)
+        public async Task<bool> UpdatePassword(string email, string oldPassword, string newPassord)
         {
             //Get current user
             var user = await _userManager.FindByEmailAsync(email);
@@ -135,10 +137,10 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             //Get user by ID
-            Administrator admin = GetUserById(id);
+            Administrator admin = GetById(id);
             
             //Get user Identity
             var user = await _userManager.FindByEmailAsync(admin.user);
@@ -148,7 +150,7 @@ namespace admin.Controllers
             } else {
                 var result = await _userManager.DeleteAsync(user);
                 if(result.Succeeded){
-                    _userService.DeleteUser(id);
+                    _userService.Delete(id);
                 }
             }
             return Json("deleted done");

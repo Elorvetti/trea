@@ -9,11 +9,15 @@
     </section>
     <section class="manage margin-top-small margin-bottom-small">
         <ul class="control-list margin-right-small margin-left-small">
-            <li id="users" class="color-white padding-left-medium border-radius-small active">Utenti</li>
-            <li id="arguments" class="color-white padding-left-medium border-radius-small">Argomenti</li>
-            <li id="posts" class="color-white padding-left-medium border-radius-small">Post</li>
-            <li id="photos" class="color-white padding-left-medium border-radius-small">Foto</li>
-            <li id="videos" class="color-white padding-left-medium border-radius-small">Video</li>
+            <li id="user" class="color-white padding-left-medium border-radius-small active">
+                <a class="color-white" asp-area="" asp-controller="User" asp-action="Index">Utenti</a>
+            </li>
+            <li id="argument" class="color-white padding-left-medium border-radius-small">
+                <a class="color-white" asp-area="" asp-controller="Argument" asp-action="Index">Argomenti</a>    
+            </li>
+            <li id="post" class="color-white padding-left-medium border-radius-small">Post</li>
+            <li id="photo" class="color-white padding-left-medium border-radius-small">Foto</li>
+            <li id="video" class="color-white padding-left-medium border-radius-small">Video</li>
         </ul>
     </section>
 </div>

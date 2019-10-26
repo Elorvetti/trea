@@ -20,26 +20,26 @@ using admin.Data;
              this._ctx = ctx;
          }
 
-         public void InsertUser(Administrator admin){
+         public void Insert(Administrator admin){
             _ctx.administrator.Add(admin);
             _ctx.SaveChanges(); 
          }
 
-         public virtual IList<Administrator> GetAllUser(){
+         public virtual IList<Administrator> GetAll(){
             return _ctx.administrator.ToList();
          }
 
-         public virtual Administrator GetUserById(int id){
+         public virtual Administrator GetById(int id){
             return  _ctx.administrator.First(u => u.id == id);
          }
 
-         public void UpdateUser(int id, Administrator model){
+         public void Update(int id, Administrator model){
              var user = _ctx.administrator.Find(id);
              user.IsActive = model.IsActive;
              _ctx.SaveChanges();
          }
 
-         public void DeleteUser(int id){
+         public void Delete(int id){
             var user = _ctx.administrator.First(u => u.id == id);
              _ctx.administrator.Remove(user);
             _ctx.SaveChanges();
