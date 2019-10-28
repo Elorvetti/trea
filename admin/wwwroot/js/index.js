@@ -1,7 +1,7 @@
 ﻿"use strict"
 
 var appController = (function(){
-    
+
     //Argument Manage
     var addArgumentWindow = function(form, elementToAppend){
         form.append(elementToAppend.path);
@@ -9,8 +9,11 @@ var appController = (function(){
         createBtnForm(form);
     }
 
-    var updateArgumentList = function(event){
-        console.log($(this));
+    var addFolderChild = function(){
+        var idFolderFather = $(this).parent().attr('id');
+        
+        event.data = new Data(false, idFolderFather, 'Argument/GetById/', false, null);
+        callbackServer(event);
     }
 
     //User Manage
@@ -28,36 +31,6 @@ var appController = (function(){
 
         //3. Add validation to form
         validateAddUser(form, true);
-    }
-
-    var updateUserList = function(event){
-        
-        //remove element to DOM
-        $('#overlay').remove();
-        $('ul#user li').remove();
-
-        if($('#overlay').length === 0){
-           var $overlay = createOverlay();
-        }
-    
-        event.data = {
-            post: false,
-            url: '/User/GetAll/',
-            listContainer: $('div.content > ul#user'),
-            updateList: true
-        };
-
-
-        if($('ul#user li').length === 0){
-            callbackServer(event)
-            var feedback = '';
-
-            //2.1.3 remove overlay
-            feedback = feedbackEvent(true, 'Utente aggiornato');
-        } else {
-            feedback = feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
-        } 
-        $overlay.after(feedback);
     }
 
     var validateAddUser = function(form, pswRequired){
@@ -101,54 +74,111 @@ var appController = (function(){
     }
 
     //General Manage
-    var removeElementConfirm = function(event){
-        var userName = $(this).prev().prev().text();
-        var id = $(this).parent().attr('id');
+    var updateList = function(event){
         
+        //remove element to DOM
+        $('#overlay').remove();
+        $('ul.list li').remove();
+
+        if($('#overlay').length === 0){
+           var $overlay = createOverlay();
+        }
+        
+        //Get area for update 
+        var areaId = $('div.content').attr('id');
+
+        var params = {
+            addUser: {
+                url: '/User/GetAll/',
+                message: 'Utente aggiornato'
+            },
+            addArgument: {
+                url: '/Argument/GetAll/',
+                message: 'Argomento aggiornato'
+            }
+        }
+
+        event.data  = new Data(false, null, params[areaId].url, true, $('div.content > ul.list') );
+
+        if($('ul.list li').length === 0){
+            callbackServer(event)
+            var feedback = '';
+
+            //2.1.3 remove overlay
+            feedback = feedbackEvent(true, params[areaId].message);
+        } else {
+            feedback = feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
+        } 
+        $overlay.after(feedback);
+    }
+    
+    var removeElementConfirm = function(event){
+        var id = $(this).parent().attr('id');
+        var area = event.data.area;
         var element = '';
         
+
+        if(area === "user"){
+            var userName = $(this).prev().prev().text();
+            element = '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p></div>';
+        } else {
+            var folderName = $(this).prev().prev().prev().text();
+            element = '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'argomento: ' + folderName + '?</p></div>';
+        }
+
         var $overlay = createOverlay();
-        
-        element = '<div id="' + id +'" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p></div>';
-
         $overlay.after(element);
-
         var $selectorToAppendBtn = $('#overlay > div');
-        
         createBtnForm($selectorToAppendBtn)
+        
     }
 
-    var createEdit = function(obj){
-        var element = '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
-        if(obj.isActive === true){
-            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';
+    var createEdit = function(obj, type, add){
+        var element = ""
+        if(type === "user"){
+            element = '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
+            if(obj.isActive === true){
+                element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';
+            } else {
+                element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">';
+            }
+            element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
+        } else if(!add){
+            var folderName = obj.name.replace(/\-/g, ' ')
+            element =  '<input name="path" class="path" automplete="off" value="' + folderName + '" />'
         } else {
-            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">';
+            element = '<input name="id" type="hidden" value="' + obj.id + '">';
+            element = element + '<input name="idFather" type="hidden" value="' + obj.idFather + '">';
+            element = element + '<input name="level" type="hidden" value="' + obj.level + '">';
+            element = element + '<input name="name" type="text" value="">';
         }
-        element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
-        
-        return element;
+
+        return element;      
     }
 
     var editElement = function(event){
         var id = parseInt($(event.target).parent().attr('id'));
-        
-        event.data = {
-            post: false,
-            id: id,
-            url: '/User/GetById/' + id,
-            updateList: false
-        };
+        var url = event.data.url;
+
+        event.data = new Data(false, id, url, false, 'div.content > ul')
 
         callbackServer(event);
     }
 
-    var createList = function(obj, i){
+    var createList = function(obj, i, type){
         var element = '<li class="list" id="' + obj[i].id +'">'
-        var element = element + '<p active="' + obj[i].isActive + '">' + obj[i].user + '</p>';
-        var element = element + '<span class="btn btn-circle edit background-color-blue"></span>';
-        var element = element + '<span class="btn btn-circle remove background-color-red"></span>';
-        var element = element + '</li>';
+        if(type === "user"){
+            element = element + '<p active="' + obj[i].isActive + '">' + obj[i].user + '</p>';
+        } else {
+            var folderName = obj[i].name.replace(/\-/g, ' ')
+
+            element = element + '<p father="' + obj[i].idFather + '" level="' + obj[i].level + '">' + folderName + '</p>';
+            element = element + '<span class="btn btn-circle add background-color-blue"></span>'
+        }
+        
+        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '</li>';
 
         return element;
     }
@@ -173,30 +203,38 @@ var appController = (function(){
             post : event.data.post,
             url: event.data.url,
         }
-
+        
         if(event.data.post){
             event.preventDefault();
 
             //1. Get form from DOM
             var $form = $('form');
             var id = $form.attr('id');
-            
+            var sendblock = false;
+
             //2. check if we need form validate 
             if(id === 'add'){
                 //2.1 check if value is valide (used only for user)
                 var state = validateAddUser($form, true);
-                var invalid = state.invalid.email === true || state.invalid.password === true || state.invalid.confirmPassword === false
+                var invalid = state.invalid.email === true || state.invalid.password === true || state.invalid.confirmPassword === true
 
-                //2.2 check if are inputs required empty || invalid input and display error message 
+                //2.2 check if are inputs required empty || invalid input 
                 $('form :input').each(function(){
                     var required = $(this).attr('required') !== undefined;
-                    
-                    if(required && $(this).val() === "" && $('form#add > span').length === 0 || invalid){
-                        var errorMessage = '<span class="field-validation-error"> Dati non corretti</span>';
-                        $form.prepend(errorMessage);
-                        return
+
+                    if(invalid || $(this).val() === "" && required ){
+                        sendblock = true
                     }
                 })
+
+                //2.3 block send data
+                if(sendblock){
+                    if($('form.add > span').length === 0){
+                        var errorMessage = '<span class="field-validation-error"> Dati non corretti</span>';
+                        $form.prepend(errorMessage);
+                    }
+                    return
+                }
             }
 
             //3. Serialize data
@@ -212,7 +250,7 @@ var appController = (function(){
                         feedbackEvent(false, 'Dati non validi');
                         return;
                     }
-                    event.data.callbackSuccess(event);
+                    updateList(event)
                 }
             })
         } else {
@@ -220,14 +258,16 @@ var appController = (function(){
                 .then(function(res){
                     return res.json()
                         .then(function(data){
+                            var type = $(event.data.listContainer).attr('id'); //if create list is for user or argument i need different struct
                             if(event.data.updateList){
                                 for(var i in data){
-                                    var element = createList(data, i);
+                                    var element = createList(data, i, type);
                                     $(event.data.listContainer).append(element);
                                 }
                             } else {
+                                var add = $(event.target).hasClass('add');
                                 var $overlay = createOverlay();
-                                var element = createEdit(data);
+                                var element = createEdit(data, type, add);
                                 addEditForm($overlay, data, element);
                             }
                         })
@@ -267,54 +307,30 @@ var appController = (function(){
         element = element + '</div>';
 
         $form.append(element);
-
-       // $(document).on('click', '#save', callbackSaveParams ,callbackSave);
     }
 
-
     var bindClick = function(event){
-        var sectionId = $(event.data.sectionId).attr('id');
+        var areaId = $(event.data.areaId).attr('id');
         var $overlayChild = $(event.data.overlayChild);
-
-
-        switch(sectionId){
-            case "user":
-                if($overlayChild.hasClass('add')){
-                    event.data.post  = true;
-                    event.data.url = '/User/Index';
-                    event.data.callbackSuccess = updateUserList;
-                } else if($overlayChild.hasClass('edit')){
-                    var id = $(this).parent().parent().attr('id');
-                    event.data.post  = true;
-                    event.data.url = '/User/Update/' + id;
-                    event.data.callbackSuccess = updateUserList;
-                } else {
-                    var id = $(this).parent().parent().attr('id');
-                    event.data.post  = true;
-                    event.data.url = 'User/Delete/' + id;
-                    event.data.callbackSuccess = updateUserList;
-                }
-            break;
-            case "argument":
-                if($overlayChild.hasClass('add')){
-                    event.data.post  = true;
-                    event.data.url = '/Argument/Index';
-                    event.data.callbackSuccess = updateArgumentList;
-                } else if($overlayChild.hasClass('edit')){
-                    var id = $(this).parent().parent().attr('id');
-                    event.data.post  = true;
-                    event.data.url = '/Argument/Update/' + id;
-                    event.data.callbackSuccess = updateArgumentList;
-                } else {
-                    var id = $(this).parent().parent().attr('id');
-                    event.data.post  = true;
-                    event.data.url = 'Argument/Delete/' + id;
-                    event.data.callbackSuccess = updateArgumentList;
-                }
-            break;
+        var type = $overlayChild.attr('class'). replace('box-shadow border-radius-small text-center background-color-white ', '');
+        var urls = {
+            user: {
+                add: '/User/Index',
+                edit: '/User/Update/',
+                delete: '/User/Delete/'
+            },
+            argument: {
+                add: '/Argument/Index',
+                edit: '/Argument/Update/',
+                delete: '/Argument/Delete/'
+            }
         }
         
-       callbackServer(event);
+        var url = urls[areaId][type];
+
+        var id = $(this).parent().parent().attr('id');
+        event.data = new Data(true, id, url, false, null)
+        callbackServer(event);
     }
 
     var createOverlay = function(){
@@ -348,18 +364,18 @@ var appController = (function(){
 
     var createAddWindow = function(event){
         
-        //1. Get section id and form add element
-        var sectionId = $(event.data.sectionId).attr('id');
-        var elementToAppend = event.data.formData[sectionId];
+        //1. Get area id and form add element
+        var areaId = $(event.data.areaId).attr('id');
+        var elementToAppend = event.data.formData[areaId];
         
         //2. Create overlay
         var $overlay = createOverlay();
         $overlay.after(event.data.formAddHTML);
         
         //1.1 Get form added by id
-        var $form = $(event.data.formAddId);
+        var $form = $(event.data.formAdd);
 
-        switch(sectionId){
+        switch(areaId){
             case "addUser":
                 addUserWindow($form, elementToAppend);
                 break;
@@ -371,12 +387,12 @@ var appController = (function(){
 
     var toggleSubMenu = function(event){
         var sublist = event.data.sublist;
-        var sectionId = $(event.data.listContainer).attr('id')
+        var areaId = $(event.data.listContainer).attr('id')
         
-        //if sublist have same id of section add class active else remove it
+        //if sublist have same id of area add class active else remove it
         for(var menu in sublist){
             var menuId = $(sublist[menu]).attr('id')
-            if(menuId === sectionId){
+            if(menuId === areaId){
                 $(sublist[menu]).addClass('active');
             } else{ 
                 $(sublist[menu]).removeClass('active');
@@ -386,34 +402,52 @@ var appController = (function(){
     }
 
     var updateHomeList = function(event){
-        var sectionId = $(event.data.listContainer).attr('id');
+        var areaId = $(event.data.listContainer).attr('id');
         
-        if(sectionId === undefined){
+        if(areaId === undefined){
             return
         }
-
-        var selectorToAppend = event.data.listContainer +'#'+ sectionId;
+        
+        var selectorToAppend = event.data.listContainer +'#'+ areaId;
 
         var url = {
-            user: 'User/GetAll',
-            argument: 'Argument/GetAll',
-            post: 'Post/GetAll',
-            photo: 'Photo/GetAll',
-            video: 'Video/GetAll'
+            update: {
+                user: 'User/GetAll',
+                argument: 'Argument/GetAll',
+                post: 'Post/GetAll',
+                photo: 'Photo/GetAll',
+                video: 'Video/GetAll'
+            },
+            edit: {
+                user: 'User/GetById/',
+                argument: 'Argument/GetById/',
+                post: 'Post/GetById/',
+                photo: 'Photo/GetById/',
+                video: 'Video/GetById/'
+            }            
         }
 
-        event.data = {
-            post: false,
-            url: url[sectionId],
-            listContainer: selectorToAppend,
-            updateList: true
-        };
-         
+        event.data = new Data(false, null, url.update[areaId], true, selectorToAppend)
+
         callbackServer(event);
 
         //Add event lister on btn edit and remove
-        $(document).on('click', '.btn.edit' , editElement);
-        $(document).on('click', '.btn.remove' , removeElementConfirm);
+        $(document).on('click', 'li .btn.add', addFolderChild)
+        $(document).on('click', '.btn.edit' , { url: url.edit[areaId] } ,editElement);
+        $(document).on('click', '.btn.remove' , { area: areaId }  ,removeElementConfirm);
+    }
+
+    //Constructor
+    var Data = function(post, id, url, updateList, listContainer){
+        this.post = post;
+        this.id = id;
+        if(id !== null && id !== undefined){
+            this.url = url + this.id;
+        } else {
+            this.url = url;
+        }
+        this.updateList = updateList;
+        this.listContainer = listContainer;
 
     }
 
@@ -444,13 +478,13 @@ var appUI = (function(){
             }
         },
         Content: {
-            btnAdd: '.btn.add',
+            btnAdd: '.btn#add',
             btnClose: 'span#close',
             btnSave: '.btn.save',
             btnReturn: '.btn.return',
-            sectionId: 'div.content',
-            formAddHTML: '<form id="add" class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off"></form>',
-            formAddId: 'form#add',
+            areaId: 'div.content',
+            formAddHTML: '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off"></form>',
+            formAdd: 'form.add',
             formData: {
                 addUser: {
                     email: '<input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />',
@@ -490,9 +524,9 @@ var app = (function(UICtrl, appCtrl){
         $(window).on('load', { listContainer: DOMElement.Content.listContainer }, appCtrl.updateHomeList);
 
         //Add event listerner to btn
-        $(document).on('click', DOMElement.Content.btnAdd, { formAddId: DOMElement.Content.formAddId, sectionId: DOMElement.Content.sectionId, formAddHTML: DOMElement.Content.formAddHTML, formData: DOMElement.Content.formData }, appCtrl.createAddWindow);
+        $(document).on('click', DOMElement.Content.btnAdd, { formAdd: DOMElement.Content.formAdd, areaId: DOMElement.Content.areaId, formAddHTML: DOMElement.Content.formAddHTML, formData: DOMElement.Content.formData }, appCtrl.createAddWindow);
         $(document).on('click', DOMElement.Content.btnReturn, appCtrl.removeOverlay);
-        $(document).on('click', DOMElement.Content.btnSave, { sectionId: DOMElement.Content.listContainer, overlayChild: DOMElement.Content.overlayChild },  appCtrl.bindClick);
+        $(document).on('click', DOMElement.Content.btnSave, { areaId: DOMElement.Content.listContainer, overlayChild: DOMElement.Content.overlayChild },  appCtrl.bindClick);
 
     }
 

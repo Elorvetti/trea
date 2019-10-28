@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using admin.Data;
 
 namespace admin.Models
 {
-    public class ArgumentModel
+    public class ArgumentModel : Argument
     {
-        [Required(ErrorMessage = "Il Campo Nome è obbligatorio")]
-        [Display(Name = "Nome")]
-        public string Path { get; set; }
-        
+
     }
 }

@@ -33,15 +33,21 @@ namespace admin.Services
             return _ctx.argument.First(a => a.id == id);
         }
 
+        public virtual string GetFolderName(int id)
+        {
+            return _ctx.argument.First(a => a.id == id).name;
+        }
+
         public void Update(int id, Argument folder){
             var argument = _ctx.argument.Find(id);
+            argument.name = folder.name;
             argument.path = folder.path;
             _ctx.SaveChanges();
         }
 
         public void Delete(int id){
-            var argument = _ctx.argument.First(a => a.id == id);
-            _ctx.argument.Remove(argument);
+            var folder = _ctx.argument.First(a => a.id == id);
+            _ctx.argument.Remove(folder);
             _ctx.SaveChanges();
         }
 

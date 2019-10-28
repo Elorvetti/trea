@@ -33,5 +33,24 @@ namespace admin.Services
             return false;
         }
 
+        public void Create(string folderName){
+            var C = Path.Combine(_env.ContentRootPath, "App_Data");
+            string folder = Path.Combine(C, folderName);
+            Directory.CreateDirectory(folder);
+        }
+
+        public void Update(string folderName, string newFoldeName){
+            var p = Path.Combine(_env.ContentRootPath, "App_Data");
+            string folder = Path.Combine(p, folderName);
+            string folderNewName = Path.Combine(p, newFoldeName);
+            Directory.Move(folder, folderNewName);
+        }
+
+        public void Delete(string folderName){
+            var C = Path.Combine(_env.ContentRootPath, "App_Data");
+            string folder = Path.Combine(C, folderName);
+            Directory.Delete(folder);
+        }
+
     }
 }

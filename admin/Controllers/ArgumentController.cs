@@ -38,13 +38,27 @@ namespace admin.Controllers
         [HttpPost]
         public IActionResult Index(IFormCollection data){
             var model = new ArgumentModel();
+            
+            //Get folder name
             string path = data["path"];
+
+            //Replace white space and / with -
             string pathIO = path .Replace(" ", "-").Replace("/", "-");
             
+            //Check if folder already exist and create
             var exist = _folderService.Exist(pathIO);
-
-            model.Path = "/" + pathIO + "/";
-
+            if (!exist)
+            {
+                model.name = pathIO;
+                model.path = "/" + pathIO + "/";
+                _argumentService.Insert(model);
+                _folderService.Create(pathIO);
+            } 
+            else
+            {
+                return Json("Errore");
+            }
+           
             return View();
         }
 
@@ -53,6 +67,36 @@ namespace admin.Controllers
             var arguments = _argumentService.GetAll();
 
             return arguments;
+        }
+
+        [HttpPost]
+        public Argument GetById(int id){
+            return _argumentService.GetById(id);
+        }
+
+
+        [HttpPost]
+        public void Update(int id, IFormCollection data){
+            var model = new ArgumentModel();
+            string name = data["path"];
+
+            //Set folder name and folder path
+            model.name = name.Replace(" ", "-").Replace("/", "-");
+            model.path = "/" + model.name + "/";
+
+            //get folder name
+            var folderName = _argumentService.GetFolderName(id);
+            _folderService.Update(folderName, model.name);
+
+            _argumentService.Update(id, model);
+        }
+
+        [HttpPost]
+        public void Delete(int id){
+            var folderName = _argumentService.GetFolderName(id);
+            _argumentService.Delete(id);
+            _folderService.Delete(folderName);
+
         }
 
     }

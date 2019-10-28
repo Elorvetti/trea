@@ -247,10 +247,9 @@ div#overlay p.confirm{ padding: 20px; }
     div#overlay > form input.btn{ margin-left: 15px; max-width: 150px; }
 }
 
-ul#user li{ background-image: url('../img/account-blue.png'); }
 ul.list li{ 
     margin: 0 auto 15px;
-    padding-left: 30px; 
+    padding-left: 40px; 
     height: 40px; 
     width: 90%;
     border-bottom: 1px solid #73AFBA; 
@@ -258,9 +257,11 @@ ul.list li{
     background-position: 5px center; 
     background-repeat: no-repeat; 
 }
+ul#user li{ background-image: url('../img/account-blue.png'); }
+ul#argument li { background-image: url('../img/folder.png'); }
 ul.list li:hover{ border-bottom: 2px solid #73AFBA; }
 ul.list li p{ position: relative; display: inline-block; width: auto; overflow: hidden; line-height: 40px; }
-ul.list li p[active]{ padding-left: 30px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
+ul.list li p[active]{ padding-left: 40px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
 ul.list li p[active="true"]{ background-image: url('../img/is-active.png'); }
 ul.list li p[active="false"]{ background-image: url('../img/disabled.png'); }
 ul.list li span{ float: right; margin-right: 10px; width: 35px; height: 35px; background-size: 26px; }

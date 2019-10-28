@@ -24,7 +24,6 @@ namespace admin.Data
             base.OnModelCreating(modelBuilder);
             
             modelBuilder.Entity<Administrator>(entity => {
-
                 entity.HasKey(e => e.id);
                 entity.Property(e => e.user);
                 entity.Property(e => e.password); 
@@ -32,11 +31,13 @@ namespace admin.Data
                 entity.Property(e => e.rememberMe);
             });
 
-            modelBuilder.Entity<Argument>(entity => {
-                entity.HasKey(e => e.id);
-                entity.Property(e => e.path);
+            modelBuilder.Entity<Argument>(entity => { 
+                entity.HasKey(a => a.id);
+                entity.Property(a => a.idFather);
+                entity.Property(a => a.level);
+                entity.Property(a => a.name);
+                entity.Property(a => a.path);
             });
-
         }
 
     }

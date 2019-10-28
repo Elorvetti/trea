@@ -10,6 +10,9 @@ namespace  admin.Services
     public partial interface IFolderService
     {
         bool Exist(string folderName);
+        void Create(string folderName);
+        void Update(string folderName, string newFolderName);
+        void Delete(string folderName);
         
     }
 }
