@@ -26,16 +26,11 @@ namespace admin.Services
         }
 
         public virtual IList<Argument> GetAll(){
-            return _ctx.argument.ToList();
+            return _ctx.argument.Where(a => a.idFather == 0).ToList();
         }
 
         public virtual Argument GetById(int id){
             return _ctx.argument.First(a => a.id == id);
-        }
-
-        public virtual string GetFolderName(int id)
-        {
-            return _ctx.argument.First(a => a.id == id).name;
         }
 
         public void Update(int id, Argument folder){

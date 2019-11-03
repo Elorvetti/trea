@@ -85,18 +85,57 @@ namespace admin.Controllers
             model.path = "/" + model.name + "/";
 
             //get folder name
-            var folderName = _argumentService.GetFolderName(id);
-            _folderService.Update(folderName, model.name);
+            var folder = _argumentService.GetById(id);
+            var newFolderName = folder.systemPath + '\\' + model.name;
+            _folderService.Update(folder.systemPath, newFolderName);
 
             _argumentService.Update(id, model);
         }
 
         [HttpPost]
         public void Delete(int id){
-            var folderName = _argumentService.GetFolderName(id);
+            var folder = _argumentService.GetById(id);
             _argumentService.Delete(id);
-            _folderService.Delete(folderName);
+            _folderService.Delete(folder.systemPath);
 
+        }
+
+        [HttpPost]
+        public IActionResult AddChild(int id, IFormCollection data){
+
+            //Get folder name by form and replace white space or / with -
+            string folderChildName = data["name"];
+            folderChildName = folderChildName.Replace(" ", "-").Replace("/", "-");
+
+            //Get folder id pressed
+            var folders = _argumentService.GetById(id);
+
+            //Check if folder child exist
+            var newfolderPathSystem = folders.systemPath + '\\' + folderChildName;
+            var Exist = _folderService.Exist(newfolderPathSystem);
+
+            if (!Exist)
+            {
+                _folderService.Create(newfolderPathSystem);
+                //Set path IO
+                string folderChildNameIO = folderChildName + '/';
+
+                //Get folder father
+                var folder = _argumentService.GetById(id);
+
+                //Set data of folder child
+                var folderChild = new ArgumentModel();
+                folderChild.idFather = folder.id;
+                folderChild.level = folder.level + 1;
+                folderChild.name = folderChildName;
+                folderChild.path = folder.path + folderChildNameIO;
+                folderChild.systemPath = folder.systemPath + '\\' + folderChildName;
+
+                _argumentService.Insert(folderChild);
+            }
+
+            return Json("Errore");
+           
         }
 
     }

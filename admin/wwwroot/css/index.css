@@ -42,7 +42,7 @@ ul{ list-style-type: none; }
 p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: none; }
 
 .color-black{ color:  #212121; }
-.color-white{ color: #fff; }
+.color-white{ color: #fff!important; }
 .color-red{ color: #E8594E!important; }
 .color-pink-light{ color: #FCBDB2; }
 .color-blue-light{ color: #73AFBA; }
@@ -109,7 +109,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .btn:hover{ opacity: .8; border-bottom: 1px solid transparent;}
 
 .btn.close{ background-image: url('../img/close.png'); }
-.btn.add{ background-image: url('../img/plus.png'); }
+.btn.add, .btn.add-child{ background-image: url('../img/plus.png'); }
 .btn.remove{ background-image: url('../img/delete.png'); }
 .btn.edit{ background-image: url('../img/edit.png'); }
 .btn.logout{ background-image: url('../img/logout.png'); background-position: center center; background-repeat: no-repeat; }
@@ -142,7 +142,7 @@ span.field-validation-error{
     border-radius: 5px;
 }
 
-main{ position: relative; display: inline-block; margin-top: 0; width: 100%; height: 100%; overflow-x: hidden; }
+main{ position: relative; display: inline-block; margin-top: 0; width: 100%; overflow-x: hidden; }
 
 /*** Login ***/
 div.form-container{ position: relative; display: inline-block; width: 100%; height: 100%; }
@@ -175,7 +175,6 @@ div#sidebar{
     display: inline-block;
     top: 50px;
     left: 100%;
-    height: 100%;
 }
 div#sidebar.active{ transform: translateX(0px)!important; left: 0; right: 0; bottom: 0; z-index: 9999;}
 div.content{ position: relative; display: inline-block; width: 100%; height: 100%; }
@@ -197,10 +196,12 @@ section.manage ul li.active:hover{ border: 0; }
 section.manage ul li:hover{ border: 1px solid #fff; }
 
 li#user{ background-image: url('../img/account.png');}
-li#argument{ background-image: url('../img/arguments.png');}
-li#post{ background-image: url('../img/post.png');}
+li#category{ background-image: url('../img/category.png');}
 li#photo{ background-image: url('../img/image.png');}
 li#video{ background-image: url('../img/video.png');}
+li#podcast{ background-image: url('../img/podcast.png');}
+li#argument{ background-image: url('../img/arguments.png');}
+li#post{ background-image: url('../img/post.png');}
 
 
 
@@ -258,6 +259,7 @@ ul.list li{
     background-repeat: no-repeat; 
 }
 ul#user li{ background-image: url('../img/account-blue.png'); }
+ul#category li { background-image: url('../img/category-blue.png'); }
 ul#argument li { background-image: url('../img/folder.png'); }
 ul.list li:hover{ border-bottom: 2px solid #73AFBA; }
 ul.list li p{ position: relative; display: inline-block; width: auto; overflow: hidden; line-height: 40px; }
@@ -272,4 +274,19 @@ ul.list li span{ float: right; margin-right: 10px; width: 35px; height: 35px; ba
 
 @media(max-width: 325px){
     ul.list li p{ max-width: 150px; }
+}
+
+input[type="file"]{
+    display: none!important;
+}
+
+input[type="file"] + label{
+    margin: 10px auto!important;
+    max-width: 280px!important;
+    line-height: 40px;
+    background-image: url('../img/upload.png');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    cursor: pointer;
 }

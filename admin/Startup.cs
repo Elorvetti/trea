@@ -59,8 +59,11 @@ namespace admin
             //Custom services
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IArgumentService, ArgumentService>();
             services.AddScoped<IFolderService, FolderService>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
       

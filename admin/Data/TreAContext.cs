@@ -11,6 +11,8 @@ namespace admin.Data
     {
         public TreAContext(DbContextOptions<TreAContext> o ) : base(o) {}
         public virtual DbSet<Administrator> administrator { get; set; }
+        public virtual DbSet<Category> category { get; set; }
+        public virtual DbSet<Photo> photo { get; set; }
         public virtual DbSet<Argument> argument { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
@@ -31,12 +33,25 @@ namespace admin.Data
                 entity.Property(e => e.rememberMe);
             });
 
+            modelBuilder.Entity<Category>(entity => {
+                entity.HasKey(c => c.id);
+                entity.Property(c => c.name);
+                entity.Property(c => c.displayOrder);
+            });
+
+            modelBuilder.Entity<Photo>(entity => {
+                entity.HasKey(p => p.id);
+                entity.Property(p => p.name);
+                entity.Property(p => p.path);
+            });
+
             modelBuilder.Entity<Argument>(entity => { 
                 entity.HasKey(a => a.id);
                 entity.Property(a => a.idFather);
                 entity.Property(a => a.level);
                 entity.Property(a => a.name);
                 entity.Property(a => a.path);
+                entity.Property(a => a.systemPath);
             });
         }
 

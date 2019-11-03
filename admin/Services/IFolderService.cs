@@ -13,6 +13,7 @@ namespace  admin.Services
         void Create(string folderName);
         void Update(string folderName, string newFolderName);
         void Delete(string folderName);
-        
+        string removeSpaceAndSlash(string folderName);
+        string formatPath(string folderName);
     }
 }

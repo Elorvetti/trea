@@ -25,8 +25,8 @@ namespace admin.Services
 
         public bool Exist(string folderName){
             var C = Path.Combine(_env.ContentRootPath, "App_Data");
-            string folder = Path.Combine(C, folderName);
-    
+
+           string folder = Path.Combine(C, folderName);
             if(Directory.Exists(folder)){
                 return true;
             }
@@ -50,6 +50,15 @@ namespace admin.Services
             var C = Path.Combine(_env.ContentRootPath, "App_Data");
             string folder = Path.Combine(C, folderName);
             Directory.Delete(folder);
+        }
+
+        public string removeSpaceAndSlash (string folderName){
+            return folderName.Replace(" ", "-").Replace("/", "-");
+        }
+
+        public string formatPath(string folderName){
+            var path = "\\" + folderName;
+            return path;
         }
 
     }
