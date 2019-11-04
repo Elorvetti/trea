@@ -104,6 +104,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 }
 
 .border-radius-small{ border-radius: 5px; }
+.border-radius-medium{ border-radius: 20px; }
 
 .btn{ padding: 0px; left: unset;  border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background-size: contain; background-position: center center; background-repeat: no-repeat; }
 .btn:hover{ opacity: .8; border-bottom: 1px solid transparent;}
@@ -289,4 +290,43 @@ input[type="file"] + label{
     background-repeat: no-repeat;
     background-size: 24px;
     cursor: pointer;
+}
+ul#photo{ margin: 10px 0; text-align: center;}
+
+ul#photo li{
+    position: relative;
+    display: inline-block;
+    margin: 0 10px;
+    padding: 0;
+    width: 220px;
+    height: 220px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+}
+ul#photo li span{
+    position: relative;
+    display: inline-block;
+    margin: 10px 0;
+    width: 90%;
+    height: 150px;
+    float: none;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+ul#photo li p{ 
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    line-height: 21px;
+    text-align: center;
+}
+
+ul#photo li:hover, ul#photo li:focus, ul#photo li:active{ border: 1px solid transparent; }
+
+@media(min-width: 768px){
+    ul#photo{ margin: 10px; text-align: left; }
+    ul#photo li{ width: 200px; height: 200px; }
 }

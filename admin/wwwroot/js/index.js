@@ -1,4 +1,4 @@
-﻿"use strict"
+﻿"use strict";
 
 var appController = (function(){
 
@@ -84,6 +84,7 @@ var appController = (function(){
                 .then(function(res){
                     return res.json()
                         .then(function(data){
+                            console.log(data);
                             if(event.data.updateList){
                                 for(var i in data){
                                     var element = callback(data, i);

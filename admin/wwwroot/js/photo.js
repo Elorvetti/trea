@@ -1,14 +1,14 @@
-"use strict"
+"use strict";
 
 var photoController = (function(){
 
     var createPhotoList = function(obj, i){
         var element = '';
-
-        element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p displayOrder="' + obj[i].diplayOrder + '">' + obj[i].name + '</p>';
-        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '<li class="list box-shadow border-radius-medium" id="' + obj[i].id +'">';
+        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj[i].path + '\')"></span>'
+        element = element + '<p>' + obj[i].name.replace(/\.[^/.]+$/, "") + '</p>';
+        //element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+        //element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
         
         return element;
@@ -17,7 +17,7 @@ var photoController = (function(){
     var CreateEditList = function(obj){
         var element = '';
 
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        element = element + '<form enctype="multipart/form-data" id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         element = element + '<input tupe="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
         element = element + '<input type="number" name="order" class="order" id="order"  autocomplete="off" value="'+ obj.displayOrder +'"  required>';
         
@@ -29,7 +29,7 @@ var photoController = (function(){
         element = element + '</form>'
 
         return element;
-    }
+    };
 
     var createRemovePhoto = function(event){
         var id = $(this).parent().attr('id');
@@ -200,8 +200,7 @@ var photoUI = (function(){
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
-        btnEdit: '.btn.edit',
-        btnRemove: '.btn.remove',
+        btnEdit: 'ul li.list',
         formFiles: 'input#images'
     }
 
@@ -231,10 +230,10 @@ var photo = (function(photoCtrl, photoUI){
 
 
         $(document).on('click', DOMElement.btnEdit, { photoList: DOMElement.list }, photoCtrl.editPhoto);
-        $(document).on('click', DOMElement.btnRemove , photoCtrl.createRemovePhoto);
+      //  $(document).on('click', DOMElement.btnRemove , photoCtrl.createRemovePhoto);
         
-        $(document).on('click', DOMElement.btnUpdate, photoCtrl.updatePhoto);
-        $(document).on('click', DOMElement.btnDelete, photoCtrl.deletePhoto);
+        //$(document).on('click', DOMElement.btnUpdate, photoCtrl.updatePhoto);
+        //$(document).on('click', DOMElement.btnDelete, photoCtrl.deletePhoto);
     }
 
     return {

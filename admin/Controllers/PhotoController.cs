@@ -45,13 +45,12 @@ namespace admin.Controllers
             if(files.Count() > 0)
             {
 
-                var exist = _folderService.Exist("Content\\Images");
-                if (!exist)
+                var existFolder = _folderService.Exist("Content\\Images");
+                if (!existFolder)
                 {
                     _folderService.Create("Content\\Images");
                 }
 
-                var absoluteImagePath = "Content\\Images\\";
 
                 var model = new PhotoModel();
                 model.images = files;
@@ -61,16 +60,22 @@ namespace admin.Controllers
                     var fileExtensionOk = _fileService.fileExtensionOk(image.ContentType, fileExtension);
                     if (fileExtensionOk)
                     {
-                        var imagePath = absoluteImagePath + Path.GetTempFileName();
-                        using (var stream = System.IO.File.Create(imagePath))
-                        {
-                            await image.CopyToAsync(stream);
+                        var existFile = _fileService.exist("Content\\Images", image);
+                        if(!existFile){
+
+                            await _fileService.uploadFile("Content\\Images", image);
+
+                            model.name = image.FileName;
+                            model.path = "../App_Data/Content/Images/" + image.FileName;
+
+                            _photoService.Insert(model);
+                            
                         }
                     }
                 }
             }
-
             return View();
+            
         }
 
         [HttpPost]

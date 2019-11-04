@@ -29,6 +29,7 @@ client/appsettings.json
 admin/obj/*
 admin/bin/*
 admin/Properties/*
+admin/App_Data/*
 client/obj/*
 client/bin/*
 client/Properties/*
