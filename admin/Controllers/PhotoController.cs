@@ -60,7 +60,7 @@ namespace admin.Controllers
                     var fileExtensionOk = _fileService.fileExtensionOk(image.ContentType, fileExtension);
                     if (fileExtensionOk)
                     {
-                        var existFile = _fileService.exist("Content\\Images", image);
+                        var existFile = _fileService.exist("Content\\Images", image.FileName);
                         if(!existFile){
 
                             await _fileService.uploadFile("Content\\Images", image);
@@ -86,6 +86,40 @@ namespace admin.Controllers
         [HttpPost]
         public Photo GetById(int id){
             return _photoService.GetById(id);
+        }
+
+        [HttpPost]
+        public void Update(int id, IFormCollection form){
+            var model = new PhotoModel();
+
+            var photo = _photoService.GetById(id);
+            var path = photo.path;
+
+            var ext = Path.GetExtension(path);
+            var fileNameFromPost = _fileService.removeSpaceAndSlash(form["name"]) + ext;
+
+            var exist = _fileService.exist("Content\\Images\\", fileNameFromPost);
+            if (!exist)
+            {
+                var oldFileName = "Content\\Images\\" + photo.name;
+                var newFileName = "Content\\Images\\" + fileNameFromPost;
+                _fileService.update(oldFileName, fileNameFromPost);
+
+                model.path = "../App_Data/Content/Images/" + fileNameFromPost;
+                model.name = fileNameFromPost;
+                _photoService.Update(id, model);
+            }
+
+        }
+
+        [HttpPost]
+        public void Delete(int id){
+            var photo = _photoService.GetById(id);
+
+            var filePath = "Content\\Images\\" + photo.name;
+            _fileService.Delete(filePath);
+            _photoService.Delete(id);
+            
         }
 
     }

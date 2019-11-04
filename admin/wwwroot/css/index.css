@@ -296,12 +296,11 @@ ul#photo{ margin: 10px 0; text-align: center;}
 ul#photo li{
     position: relative;
     display: inline-block;
-    margin: 0 10px;
+    margin: 5px 10px;
     padding: 0;
     width: 220px;
     height: 220px;
     border: 1px solid transparent;
-    cursor: pointer;
     text-align: center;
 }
 ul#photo li span{
@@ -316,6 +315,18 @@ ul#photo li span{
     background-repeat: no-repeat;
 }
 
+ul#photo li span.btn{ 
+    position: absolute;
+    display: inline-block;
+    width: 35px; 
+    height: 35px; 
+    background-size: 26px;
+    z-index: 9997;  
+}
+
+ul#photo li span.btn.edit{ right: 10px; }
+ul#photo li span.btn.remove{ right: 50px; }
+
 ul#photo li p{ 
     position: relative;
     display: inline-block;
@@ -326,7 +337,17 @@ ul#photo li p{
 
 ul#photo li:hover, ul#photo li:focus, ul#photo li:active{ border: 1px solid transparent; }
 
+form > span{
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    height: 200px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
 @media(min-width: 768px){
     ul#photo{ margin: 10px; text-align: left; }
-    ul#photo li{ width: 200px; height: 200px; }
+    ul#photo li{ height: 205px; }
+    form > span{  height: 250px;}
 }

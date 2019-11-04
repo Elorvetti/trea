@@ -13,6 +13,7 @@ namespace admin.Data
         public virtual DbSet<Administrator> administrator { get; set; }
         public virtual DbSet<Category> category { get; set; }
         public virtual DbSet<Photo> photo { get; set; }
+        public virtual DbSet<Video> video { get; set; }
         public virtual DbSet<Argument> argument { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
@@ -43,6 +44,12 @@ namespace admin.Data
                 entity.HasKey(p => p.id);
                 entity.Property(p => p.name);
                 entity.Property(p => p.path);
+            });
+
+            modelBuilder.Entity<Video>(entity => {
+                entity.HasKey(v => v.id);
+                entity.Property(v => v.name);
+                entity.Property(v => v.path);
             });
 
             modelBuilder.Entity<Argument>(entity => { 

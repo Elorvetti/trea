@@ -36,15 +36,38 @@ namespace admin.Services
             var stream = File.Create(imagePath);
             await file.CopyToAsync(stream);
 
+            stream.Close();
             return imagePath;
         }
 
-        public bool exist(string path, IFormFile file){
+        public bool exist(string path, string fileName){
             var p = Path.Combine(_env.ContentRootPath, "App_Data");
             var f = Path.Combine(p, path);
-            var imagePath = Path.Combine(f, file.FileName);
+            var imagePath = Path.Combine(f, fileName);
 
             return File.Exists(imagePath);
         }
+
+        public void update(string path, string fileName)
+        {
+            var p = Path.Combine(_env.ContentRootPath, "App_Data");
+            var f = Path.Combine(p, path);
+            var n = Path.Combine(p, fileName);
+
+            File.Move(f, n);
+        }
+
+        public void Delete(string path)
+        {
+            var p = Path.Combine(_env.ContentRootPath, "App_Data");
+            var f = Path.Combine(p, path);
+
+            File.Delete(f);
+        }
+
+        public string removeSpaceAndSlash (string folderName){
+            return folderName.Replace(" ", "-").Replace("/", "-");
+        }
+        
     }
 }

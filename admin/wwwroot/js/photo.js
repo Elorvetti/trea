@@ -3,41 +3,44 @@
 var photoController = (function(){
 
     var createPhotoList = function(obj, i){
+        var name = obj[i].name.replace(/\.[^/.]+$/, "");
+
         var element = '';
         element = element + '<li class="list box-shadow border-radius-medium" id="' + obj[i].id +'">';
+        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj[i].path + '\')"></span>'
-        element = element + '<p>' + obj[i].name.replace(/\.[^/.]+$/, "") + '</p>';
-        //element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-        //element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '<p>' + name + '</p>';
         element = element + '</li>';
         
         return element;
     }
     
     var CreateEditList = function(obj){
-        var element = '';
+        var name = obj.name.replace(/\.[^/.]+$/, "");
 
-        element = element + '<form enctype="multipart/form-data" id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        element = element + '<input tupe="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
-        element = element + '<input type="number" name="order" class="order" id="order"  autocomplete="off" value="'+ obj.displayOrder +'"  required>';
+        var element = '';
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
+        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj.path + '\')"></span>'
         
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
         element = element + '</div>';
-        
         element = element + '</form>'
+        
 
         return element;
     };
 
     var createRemovePhoto = function(event){
         var id = $(this).parent().attr('id');
-        var photoName = $(this).prev().prev().text();
+        var photoName = $(this).next().next().text();
 
         var element = '';
 
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la categoria: ' + photoName + '?</p>';
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la foto: ' + photoName + '?</p>';
         
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
@@ -197,10 +200,11 @@ var photoUI = (function(){
     var DOM = {
         btnAdd: '.btn#add',
         btnAddPhoto: '.btn#save',
+        btnEdit: '.btn.edit',
+        btnRemove: '.btn.remove',
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
-        btnEdit: 'ul li.list',
         formFiles: 'input#images'
     }
 
@@ -228,12 +232,11 @@ var photo = (function(photoCtrl, photoUI){
         //if upload a multiple file change name to input with a number of element
         $(document).on('change', DOMElement.formFiles, photoController.changeInputText);
 
-
         $(document).on('click', DOMElement.btnEdit, { photoList: DOMElement.list }, photoCtrl.editPhoto);
-      //  $(document).on('click', DOMElement.btnRemove , photoCtrl.createRemovePhoto);
+        $(document).on('click', DOMElement.btnRemove , photoCtrl.createRemovePhoto);
         
-        //$(document).on('click', DOMElement.btnUpdate, photoCtrl.updatePhoto);
-        //$(document).on('click', DOMElement.btnDelete, photoCtrl.deletePhoto);
+        $(document).on('click', DOMElement.btnUpdate, photoCtrl.updatePhoto);
+        $(document).on('click', DOMElement.btnDelete, photoCtrl.deletePhoto);
     }
 
     return {

@@ -13,7 +13,9 @@ namespace admin.Services
     {
         bool fileExtensionOk(string fileExtension, string[] extensioneSupported);
         Task<string> uploadFile(string path, IFormFile file);
-        bool exist(string path, IFormFile file);
-
+        bool exist(string path, string file);
+        void update(string path, string fileName);
+        void Delete(string path);
+        string removeSpaceAndSlash (string folderName);
     }
 }
