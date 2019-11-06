@@ -8,8 +8,9 @@ var videoController = (function(){
         var element = '';
         element = element + '<li class="list box-shadow border-radius-medium" id="' + obj[i].id +'">';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+        element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
-        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj[i].path + '\')"></span>'
+        element = element + '<video class="border-radius-small"><source src="' + obj[i].path + '"></video>' ;
         element = element + '<p>' + name + '</p>';
         element = element + '</li>';
         
@@ -22,7 +23,7 @@ var videoController = (function(){
         var element = '';
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
-        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj.path + '\')"></span>'
+        element = element + '<video class="border-radius-small"><source src="' + obj.path + '"></video>' ;
         
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
@@ -32,8 +33,24 @@ var videoController = (function(){
         
 
         return element;
-    };
+    }
 
+    var CreateCrop = function(obj){
+
+        var name = obj.name.replace(/\.[^/.]+$/, "");
+
+        var element = '';
+        element = element + '<div class="box-shadow border-radius-small text-center background-color-white">';
+        element = element + '<p>' + name + '</p>';
+        element = element + '<video class="border-radius-small" controls><source src="' + obj.path + '"></video>' ;
+        element = element + '</div>';
+
+        $('div#overlay').addClass('crop');
+
+        return element;
+
+    }
+    
     var createRemoveVideo = function(event){
         var id = $(this).parent().attr('id');
         var videoName = $(this).next().next().text();
@@ -61,8 +78,8 @@ var videoController = (function(){
         
         element = element + '<form enctype="multipart/form-data" class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
         element = element + '<label id="files"></label>'
-        element = element + '<input type="file" name="videos" class="name" id="images" placeholder="Upload video" multiple>';
-        element = element + '<label for="images" class="btn upload text-center box-shadow border-radius-small background-color-pink-light color-white">Aggiungi video</label>'
+        element = element + '<input type="file" name="videos" class="name" id="videos" placeholder="Upload video" multiple>';
+        element = element + '<label for="videos" class="btn upload text-center box-shadow border-radius-small background-color-pink-light color-white">Aggiungi video</label>'
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
@@ -79,14 +96,13 @@ var videoController = (function(){
         var files = $('input#videos').prop('files');
         var regex = RegExp('\.(mp4|ogg|3gp|wmv|webm|flv)$')
         var arrayFileOk = new Array;
-        
 
         //push into array if file is ok
         for(var file in files){
             if(file !== 'length' && file !== 'item'){
                 
                 //check exist && size && format
-                arrayFileOk.push(files[file] && files[file].size < 100 * 1048576 && regex.test(files[file].name)); 
+                arrayFileOk.push(files[file] && files[file].size < 300 * 1048576 && regex.test(files[file].name)); 
             }
         }
 
@@ -96,7 +112,7 @@ var videoController = (function(){
         })
 
         if(error.length === 0){
-            event.data = new UploadData('input#images', null, '/Video/Index');
+            event.data = new UploadData('input#videos', null, '/Video/Index');
             app.callbackUpload(event, updateVideoList); 
         } else {
             if($('form.add > span').length === 0){
@@ -149,6 +165,14 @@ var videoController = (function(){
         app.callback(event, CreateEditList);
     }
 
+    var cropVideo = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+
+        event.data = new app.Data(false, id, 'Video/GetById/', false, null);
+
+        app.callback(event, CreateCrop);
+    }
+
     var updateVideo = function(event){
         var id = $('form').attr('id');
 
@@ -183,6 +207,7 @@ var videoController = (function(){
     return {
         createNewVideoForm: createNewVideoForm,
         createRemoveVideo: createRemoveVideo,
+        cropVideo: cropVideo,
         addNewVideo: addNewVideo,
         getAll: getAll,
         editVideo: editVideo,
@@ -199,11 +224,12 @@ var videoUI = (function(){
         btnAdd: '.btn#add',
         btnAddVideo: '.btn#save',
         btnEdit: '.btn.edit',
+        btnCrop: '.btn.crop',
         btnRemove: '.btn.remove',
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
-        formFiles: 'input#images'
+        formFiles: 'input#videos'
     }
 
 
@@ -230,6 +256,7 @@ var video = (function(videoCtrl, videoUI){
         $(document).on('change', DOMElement.formFiles, videoController.changeInputText);
 
         $(document).on('click', DOMElement.btnEdit, { videoList: DOMElement.list }, videoCtrl.editVideo);
+        $(document).on('click', DOMElement.btnCrop , videoCtrl.cropVideo);
         $(document).on('click', DOMElement.btnRemove , videoCtrl.createRemoveVideo);
         
         $(document).on('click', DOMElement.btnUpdate, videoCtrl.updateVideo);

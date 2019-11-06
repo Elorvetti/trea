@@ -7,8 +7,9 @@ var photoController = (function(){
 
         var element = '';
         element = element + '<li class="list box-shadow border-radius-medium" id="' + obj[i].id +'">';
-        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
+        element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
+        element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
         element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj[i].path + '\')"></span>'
         element = element + '<p>' + name + '</p>';
         element = element + '</li>';
@@ -34,6 +35,22 @@ var photoController = (function(){
         return element;
     };
 
+    var CreateCrop = function(obj){
+
+        var name = obj.name.replace(/\.[^/.]+$/, "");
+
+        var element = '';
+        element = element + '<div class="box-shadow border-radius-small text-center background-color-white">';
+        element = element + '<p>' + name + '</p>';
+        element = element + '<img class="border-radius-small" src="' + obj.path +  '">'
+        element = element + '</div>';
+
+        $('div#overlay').addClass('crop');
+
+        return element;
+
+    }
+    
     var createRemovePhoto = function(event){
         var id = $(this).parent().attr('id');
         var photoName = $(this).next().next().text();
@@ -73,7 +90,7 @@ var photoController = (function(){
         $overlay.after(element);
 
     }
-    
+
     var addNewPhoto = function(event){
         event.preventDefault();
         var files = $('input#images').prop('files');
@@ -151,6 +168,14 @@ var photoController = (function(){
         app.callback(event, CreateEditList);
     }
 
+    var cropPhoto = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+
+        event.data = new app.Data(false, id, 'Photo/GetById/', false, null);
+
+        app.callback(event, CreateCrop);
+    }
+
     var updatePhoto = function(event){
         var id = $('form').attr('id');
 
@@ -185,6 +210,7 @@ var photoController = (function(){
     return {
         createNewPhotoForm: createNewPhotoForm,
         createRemovePhoto: createRemovePhoto,
+        cropPhoto: cropPhoto,
         addNewPhoto: addNewPhoto,
         getAll: getAll,
         editPhoto: editPhoto,
@@ -201,6 +227,7 @@ var photoUI = (function(){
         btnAdd: '.btn#add',
         btnAddPhoto: '.btn#save',
         btnEdit: '.btn.edit',
+        btnCrop: '.btn.crop',
         btnRemove: '.btn.remove',
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
@@ -233,6 +260,7 @@ var photo = (function(photoCtrl, photoUI){
         $(document).on('change', DOMElement.formFiles, photoController.changeInputText);
 
         $(document).on('click', DOMElement.btnEdit, { photoList: DOMElement.list }, photoCtrl.editPhoto);
+        $(document).on('click', DOMElement.btnCrop , photoCtrl.cropPhoto);
         $(document).on('click', DOMElement.btnRemove , photoCtrl.createRemovePhoto);
         
         $(document).on('click', DOMElement.btnUpdate, photoCtrl.updatePhoto);

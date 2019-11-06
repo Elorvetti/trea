@@ -113,6 +113,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .btn.add, .btn.add-child{ background-image: url('../img/plus.png'); }
 .btn.remove{ background-image: url('../img/delete.png'); }
 .btn.edit{ background-image: url('../img/edit.png'); }
+.btn.crop{ background-image: url('../img/crop.png'); }
 .btn.logout{ background-image: url('../img/logout.png'); background-position: center center; background-repeat: no-repeat; }
 
 .btn-rounded{ border-radius: 40px; }
@@ -135,12 +136,15 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 
 span.field-validation-error{ 
     position: relative;
-    display: inline-block;
-    margin-bottom: 10px;
-    padding: 10px 20px;
+    display: block;
+    margin: 5px auto;
+    padding: 10px;
+    width: 80%;
+    height: auto;
     background-color: #E8594E;
     color: #fff;
     border-radius: 5px;
+    text-align: center;
 }
 
 main{ position: relative; display: inline-block; margin-top: 0; width: 100%; overflow-x: hidden; }
@@ -277,10 +281,7 @@ ul.list li span{ float: right; margin-right: 10px; width: 35px; height: 35px; ba
     ul.list li p{ max-width: 150px; }
 }
 
-input[type="file"]{
-    display: none!important;
-}
-
+input[type="file"]{ display: none!important; }
 input[type="file"] + label{
     margin: 10px auto!important;
     max-width: 280px!important;
@@ -291,19 +292,19 @@ input[type="file"] + label{
     background-size: 24px;
     cursor: pointer;
 }
-ul#photo{ margin: 10px 0; text-align: center;}
-
-ul#photo li{
+ul#photo, ul#video{ margin: 10px 0; text-align: center;}
+ul#photo li, ul#video li{
     position: relative;
     display: inline-block;
     margin: 5px 10px;
     padding: 0;
-    width: 220px;
+    width: 165px;
     height: 220px;
     border: 1px solid transparent;
     text-align: center;
 }
-ul#photo li span{
+ul#video li{ min-width: 200px; height: 140px; }
+ul#photo li span, ul#video li span, ul#podcast li span{
     position: relative;
     display: inline-block;
     margin: 10px 0;
@@ -315,28 +316,12 @@ ul#photo li span{
     background-repeat: no-repeat;
 }
 
-ul#photo li span.btn{ 
-    position: absolute;
-    display: inline-block;
-    width: 35px; 
-    height: 35px; 
-    background-size: 26px;
-    z-index: 9997;  
-}
-
-ul#photo li span.btn.edit{ right: 10px; }
-ul#photo li span.btn.remove{ right: 50px; }
-
-ul#photo li p{ 
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    line-height: 21px;
-    text-align: center;
-}
-
+ul#photo li span.btn, ul#video li span.btn, ul#podcast li span.btn{ position: absolute; display: inline-block; width: 35px; height: 35px; background-size: 26px; z-index: 9997; }
+ul#photo li span.btn.edit, ul#video li span.btn.edit, ul#podcast li span.btn.edit{ right: 10px; }
+ul#photo li span.btn.remove, ul#video li span.btn.remove, ul#podcast li span.btn.remove{ right: 50px; }
+ul#photo li p, ul#video li p, ul#podcast li p{ position: relative; display: inline-block; margin-top: 5px; width: 100%; line-height: 21px; text-align: center; }
 ul#photo li:hover, ul#photo li:focus, ul#photo li:active{ border: 1px solid transparent; }
-
+ul#video li > video{ position: relative; display: inline-block; margin-top: 10px; max-width: 175px; height: auto;}
 form > span{
     position: relative;
     display: inline-block;
@@ -346,8 +331,26 @@ form > span{
     background-position: center center;
     background-repeat: no-repeat;
 }
+form > video{ position: relative; display: inline-block; max-width: 80%; height: auto; }
+
+ul#podcast{ text-align: center; }
+ul#podcast li{ position: relative; display: inline-block; margin: 5px; padding: 10px 0; width: 190px; height: 90px; text-align: center; border-bottom: 1px solid transparent; }
+ul#podcast li span.btn{ margin: 0 5px; }
+ul#podcast li p{ margin-top: 45px; }
+
 @media(min-width: 768px){
-    ul#photo{ margin: 10px; text-align: left; }
-    ul#photo li{ height: 205px; }
+    ul#photo, ul#video, ul#podcast{ margin: 10px; text-align: left; }
+    ul#photo li{ height: 205px; width: 250px; }
+    ul#video li{ height: 170px; width: 250px; }
+    ul#video li > video{ max-width: 230px; }
+    ul#podcast li{ width: 250px; }  
     form > span{  height: 250px;}
+    
 }
+
+/* overlay crop */
+div#overlay.crop > span{ max-width: unset; max-height: 100%; }
+div#overlay.crop > div{ max-width: unset; }
+div#overlay.crop > div > p{ margin-bottom: 20px; text-align: center; }
+div#overlay.crop > div > img{ position: relative; display: inline-block; width: auto; max-width: 90%; height: auto; max-height: 750px; }
+div#overlay.crop > div > video{ position: relative; display: inline-block; width: auto; max-width: 90%; height: auto; max-height: 750px; }

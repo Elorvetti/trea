@@ -40,10 +40,12 @@ var appController = (function(){
 
         var files = $(event.data.input).prop('files');
         var data = new FormData();
-
+        
         for (var i = 0; i != files.length; i++) {
             data.append("files", files[i]);
         }
+
+        console.log(data.getAll('files'));
 
         $.ajax({
             method: 'POST',
