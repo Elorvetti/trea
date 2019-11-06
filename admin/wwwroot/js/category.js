@@ -198,7 +198,7 @@ var categoryUI = (function(){
 
     return {
         DOMElement: DOM
-    }
+    };
     
 })();
 
@@ -210,7 +210,7 @@ var category = (function(categoryCtrl, categoryUI){
         console.log('category init');
 
         //On document load create element list
-        $(window).on('load', categoryCtrl.getAll);
+        $(document).ready(categoryCtrl.getAll);
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, categoryCtrl.createNewCategoryForm);
@@ -221,10 +221,10 @@ var category = (function(categoryCtrl, categoryUI){
         
         $(document).on('click', DOMElement.btnUpdate, categoryCtrl.updateCategory);
         $(document).on('click', DOMElement.btnDelete, categoryCtrl.deleteCategory);
-    }
+    };
 
     return {
         init: init
-    }
+    };
 
-})(categoryController, categoryUI)
+})(categoryController, categoryUI);

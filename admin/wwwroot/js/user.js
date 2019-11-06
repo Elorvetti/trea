@@ -12,7 +12,7 @@ var userController = (function(){
         element = element + '</li>';
         
         return element;
-    }
+    };
     
     var CreateEditList = function(obj){
         var element = '';
@@ -24,7 +24,7 @@ var userController = (function(){
             element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';
         } else {
             element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">';
-        }
+        };
 
         element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
         
@@ -33,10 +33,10 @@ var userController = (function(){
         element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
         element = element + '</div>';
         
-        element = element + '</form>'
+        element = element + '</form>';
 
         return element;
-    }
+    };
 
     var createRemoveUser = function(event){
         var id = $(this).parent().attr('id');
@@ -47,7 +47,7 @@ var userController = (function(){
         element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p>';
         
         element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
         element = element + '</div>';
 
@@ -55,7 +55,7 @@ var userController = (function(){
 
         var $overlay = app.createOverlay();
         $overlay.after(element);
-    }
+    };
 
     var createNewUserForm = function(){
         
@@ -74,15 +74,15 @@ var userController = (function(){
         element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
         element = element + '</div>';
         
-        element = element + '</form>'
+        element = element + '</form>';
 
         $overlay.after(element);
-    }
+    };
 
     var validateNewUser = function(){
 
         $.validator.addMethod('password_regex', function(value, element, regex){
-            return regex.test(value)
+            return regex.test(value);
         }, "La password deve contenere almeno: una lettera minuscola, una lettera maiuscola e un carattere speciale");
 
         return $('form').validate({
@@ -117,7 +117,7 @@ var userController = (function(){
                     }
                 }
             });
-    }
+    };
 
     var addNewUser = function(event){
        
@@ -133,16 +133,16 @@ var userController = (function(){
                 if($('form.add > span').length === 0){
                     var errorMessage = '<span class="field-validation-error"> Dati non corretti</span>';
                     $('form').prepend(errorMessage);
-                }
+                };
                 valid = false;
-            }
-        })
+            };
+        });
 
         if(valid){
             event.data = new app.Data(true, null, '/User/Index', false, null);
             app.callback(event, updateUserList);
-        }
-    }
+        };
+    };
 
     var updateUserList = function(event){
         //remove element to DOM
@@ -151,19 +151,19 @@ var userController = (function(){
 
         if($('#overlay').length === 0){
             var $overlay = app.createOverlay();
-        }
+        };
         
         if($('ul.list li').length === 0){
-            getAll(event)
+            getAll(event);
             var feedback = '';
 
             //2.1.3 remove overlay
             feedback = app.feedbackEvent(true, 'Utente aggiornato');
         } else {
             feedback = app.feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento utenti, provare a ricicare la pagina');
-        } 
+        }; 
         $overlay.after(feedback);
-    }
+    };
 
     var editUser = function(event){
         var id = parseInt($(event.target).parent().attr('id'));
@@ -172,27 +172,27 @@ var userController = (function(){
         event.data = new app.Data(false, id, 'User/GetById/', false, list);
 
         app.callback(event, CreateEditList);
-    }
+    };
 
     var updateUser = function(event){
         var id = $('form').attr('id');
 
         event.data = new app.Data(true, id, 'User/Update/', false, null);
         app.callback(event, updateUserList);
-    }
+    };
 
     var deleteUser = function(event){
         var id = $('div.delete').attr('id');
         
         event.data = new app.Data(true, id, 'User/Delete/', false, null);
         app.callback(event, updateUserList);
-    }
+    };
 
     var getAll = function(event){
         event.data = new app.Data(false, null, 'User/GetAll', true, $('div.content > ul.list'));
 
         app.callback(event, createUserList);
-    }
+    };
 
     return {
         createNewUserForm: createNewUserForm,
@@ -202,12 +202,10 @@ var userController = (function(){
         editUser: editUser,
         updateUser: updateUser,
         deleteUser: deleteUser
-
-    }
+    };
 })();
 
 var userUI = (function(){
-
 
     var DOM = {
         btnAdd: '.btn#add',
@@ -217,24 +215,22 @@ var userUI = (function(){
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
-    }
-
+    };
 
     return {
         DOMElement: DOM
-    }
+    };
     
 })();
 
 var user = (function(userCtrl, userUI){
     var DOMElement = userUI.DOMElement;
 
-
     var init = function(){
         console.log('user init');
 
         //On document load create element list
-        $(window).on('load', userCtrl.getAll);
+        $(document).ready(userCtrl.getAll);
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, userCtrl.createNewUserForm);
@@ -245,10 +241,10 @@ var user = (function(userCtrl, userUI){
         
         $(document).on('click', DOMElement.btnUpdate, userCtrl.updateUser);
         $(document).on('click', DOMElement.btnDelete, userCtrl.deleteUser);
-    }
+    };
 
     return {
         init: init
-    }
+    };
 
-})(userController, userUI)
+})(userController, userUI);

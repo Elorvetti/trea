@@ -9,13 +9,13 @@ var appController = (function(){
             element = '<span class="box-shadow border-radius-small success text-center color-white">';    
         } else {
             element = '<span class="box-shadow border-radius-small error text-center color-white">';    
-        }
+        };
         element = element + message;
         element = element + '</span>';
 
         return element;
         
-    }
+    };
 
     var callbackServer = function(event, callback){
         var parameter = {
@@ -28,12 +28,12 @@ var appController = (function(){
 
             var data = $('form').serialize();
 
-            callbackPOST(event, data, parameter.url, callback)
+            callbackPOST(event, data, parameter.url, callback);
            
         } else {
             callbackGET(event, parameter.url, callback);
-        }
-    }
+        };
+    };
 
     var callbackUpload = function(event, callback){
         event.preventDefault();
@@ -43,9 +43,7 @@ var appController = (function(){
         
         for (var i = 0; i != files.length; i++) {
             data.append("files", files[i]);
-        }
-
-        console.log(data.getAll('files'));
+        };
 
         $.ajax({
             method: 'POST',
@@ -57,12 +55,12 @@ var appController = (function(){
                 if(result === "Error"){
                     feedbackEvent(false, 'Dati non validi');
                     return;
-                }
-                callback(event)
+                };
+                callback(event);
             }
-        })
+        });
 
-    }
+    };
 
     var callbackPOST = function(event, data, url, callback){
 
@@ -74,15 +72,16 @@ var appController = (function(){
                 if(result === "Error"){
                     feedbackEvent(false, 'Dati non validi');
                     return;
-                }
+                };
                 callback(event)
             }
-        })
+        });
 
-    }
+    };
 
-    var callbackGET = function(event, url, callback){
-        fetch(url,{method: 'POST'})
+    var callbackGET = async function(event, url, callback){
+
+       await fetch(url,{method: 'POST'})
                 .then(function(res){
                     return res.json()
                         .then(function(data){
@@ -90,15 +89,15 @@ var appController = (function(){
                                 for(var i in data){
                                     var element = callback(data, i);
                                     $(event.data.mainList).append(element);
-                                }
+                                };
                             } else {
                                 var $overlay = createOverlay();
                                 var element = callback(data);
                                 $overlay.after(element);
-                            }
+                            };
                         })
-                })
-    }
+                });
+    };
 
     var createOverlay = function(){
         
@@ -115,11 +114,11 @@ var appController = (function(){
         var $selector = $('#close');
 
         return $selector;
-    }
+    };
     
     var removeOverlay = function(){
         $('div#overlay').remove();
-    }
+    };
 
     //Constructor
     var Data = function(post, id, url, updateList, mainList){
@@ -129,10 +128,10 @@ var appController = (function(){
             this.url = url;
         } else {
             this.url = url + this.id;
-        }
+        };
         this.updateList = updateList;
         this.mainList = mainList;
-    }
+    };
 
     return{
         createOverlay: createOverlay,
@@ -141,7 +140,7 @@ var appController = (function(){
         callbackServer: callbackServer,
         feedbackEvent: feedbackEvent,
         callbackUpload: callbackUpload
-    }
+    };
 
 })();
 
@@ -149,27 +148,26 @@ var appUI = (function(){
 
     var toogleSidebar = function(){
         if($(DOMSidebar.element).hasClass(DOMSidebar.showClass)){
-            $(DOMSidebar.element).removeClass(DOMSidebar.showClass)
+            $(DOMSidebar.element).removeClass(DOMSidebar.showClass);
         } else {
-            $(DOMSidebar.element).addClass(DOMSidebar.showClass)
-        }
-    }
+            $(DOMSidebar.element).addClass(DOMSidebar.showClass);
+        };
+    };
 
     var sectionActive = function(){
         var section = DOMSidebar.section;
-        var mainId = $(DOMElement.Main.list).attr('id')
+        var mainId = $(DOMElement.Main.list).attr('id');
         
         //if section have same id of area add class active else remove it
         for(var menu in section){
-            var menuId = $(section[menu]).attr('id')
+            var menuId = $(section[menu]).attr('id');
             if(menuId === mainId){
                 $(section[menu]).addClass('active');
             } else{ 
                 $(section[menu]).removeClass('active');
-            }
-            
-        }
-    }
+            };
+        };
+    };
     
     var DOMSidebar = {
         element : '#sidebar',
@@ -183,7 +181,7 @@ var appUI = (function(){
             arguments: 'li#argument',
             post: 'li#post'    
         }
-    }
+    };
 
     var DOMElement = {
         Menu: {
@@ -193,13 +191,13 @@ var appUI = (function(){
             btnReturn: '.btn.return',
             list: 'ul.list'
         }
-    }
+    };
 
     return {
         DOM: DOMElement,
         sectionActive: sectionActive,
         toogleSidebar: toogleSidebar,
-    }
+    };
 
 })();
 
@@ -213,11 +211,11 @@ var app = (function(UICtrl, appCtrl){
         $(document).on('click', DOMElement.Menu.btn, appUI.toogleSidebar);
 
         //Toggle class Active to sublist menu
-        $(window).on('load', appUI.sectionActive);
+        $(document).ready(appUI.sectionActive);
 
         //Add event listerner to btn
         $(document).on('click', DOMElement.Main.btnReturn, appCtrl.removeOverlay);
-    }
+    };
 
     return {
         init: init,
@@ -228,4 +226,4 @@ var app = (function(UICtrl, appCtrl){
         callbackUpload: appCtrl.callbackUpload
     }
 
-})(appUI, appController)
+})(appUI, appController);
