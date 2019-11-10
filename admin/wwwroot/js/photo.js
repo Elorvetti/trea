@@ -37,6 +37,8 @@ var photoController = (function(){
 
     var CreateCrop = function(obj){
 
+        var $overlay = app.createOverlay();
+
         var name = obj.name.replace(/\.[^/.]+$/, "");
 
         var element = '';
@@ -46,8 +48,7 @@ var photoController = (function(){
         element = element + '</div>';
 
         $('div#overlay').addClass('crop');
-
-        return element;
+        $overlay.after(element);
 
     };
     
@@ -160,10 +161,13 @@ var photoController = (function(){
     };
 
     var editPhoto = function(event){
+        //Create overalay
+        var $overlay = app.createOverlay();
+
         var id = parseInt($(event.target).parent().attr('id'));
         var list = event.data.photoList;
 
-        event.data = new app.Data(false, id, 'Photo/GetById/', false, list);
+        event.data = new app.Data(false, id, 'Photo/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
     };

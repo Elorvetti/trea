@@ -18,6 +18,12 @@ var userController = (function(){
         var element = '';
 
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        if(obj.photoId > 0){
+            element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');"></span>'
+        } else {
+            element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
+        }
+        element = element + '<input id="photoId" name="photoId" automplete="off" type="hidden" value="' + obj.photoId + '"/>'
         element = element + '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
         
         if(obj.isActive === true){
@@ -36,6 +42,14 @@ var userController = (function(){
         element = element + '</form>';
 
         return element;
+    };
+
+    var createAddUserPhoto = function(obj,i){
+        var element = '';
+        element = element + '<li id="' + obj[i].id +'" style="background-image: url(\'' + obj[i].path + '\');" class="select border-radius-small"></li>';
+
+        return element;
+        
     };
 
     var createRemoveUser = function(event){
@@ -64,6 +78,8 @@ var userController = (function(){
         var element = '';
         
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
+        element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
+        element = element + '<input name="photoId" id="photoId" automplete="off" type="hidden" />'
         element = element + '<input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />';
         element = element + '<input name="password" type="password" id="password" class="password" placeholder="Prassword" autocomplete="off" required />';
         element = element + '<input name="confirmPassword"  type="password" class="confirmPassword" id="confirmPassword" placeholder="Conferma Prassword" autocomplete="off" required />';
@@ -120,7 +136,8 @@ var userController = (function(){
     };
 
     var addNewUser = function(event){
-       
+       event.preventDefault();
+
         var state = validateNewUser();
         var valid = true;
 
@@ -166,12 +183,41 @@ var userController = (function(){
     };
 
     var editUser = function(event){
+        //Add overlay
+        var $overlay = app.createOverlay();
+
         var id = parseInt($(event.target).parent().attr('id'));
         var list = event.data.userList;
 
-        event.data = new app.Data(false, id, 'User/GetById/', false, list);
+        event.data = new app.Data(false, id, 'User/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
+    };
+
+    var addUserPhoto = function(event){
+        var element = '';
+        var element = '<div id="select" ><span class="btn close select"></span><ul class="image background-color-white border-radius-small"></ul></div>'
+        $('body').append(element)
+
+        event.data = new app.Data(false, null, 'Photo/GetAll', true, $('div#select > ul.image'));
+
+        app.callback(event, createAddUserPhoto);
+
+        $(document).on('click', '.btn.close.select', function(){
+            $('div#select').remove();
+        })
+    };
+
+    var selectedImage = function(event){
+        //Get id select and image selected
+        var id = $(this).attr('id');
+        var image = $(this).css('background-image');
+
+        $('div#overlay > form > input#photoId').val(id);
+        $('div#overlay > form > span.user-image').css('background-size', 'cover ');
+        $('div#overlay > form > span.user-image').css('background-image', image);
+        $('div#select').remove();
+
     };
 
     var updateUser = function(event){
@@ -200,6 +246,8 @@ var userController = (function(){
         addNewUser: addNewUser,
         getAll: getAll,
         editUser: editUser,
+        addUserPhoto: addUserPhoto,
+        selectedImage: selectedImage,
         updateUser: updateUser,
         deleteUser: deleteUser
     };
@@ -215,6 +263,8 @@ var userUI = (function(){
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
+        btnUserPhoto: '.btn.user-image',
+        btnSelect: 'li.select'
     };
 
     return {
@@ -238,6 +288,9 @@ var user = (function(userCtrl, userUI){
       
         $(document).on('click', DOMElement.btnEdit, { userList: DOMElement.list }, userCtrl.editUser);
         $(document).on('click', DOMElement.btnRemove , userCtrl.createRemoveUser);
+        
+        $(document).on('click', DOMElement.btnUserPhoto, userCtrl.addUserPhoto);
+        $(document).on('click', DOMElement.btnSelect, userCtrl.selectedImage)
         
         $(document).on('click', DOMElement.btnUpdate, userCtrl.updateUser);
         $(document).on('click', DOMElement.btnDelete, userCtrl.deleteUser);

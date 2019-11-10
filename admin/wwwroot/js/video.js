@@ -36,6 +36,7 @@ var videoController = (function(){
 
     var CreateCrop = function(obj){
 
+        var $overlay = app.createOverlay();
         var name = obj.name.replace(/\.[^/.]+$/, "");
 
         var element = '';
@@ -46,7 +47,7 @@ var videoController = (function(){
 
         $('div#overlay').addClass('crop');
 
-        return element;
+        $overlay.after(element);
 
     };
     
@@ -156,10 +157,13 @@ var videoController = (function(){
     };
 
     var editVideo = function(event){
+        //Create overalay
+        var $overlay = app.createOverlay();
+
         var id = parseInt($(event.target).parent().attr('id'));
         var list = event.data.videoList;
 
-        event.data = new app.Data(false, id, 'Video/GetById/', false, list);
+        event.data = new app.Data(false, id, 'Video/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
     };

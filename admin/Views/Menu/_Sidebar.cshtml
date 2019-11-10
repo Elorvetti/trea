@@ -2,9 +2,7 @@
     <section class="user-data text-center margin-top-small margin-bottom-small">
         <span class="user-image background-color-white"></span>
         <a id="logout" class="btn btn-circle logout background-color-red" asp-area="" asp-controller="User" asp-action="Logout"></a>
-        <p class="color-white text-center margin-top-xsmall">
-            @ViewBag.User
-        </p>
+        <p id="username" class="color-white text-center margin-top-xsmall"></p>
     </section>
     <section class="manage margin-top-small margin-bottom-small">
         <ul class="control-list margin-right-small margin-left-small">
@@ -13,6 +11,9 @@
             </li>
             <li id="category" class="color-white padding-left-medium border-radius-small">
                 <a class="color-white" asp-area="" asp-controller="Category" asp-action="Index">Categorie</a>    
+            </li>
+            <li id="argument" class="color-white padding-left-medium border-radius-small">
+                <a class="color-white" asp-area="" asp-controller="Argument" asp-action="Index">Argomenti</a>    
             </li>
             <li id="photo" class="color-white padding-left-medium border-radius-small">
                 <a class="color-white" asp-area="" asp-controller="Photo" asp-action="Index">Foto</a>    
@@ -23,9 +24,7 @@
             <li id="podcast" class="color-white padding-left-medium border-radius-small">
                 <a class="color-white" asp-area="" asp-controller="Podcast" asp-action="Index">Podcast</a>    
             </li>
-            <li id="argument" class="color-white padding-left-medium border-radius-small">
-                <a class="color-white" asp-area="" asp-controller="Argument" asp-action="Index">Argomenti</a>    
-            </li>
+            
             <li id="post" class="color-white padding-left-medium border-radius-small">Post</li>
         </ul>
     </section>

@@ -11,5 +11,6 @@ namespace admin.Data
         public string password { get; set; }
         public bool IsActive { get; set; }
         public bool rememberMe { get; set; }
+        public int photoId { get; set; }
     }
 }

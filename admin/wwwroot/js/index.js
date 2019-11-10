@@ -88,12 +88,11 @@ var appController = (function(){
                             if(event.data.updateList){
                                 for(var i in data){
                                     var element = callback(data, i);
-                                    $(event.data.mainList).append(element);
+                                    $(event.data.father).append(element);
                                 };
                             } else {
-                                var $overlay = createOverlay();
                                 var element = callback(data);
-                                $overlay.after(element);
+                                $(event.data.father).after(element);
                             };
                         })
                 });
@@ -121,7 +120,7 @@ var appController = (function(){
     };
 
     //Constructor
-    var Data = function(post, id, url, updateList, mainList){
+    var Data = function(post, id, url, updateList, father){
         this.post = post;
         this.id = id;
         if(id === null || id === undefined){
@@ -130,7 +129,7 @@ var appController = (function(){
             this.url = url + this.id;
         };
         this.updateList = updateList;
-        this.mainList = mainList;
+        this.father = father;
     };
 
     return{
@@ -154,7 +153,7 @@ var appUI = (function(){
         };
     };
 
-    var sectionActive = function(){
+    var init = function(event){
         var section = DOMSidebar.section;
         var mainId = $(DOMElement.Main.list).attr('id');
         
@@ -167,6 +166,18 @@ var appUI = (function(){
                 $(section[menu]).removeClass('active');
             };
         };
+
+        //Get user on context and display user name
+        fetch('User/GetUserContext', {method: 'POST'}).then(function(res){
+          res.json()
+            .then(function(data){
+                $('#username').text(data.username);
+                var image = 'url(' + data.photoPath + ')';
+                $('span.user-image').css('background-image', image);
+                $('span.user-image').css('background-size', 'cover');
+            })
+        })
+    
     };
     
     var DOMSidebar = {
@@ -195,7 +206,7 @@ var appUI = (function(){
 
     return {
         DOM: DOMElement,
-        sectionActive: sectionActive,
+        init: init,
         toogleSidebar: toogleSidebar,
     };
 
@@ -211,7 +222,7 @@ var app = (function(UICtrl, appCtrl){
         $(document).on('click', DOMElement.Menu.btn, appUI.toogleSidebar);
 
         //Toggle class Active to sublist menu
-        $(document).ready(appUI.sectionActive);
+        $(document).ready(appUI.init);
 
         //Add event listerner to btn
         $(document).on('click', DOMElement.Main.btnReturn, appCtrl.removeOverlay);

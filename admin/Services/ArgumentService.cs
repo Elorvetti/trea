@@ -20,29 +20,29 @@ namespace admin.Services
             this._ctx = ctx;
         }
 
-        public void Insert(Argument folder){
-            _ctx.argument.Add(folder);
+        public void Insert(Argument argument){
+            _ctx.argument.Add(argument);
             _ctx.SaveChanges();
         }
 
         public virtual IList<Argument> GetAll(){
-            return _ctx.argument.Where(a => a.idFather == 0).ToList();
+            return _ctx.argument.ToList();
         }
 
         public virtual Argument GetById(int id){
             return _ctx.argument.First(a => a.id == id);
         }
 
-        public void Update(int id, Argument folder){
+        public void Update(int id, Argument model){
             var argument = _ctx.argument.Find(id);
-            argument.name = folder.name;
-            argument.path = folder.path;
+            argument.idCategory = model.idCategory;
+            argument.name = model.name;
             _ctx.SaveChanges();
         }
 
         public void Delete(int id){
-            var folder = _ctx.argument.First(a => a.id == id);
-            _ctx.argument.Remove(folder);
+            var argument = _ctx.argument.First(a => a.id == id);
+            _ctx.argument.Remove(argument);
             _ctx.SaveChanges();
         }
 

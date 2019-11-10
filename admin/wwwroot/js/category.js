@@ -69,7 +69,6 @@ var categoryController = (function(){
 
         $overlay.after(element);
 
-        validateNewCategory();
     }
 
     var validateNewCategory = function(){
@@ -91,11 +90,13 @@ var categoryController = (function(){
                         required: 'Il campo Ordinamento è obbligatorio',
                     }
                 }
-            });
+            })
     }
 
     var addNewCategory = function(event){
         
+        event.preventDefault();
+
         var state = validateNewCategory();
         var valid = true;
 
@@ -142,10 +143,13 @@ var categoryController = (function(){
     }
 
     var editCategory = function(event){
+        //Ceate overlay
+        $overlay =app.createOverlay();
+
         var id = parseInt($(event.target).parent().attr('id'));
         var list = event.data.categoryList;
 
-        event.data = new app.Data(false, id, 'Category/GetById/', false, list);
+        event.data = new app.Data(false, id, 'Category/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
     }

@@ -36,6 +36,8 @@ var podcastController = (function(){
 
     var CreateCrop = function(obj){
 
+        var $overlay = app.createOverlay();
+
         var name = obj.name.replace(/\.[^/.]+$/, "");
 
         var element = '';
@@ -44,7 +46,7 @@ var podcastController = (function(){
         element = element + '<audio class="border-radius-small" controls><source src="' + obj.path + '"></audio>' ;
         element = element + '</div>';
 
-        return element;
+        $overlay.after(element);
 
     };
     
@@ -154,10 +156,13 @@ var podcastController = (function(){
     };
 
     var editPodcast = function(event){
+        //Create overalay
+        var $overlay = app.createOverlay();
+
         var id = parseInt($(event.target).parent().attr('id'));
         var list = event.data.podcastList;
 
-        event.data = new app.Data(false, id, 'Podcast/GetById/', false, list);
+        event.data = new app.Data(false, id, 'Podcast/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
     };

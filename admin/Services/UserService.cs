@@ -33,9 +33,14 @@ using admin.Data;
             return  _ctx.administrator.First(u => u.id == id);
          }
 
-         public void Update(int id, Administrator model){
+        public virtual Administrator GetByEmail(string email){
+            return _ctx.administrator.First(u => u.user == email);
+        }
+
+        public void Update(int id, Administrator model){
              var user = _ctx.administrator.Find(id);
              user.IsActive = model.IsActive;
+             user.photoId = model.photoId;
              _ctx.SaveChanges();
          }
 

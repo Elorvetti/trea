@@ -11,6 +11,7 @@ namespace admin.Services
         void Insert(Administrator model);
         IList<Administrator> GetAll();
         Administrator GetById(int id);
+        Administrator GetByEmail(string email);
         void Update(int id, Administrator model);
         void Delete(int id);
     }
