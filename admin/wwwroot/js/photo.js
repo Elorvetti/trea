@@ -194,7 +194,9 @@ var photoController = (function(){
         app.callback(event, updatePhotoList);
     };
 
-    var getAll = function(event){
+    var getAll = function(){
+
+        var event = {};
         event.data = new app.Data(false, null, 'Photo/GetAll', true, $('div.content > ul.list'));
 
         app.callback(event, createPhotoList);
@@ -252,7 +254,7 @@ var photo = (function(photoCtrl, photoUI){
         console.log('photo init');
 
         //On document load create element list
-        $(document).ready(photoCtrl.getAll);
+        photoCtrl.getAll();
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, photoCtrl.createNewPhotoForm);

@@ -190,7 +190,8 @@ var videoController = (function(){
         app.callback(event, updateVideoList);
     };
 
-    var getAll = function(event){
+    var getAll = function(){
+        var event = {};
         event.data = new app.Data(false, null, 'Video/GetAll', true, $('div.content > ul.list'));
 
         app.callback(event, createVideoList);
@@ -247,7 +248,7 @@ var video = (function(videoCtrl, videoUI){
         console.log('video init');
 
         //On document load create element list
-        $(document).ready(videoCtrl.getAll);
+        videoCtrl.getAll();
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, videoCtrl.createNewVideoForm);

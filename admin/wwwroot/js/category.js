@@ -168,7 +168,9 @@ var categoryController = (function(){
         app.callback(event, updateCategoryList);
     }
 
-    var getAll = function(event){
+    var getAll = function(){
+        
+        var event = {};
         event.data = new app.Data(false, null, 'Category/GetAll', true, $('div.content > ul.list'));
 
         app.callback(event, createCategoryList);
@@ -214,8 +216,8 @@ var category = (function(categoryCtrl, categoryUI){
         console.log('category init');
 
         //On document load create element list
-        $(document).ready(categoryCtrl.getAll);
-
+        categoryCtrl.getAll();
+        
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, categoryCtrl.createNewCategoryForm);
         $(document).on('click', DOMElement.btnAddCategory, categoryCtrl.addNewCategory);

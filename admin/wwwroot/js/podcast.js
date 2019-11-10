@@ -189,7 +189,9 @@ var podcastController = (function(){
         app.callback(event, updatePodcastList);
     };
 
-    var getAll = function(event){
+    var getAll = function(){
+        
+        var event = {};
         event.data = new app.Data(false, null, 'Podcast/GetAll', true, $('div.content > ul.list'));
 
         app.callback(event, createPodcastList);
@@ -246,7 +248,7 @@ var podcast = (function(podcastCtrl, podcastUI){
         console.log('podcast init');
 
         //On document load create element list
-        $(document).ready(podcastCtrl.getAll);
+        podcastCtrl.getAll();
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, podcastCtrl.createNewPodcastForm);

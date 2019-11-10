@@ -153,7 +153,9 @@ var appUI = (function(){
         };
     };
 
-    var init = function(event){
+    var init = function(){
+
+        var event = {};
         var section = DOMSidebar.section;
         var mainId = $(DOMElement.Main.list).attr('id');
         
@@ -171,7 +173,7 @@ var appUI = (function(){
         fetch('User/GetUserContext', {method: 'POST'}).then(function(res){
           res.json()
             .then(function(data){
-                $('#username').text(data.username);
+                $('#username').text(data.user);
                 var image = 'url(' + data.photoPath + ')';
                 $('span.user-image').css('background-image', image);
                 $('span.user-image').css('background-size', 'cover');
@@ -218,11 +220,12 @@ var app = (function(UICtrl, appCtrl){
     var init = function(){
         console.log('App init');
 
+        //Toggle class Active to sublist menu
+        appUI.init();
+        
         //Display sidebar on mobile view
         $(document).on('click', DOMElement.Menu.btn, appUI.toogleSidebar);
 
-        //Toggle class Active to sublist menu
-        $(document).ready(appUI.init);
 
         //Add event listerner to btn
         $(document).on('click', DOMElement.Main.btnReturn, appCtrl.removeOverlay);

@@ -1,8 +1,16 @@
 var argumentController = (function(){
 
-    var getAllCategory = function(event){
-        event.data = new app.Data(false, null, '/Category/GetAll', false, null);
-        app.callback(event, createNewArgumentForm);
+    
+    var createUserList = function(obj, i){
+        var element = '';
+        
+        element = element + '<li class="list" id="' + obj[i].id +'">';
+        element = element + '<p>' + obj[i].idCategory + '/' + obj[i].name + '</p>';
+        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '</li>';
+        
+        return element;
     };
 
     var createNewArgumentForm = function(obj){
@@ -47,7 +55,6 @@ var argumentController = (function(){
         });
 
     };
-
 
     var addNewArgument = function(event){
         event.preventDefault();
@@ -96,6 +103,11 @@ var argumentController = (function(){
         $overlay.after(feedback);
     };
 
+    var getAllCategory = function(event){
+        event.data = new app.Data(false, null, '/Category/GetAll', false, null);
+        app.callback(event, createNewArgumentForm);
+    };
+
     var getAll = function(event){
         event.data = new app.Data(false, null, 'Argument/GetAll', true, $('div.content > ul.list'))
     };
@@ -103,7 +115,8 @@ var argumentController = (function(){
     return {
         createNewArgumentForm: createNewArgumentForm,
         getAllCategory: getAllCategory,
-        addNewArgument: addNewArgument
+        addNewArgument: addNewArgument,
+        getAll: getAll
     };
 
 })();

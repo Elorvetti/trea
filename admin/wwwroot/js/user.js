@@ -93,6 +93,7 @@ var userController = (function(){
         element = element + '</form>';
 
         $overlay.after(element);
+
     };
 
     var validateNewUser = function(){
@@ -147,7 +148,7 @@ var userController = (function(){
             var required = $(this).attr('required') !== undefined;
 
             if(invalid || $(this).val() === "" && required ){
-                if($('form.add > span').length === 0){
+                if($('form.add > span.field-validation-error').length === 0){
                     var errorMessage = '<span class="field-validation-error"> Dati non corretti</span>';
                     $('form').prepend(errorMessage);
                 };
@@ -234,10 +235,11 @@ var userController = (function(){
         app.callback(event, updateUserList);
     };
 
-    var getAll = function(event){
+    var getAll = function(){
+        var event = {};
         event.data = new app.Data(false, null, 'User/GetAll', true, $('div.content > ul.list'));
 
-        app.callback(event, createUserList);
+        return app.callback(event, createUserList);
     };
 
     return {
@@ -280,7 +282,7 @@ var user = (function(userCtrl, userUI){
         console.log('user init');
 
         //On document load create element list
-        $(document).ready(userCtrl.getAll);
+        userCtrl.getAll(event);
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnAdd, userCtrl.createNewUserForm);
