@@ -21,9 +21,11 @@ namespace admin.Controllers
     {
 
         private readonly IArgumentService _argumentService;
-        
-        public ArgumentController(IArgumentService argumentService){
+        private readonly ICategoryService _categoryService;
+
+        public ArgumentController(IArgumentService argumentService, ICategoryService categoryService){
             this._argumentService = argumentService;
+            this._categoryService = categoryService;
         }
 
         [Authorize]
@@ -47,15 +49,39 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<Argument> GetAll(){
-            var arguments = _argumentService.GetAll();
+        public IList<ArgumentModel> GetAll(){
+            
+            var models = new List<ArgumentModel>();
 
-            return arguments;
+            var arguments = _argumentService.GetAll();
+            foreach(var argument in arguments)
+            {
+                models.Add(new ArgumentModel()
+                {
+                    id = argument.id,
+                    idCategory = argument.idCategory,
+                    categoryName = _categoryService.GetById(argument.idCategory).name,
+                    name = argument.name
+                });
+
+            }
+
+            return models;
         }
 
         [HttpPost]
         public Argument GetById(int id){
-            return _argumentService.GetById(id);
+            var model = new ArgumentModel();
+
+            var argument = _argumentService.GetById(id);
+
+            model.id = argument.id;
+            model.category = _categoryService.GetAll();
+            model.idCategory = argument.idCategory;
+            model.categoryName = _categoryService.GetById(argument.idCategory).name;
+            model.name = argument.name;
+            
+            return model;
         }
 
 
@@ -70,7 +96,6 @@ namespace admin.Controllers
 
         [HttpPost]
         public void Delete(int id){
-            var folder = _argumentService.GetById(id);
             _argumentService.Delete(id);
         }
     }

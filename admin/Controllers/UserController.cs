@@ -46,11 +46,17 @@ namespace admin.Controllers
         public async Task<IActionResult> Index(IFormCollection data)
         {
             var model = new AddAdministratorModel();
+            var photoId = 0;
+            
+            if (!String.IsNullOrEmpty(data["photoId"])) {
+                photoId = Convert.ToInt32(data["photoId"]);
+            }
+
+            model.photoId = photoId;
             model.Email = data["email"];
             model.Password = data["password"];
             model.ConfirmPassword = data["confirmPassword"];
-            model.photoId = Convert.ToInt32(data["photoId"]);
-
+            
             //User Is Active
             if(data["active"] == "on")
             {
@@ -60,6 +66,7 @@ namespace admin.Controllers
             {
                 model.IsActive = false;
             }
+
             if(model.Email == "" || model.Password == "" || model.ConfirmPassword == "")
             {
                 return Json("Error");

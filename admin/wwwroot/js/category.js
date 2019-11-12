@@ -15,6 +15,7 @@ var categoryController = (function(){
     }
     
     var CreateEditList = function(obj){
+
         var element = '';
 
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
@@ -143,8 +144,8 @@ var categoryController = (function(){
     }
 
     var editCategory = function(event){
-        //Ceate overlay
-        $overlay =app.createOverlay();
+
+        var $overlay = app.createOverlay();
 
         var id = parseInt($(event.target).parent().attr('id'));
         var list = event.data.categoryList;

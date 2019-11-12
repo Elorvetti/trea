@@ -13,6 +13,7 @@ namespace admin.Data
         public virtual DbSet<Administrator> administrator { get; set; }
         public virtual DbSet<Category> category { get; set; }
         public virtual DbSet<Argument> argument { get; set; }
+        public virtual DbSet<Post> post { get; set; }
         public virtual DbSet<Photo> photo { get; set; }
         public virtual DbSet<Video> video { get; set; }
         public virtual DbSet<Podcast> podcast { get; set; }
@@ -46,6 +47,17 @@ namespace admin.Data
                 entity.HasKey(a => a.id);
                 entity.Property(a => a.idCategory);
                 entity.Property(a => a.name);
+            });
+
+            modelBuilder.Entity<Post>(entity => { 
+                entity.HasKey(p => p.id);
+                entity.Property(p => p.idArgument);
+                entity.Property(p => p.idTemplate);
+                entity.Property(p => p.idAlbum);
+                entity.Property(p => p.idImmagini);
+                entity.Property(p => p.title);
+                entity.Property(p => p.subtitle);
+                entity.Property(p => p.testo);
             });
 
             modelBuilder.Entity<Photo>(entity => {

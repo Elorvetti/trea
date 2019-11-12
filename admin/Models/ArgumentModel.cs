@@ -8,6 +8,7 @@ namespace admin.Models
 {
     public class ArgumentModel : Argument
     {
-
+        public string categoryName { get; set; }
+        public IList<Category> category { get; set; }
     }
 }

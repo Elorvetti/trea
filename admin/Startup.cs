@@ -62,10 +62,11 @@ namespace admin
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IArgumentService, ArgumentService>();
+            services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<IPodcastService, PodcastService>();
-            services.AddScoped<IArgumentService, ArgumentService>();
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<IFileService, FileService>();
 

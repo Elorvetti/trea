@@ -1,16 +1,65 @@
 var argumentController = (function(){
 
     
-    var createUserList = function(obj, i){
+    var createArgumentList = function(obj, i){
+        
         var element = '';
         
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p>' + obj[i].idCategory + '/' + obj[i].name + '</p>';
+        element = element + '<p>' + obj[i].categoryName + ' / ' + obj[i].name + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
         
         return element;
+    };
+
+    var CreateEditList = function(obj){
+        var element = '';
+
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        
+        element = element + '<select name="idCategory">';
+        for(var i in obj.category){
+            
+            if(obj.category[i].name == obj.categoryName){
+                element = element + '<option value="' + obj.category[i].id + '" selected>' + obj.category[i].name + '</option>';    
+            } else {
+                element = element + '<option value="' + obj.category[i].id + '">' + obj.category[i].name + '</option>';
+            }
+
+        }        
+        element = element + '</select>';
+
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
+        element = element + '</div>';
+        
+        element = element + '</form>'
+
+        return element;
+    };
+
+    var createRemoveArgument = function(event){
+        var id = $(this).parent().attr('id');
+        var argumentName = $(this).prev().prev().text();
+
+        var element = '';
+
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la categoria: ' + argumentName + '?</p>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
+        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        element = element + '</div>';
+
+        element = element + '</div>';
+
+        var $overlay = app.createOverlay();
+        $overlay.after(element);
     };
 
     var createNewArgumentForm = function(obj){
@@ -103,20 +152,57 @@ var argumentController = (function(){
         $overlay.after(feedback);
     };
 
-    var getAllCategory = function(event){
+    var editArgument = function(event){
+        //Ceate overlay
+        $overlay =app.createOverlay();
+
+        var id = parseInt($(event.target).parent().attr('id'));
+        var list = event.data.argumentList;
+
+        event.data = new app.Data(false, id, 'Argument/GetById/', false, $overlay);
+
+        app.callback(event, CreateEditList);
+    };
+    
+    var updateArgument = function(event){
+        event.preventDefault();
+        var id = $('form').attr('id');
+
+        event.data = new app.Data(true, id, 'Argument/Update/', false, null);
+
+        console.log(event.data);
+        app.callback(event, updateArgumentList);
+    };
+
+    var deleteArgument = function(event){
+        var id = $('div.delete').attr('id');
+        
+        event.data = new app.Data(true, id, 'Argument/Delete/', false, null);
+        app.callback(event, updateArgumentList);
+    };
+
+    var getAllArgument = function(event){
         event.data = new app.Data(false, null, '/Category/GetAll', false, null);
         app.callback(event, createNewArgumentForm);
     };
 
-    var getAll = function(event){
+    var getAll = function(){
+
+        var event = {};
         event.data = new app.Data(false, null, 'Argument/GetAll', true, $('div.content > ul.list'))
+
+        app.callback(event, createArgumentList)
     };
 
     return {
         createNewArgumentForm: createNewArgumentForm,
-        getAllCategory: getAllCategory,
+        createRemoveArgument: createRemoveArgument,
+        getAllArgument: getAllArgument,
         addNewArgument: addNewArgument,
-        getAll: getAll
+        getAll: getAll,
+        editArgument: editArgument,
+        updateArgument: updateArgument,
+        deleteArgument: deleteArgument
     };
 
 })();
@@ -146,11 +232,17 @@ var argument = (function(argumentCtrl, argumentUI){
         console.log('argument init');
         
         //On document load create element list
-        $(document).ready(argumentCtrl.getAll);
+        argumentCtrl.getAll();
 
         //Add event handler on button
-        $(document).on('click', DOMElement.btnAdd, argumentCtrl.getAllCategory);
+        $(document).on('click', DOMElement.btnAdd, argumentCtrl.getAllArgument);
         $(document).on('click', DOMElement.btnAddArgument, argumentCtrl.addNewArgument);
+
+        $(document).on('click', DOMElement.btnEdit, { argumentList: DOMElement.list }, argumentCtrl.editArgument);
+        $(document).on('click', DOMElement.btnRemove , argumentCtrl.createRemoveArgument);
+        
+        $(document).on('click', DOMElement.btnUpdate, argumentCtrl.updateArgument);
+        $(document).on('click', DOMElement.btnDelete, argumentCtrl.deleteArgument);
     };
 
     return {
