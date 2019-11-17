@@ -80,19 +80,23 @@ var appController = (function(){
     };
 
     var callbackGET = async function(event, url, callback){
+        var param = {
+            father: event.data.father,
+            updateList: event.data.updateList,
+        };
 
-       await fetch(url,{method: 'POST'})
+        await fetch(url,{method: 'POST'})
                 .then(function(res){
                     return res.json()
                         .then(function(data){
-                            if(event.data.updateList){
+                            if(param.updateList){
                                 for(var i in data){
                                     var element = callback(data, i);
-                                    $(event.data.father).append(element);
+                                    $(param.father).append(element);
                                 };
                             } else {
                                 var element = callback(data);
-                                $(event.data.father).after(element);
+                                $(param.father).after(element);
                             };
                         })
                 });

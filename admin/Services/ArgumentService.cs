@@ -33,6 +33,12 @@ namespace admin.Services
             return _ctx.argument.First(a => a.id == id);
         }
 
+        public virtual IList<Argument> GetByIdCategory(int idCategory)
+        {
+            return _ctx.argument.Where(a => a.idCategory == idCategory).ToList();
+
+        }
+
         public void Update(int id, Argument model){
             var argument = _ctx.argument.Find(id);
             argument.idCategory = model.idCategory;

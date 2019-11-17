@@ -20,11 +20,11 @@ namespace admin.Controllers
     public partial class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
-        private readonly IFolderService _folderService;
+        private readonly IArgumentService _argumentService;
 
-        public CategoryController(ICategoryService categoryService, IFolderService folderService){
+        public CategoryController(ICategoryService categoryService, IArgumentService argumentService){
             this._categoryService = categoryService;
-            this._folderService = folderService;
+            this._argumentService = argumentService;
         }
 
         [Authorize]
@@ -41,20 +41,13 @@ namespace admin.Controllers
             //Create folder for category
             string path = category["name"];
             int displayOrder = Convert.ToInt32(category["order"]);
-            string pathClean = _folderService.removeSpaceAndSlash(path);
+            string pathClean = _categoryService.removeSpaceAndSlash(path);
 
-            //Check if folder exist
-            var exist = _folderService.Exist(pathClean);
-            if(!exist){
-                model.name = pathClean;
-                model.displayOrder = displayOrder;
-                _categoryService.Insert(model);
-                _folderService.Create(pathClean);
+            model.name = pathClean;
+            model.displayOrder = displayOrder;
+            _categoryService.Insert(model);
 
-                return View();
-            }
-
-            return Json("Errore");
+            return View();
         }
 
         [HttpPost]
@@ -75,28 +68,27 @@ namespace admin.Controllers
             var folder = _categoryService.GetById(id);
 
             //Get data from form
-            string path = category["name"];
+            string categoryName = category["name"];
             int displayOrder = Convert.ToInt32(category["order"]);
 
-            string pathClean = _folderService.removeSpaceAndSlash(path);
-            var exist = _folderService.Exist(pathClean);
+            string categoryNameClean = _categoryService.removeSpaceAndSlash(categoryName);
+            model.name = categoryNameClean;
+            model.displayOrder = displayOrder;
 
-            if(!exist){
-                //Update system folder
-                _folderService.Update(folder.name, pathClean);
-
-                //Update dbset 
-                model.name = pathClean;
-                model.displayOrder = displayOrder;
-                _categoryService.Update(id, model);
-            }
+            _categoryService.Update(id, model);
         }
 
         [HttpPost]
         public void Delete(int id){
             var folder = _categoryService.GetById(id);
+
+            //Find all argument in category and remove it
+            var arguments = _argumentService.GetByIdCategory(id);
+            foreach(var argument in arguments)
+            {
+                _argumentService.Delete(argument.id);
+            }
             
-            _folderService.Delete(folder.name);
             _categoryService.Delete(id);
 
         }

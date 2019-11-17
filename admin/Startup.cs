@@ -66,6 +66,7 @@ namespace admin
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IVideoService, VideoService>();
+            services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IPodcastService, PodcastService>();
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<IFileService, FileService>();

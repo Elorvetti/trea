@@ -2,7 +2,7 @@ var argumentController = (function(){
 
     
     var createArgumentList = function(obj, i){
-        
+        console.log(obj)
         var element = '';
         
         element = element + '<li class="list" id="' + obj[i].id +'">';

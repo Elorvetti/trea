@@ -22,12 +22,14 @@ namespace admin.Controllers
         private readonly IPhotoService _photoService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
+        private readonly IUserService _userService;
 
 
-        public PhotoController(IPhotoService photoService, IFolderService folderService, IFileService fileService){
+        public PhotoController(IPhotoService photoService, IFolderService folderService, IFileService fileService, IUserService userService){
             this._photoService = photoService;
             this._folderService = folderService;
             this._fileService = fileService;
+            this._userService = userService;
         }
 
         [Authorize]
@@ -103,7 +105,7 @@ namespace admin.Controllers
             {
                 var oldFileName = "Content\\Images\\" + photo.name;
                 var newFileName = "Content\\Images\\" + fileNameFromPost;
-                _fileService.update(oldFileName, fileNameFromPost);
+                _fileService.update(oldFileName, newFileName);
 
                 model.path = "../App_Data/Content/Images/" + fileNameFromPost;
                 model.name = fileNameFromPost;
@@ -115,6 +117,13 @@ namespace admin.Controllers
         [HttpPost]
         public void Delete(int id){
             var photo = _photoService.GetById(id);
+
+            //remove avatar photo
+            var admins = _userService.GetByPhotoId(id);
+            foreach(var admin in admins)
+            {
+                admin.photoId = 0;
+            }
 
             var filePath = "Content\\Images\\" + photo.name;
             _fileService.Delete(filePath);

@@ -14,5 +14,6 @@ namespace admin.Data
         public string title { get; set; }
         public string subtitle { get; set; }
         public string testo { get; set; }
+        public bool pubblico { get; set; }
     }
 }

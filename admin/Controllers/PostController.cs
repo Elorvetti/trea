@@ -19,11 +19,35 @@ namespace admin.Controllers
 {
     public partial class PostController : Controller
     {
+        private readonly IPostService _postService;
+        private readonly IArgumentService _argumentService;
+        private readonly IAlbumService _albumService;
+
+        public PostController(IPostService postService, IArgumentService argumentService, IAlbumService albumService){
+            this._postService = postService;
+            this._argumentService = argumentService;
+            this._albumService = albumService;
+        }
+
         [Authorize]
         public IActionResult Index(){
             ViewBag.Title = "Post";
 
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Index(IFormCollection data){
+            
+            return View();
+        }
+
+        [HttpPost]
+        public IList<Post> GetAll(){
+
+            return _postService.GetAll();
+        }
+
+
     }
 }

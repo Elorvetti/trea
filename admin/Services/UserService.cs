@@ -29,6 +29,11 @@ using admin.Data;
             return _ctx.administrator.ToList();
          }
 
+        public virtual IList<Administrator>GetByPhotoId(int photoId)
+        {
+            return _ctx.administrator.Where(a => a.photoId == photoId).ToList();
+        }
+
          public virtual Administrator GetById(int id){
             return  _ctx.administrator.First(u => u.id == id);
          }

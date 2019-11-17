@@ -16,6 +16,7 @@ namespace admin.Data
         public virtual DbSet<Post> post { get; set; }
         public virtual DbSet<Photo> photo { get; set; }
         public virtual DbSet<Video> video { get; set; }
+        public virtual DbSet<Album> album { get; set; }
         public virtual DbSet<Podcast> podcast { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
@@ -58,6 +59,7 @@ namespace admin.Data
                 entity.Property(p => p.title);
                 entity.Property(p => p.subtitle);
                 entity.Property(p => p.testo);
+                entity.Property(p => p.pubblico);
             });
 
             modelBuilder.Entity<Photo>(entity => {
@@ -70,6 +72,13 @@ namespace admin.Data
                 entity.HasKey(v => v.id);
                 entity.Property(v => v.name);
                 entity.Property(v => v.path);
+            });
+
+            modelBuilder.Entity<Album>(entity => {
+                entity.HasKey(a => a.id);
+                entity.Property(a => a.idPost);
+                entity.Property(a => a.idImmagini);
+                entity.Property(a => a.idVideo);
             });
 
             modelBuilder.Entity<Podcast>(entity => {

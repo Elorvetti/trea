@@ -26,7 +26,7 @@ namespace admin.Services
         }
 
         public virtual IList<Category> GetAll(){
-            return _ctx.category.ToList();
+            return _ctx.category.OrderBy(a => a.displayOrder).ToList();
         }
 
         public virtual Category GetById(int id){
@@ -44,6 +44,10 @@ namespace admin.Services
             var category = _ctx.category.First(c => c.id == id);
             _ctx.category.Remove(category);
             _ctx.SaveChanges();
+        }
+
+        public string removeSpaceAndSlash (string folderName){
+            return folderName.Replace(" ", "-").Replace("/", "-");
         }
     }
 
