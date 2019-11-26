@@ -82,13 +82,6 @@ namespace admin.Controllers
         public void Delete(int id){
             var folder = _categoryService.GetById(id);
 
-            //Find all argument in category and remove it
-            var arguments = _argumentService.GetByIdCategory(id);
-            foreach(var argument in arguments)
-            {
-                _argumentService.Delete(argument.id);
-            }
-            
             _categoryService.Delete(id);
 
         }
