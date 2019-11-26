@@ -11,7 +11,8 @@ namespace admin.Services
         void Insert(Album model);
         IList<Album> GetAll();
         Album GetById(int id);
-        Album GetByIdPost(int idPost);
+
+        int GetLast();
         void Update(int id, Album model);
         void Delete(int id);
     }

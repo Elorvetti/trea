@@ -40,9 +40,9 @@ namespace admin.Controllers
             var model = new ArgumentModel();
             
             //Get folder name
-            model.idCategory = Convert.ToInt32(data["idCategory"]);
             model.name = data["name"];            
-            
+            model.categoryId = Convert.ToInt32(data["idCategory"]);
+
             _argumentService.Insert(model);
            
             return View();
@@ -59,8 +59,7 @@ namespace admin.Controllers
                 models.Add(new ArgumentModel()
                 {
                     id = argument.id,
-                    idCategory = argument.idCategory,
-                    categoryName = _categoryService.GetById(argument.idCategory).name,
+                    categoryName = argument.category.name,
                     name = argument.name
                 });
 
@@ -76,9 +75,7 @@ namespace admin.Controllers
             var argument = _argumentService.GetById(id);
 
             model.id = argument.id;
-            model.category = _categoryService.GetAll();
-            model.idCategory = argument.idCategory;
-            model.categoryName = _categoryService.GetById(argument.idCategory).name;
+            model.categoryList = _categoryService.GetAll();
             model.name = argument.name;
             
             return model;
@@ -88,7 +85,6 @@ namespace admin.Controllers
         [HttpPost]
         public void Update(int id, IFormCollection data){
             var model = new ArgumentModel();
-            model.idCategory = Convert.ToInt32(data["idCategory"]);
             model.name = data["name"];
 
             _argumentService.Update(id, model);

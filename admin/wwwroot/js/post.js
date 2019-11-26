@@ -61,24 +61,26 @@ var postController = (function(){
         $overlay.after(element);
     };
 
-    var createNewPostForm = function(){
-
+    var createNewPostForm = function(obj){
+        
         var $overlay = app.createOverlay();
         $overlay.addClass("post");
 
         var element = '';
 
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add post" autocomplete="off">';
-        element = element + '<input name="name" class="name" id="name" placeholder="Nome post" autocolplete="off" required />'
+        element = element + '<input name="title" class="name" id="name" placeholder="Nome post" autocolplete="off" required />'
+        element = element + '<select id="path" name="path">'
+        for(var i in obj){
+            element = element + '<option value="' + obj[i].id + '" isChild="' + obj[i].isChild + '">' + obj[i].name + '</option>';
+        }
+        element = element + '</select>'
         element = element + '<input name="public" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
-        element = element + '<input type="hidden" name="album" class="name" id="album">';
+        element = element + '<input type="hidden" name="images" class="name" id="album">';
         element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
         element = element + '<input type="hidden" name="video" class="name" id="video">';
         element = element + '<span class="btn upload-video text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi video</span>';
-        element = element + '<textarea name="post" id="editor"></textarea>'
-        
-
-
+        element = element + '<textarea name="testo" id="editor"></textarea>'
 
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
@@ -92,15 +94,6 @@ var postController = (function(){
         summernoteInit();
     };
     
-    var createAddPhoto = function(obj,i){
-        var element = '';
-        element = element + '<li id="' + obj[i].id +'" style="background-image: url(\'' + obj[i].path + '\');" class="select border-radius-small"></li>';
-        
-        return element;
-        
-    };
-
-
     var summernoteInit = function(){
 
         $('#editor').summernote({
@@ -222,6 +215,11 @@ var postController = (function(){
         app.callback(event, createPostList)
     };
 
+    var getAllPath = function(event){
+        event.data = new app.Data(false, null, '/Post/GetAllPath', false, null);
+        app.callback(event, createNewPostForm);
+    }
+
     var summernoteDestroy = function(){
         if($('#editor').length > 0 ){
             $('#editor').summernote('destroy');
@@ -237,9 +235,6 @@ var postController = (function(){
         event.data = new app.Data(false, null, 'Photo/GetAll', true, $('div#select > ul.image'));
 
         app.callback(event, createDOMAlbum);
-
-        
-        
 
         $(document).on('click', '.btn.close.select', function(){
             $('div#select').remove();
@@ -334,7 +329,6 @@ var postController = (function(){
     }
 
     return {
-        createNewPostForm: createNewPostForm,
         createRemovePost: createRemovePost,
         addNewPost: addNewPost,
         getAll: getAll,
@@ -345,7 +339,8 @@ var postController = (function(){
         getAllImage: getAllImage,
         addImageToAlbum: addImageToAlbum,
         getAllVideo: getAllVideo,
-        addVideoToPost: addVideoToPost
+        addVideoToPost: addVideoToPost,
+        getAllPath: getAllPath
     };
 
 })();
@@ -383,7 +378,7 @@ var post = (function(postCtrl, postUI){
         postCtrl.getAll();
 
         //Add event handler on button
-        $(document).on('click', DOMElement.btnAdd, postCtrl.createNewPostForm);
+        $(document).on('click', DOMElement.btnAdd, postCtrl.getAllPath);
 
         $(document).on('click', DOMElement.btnAddPost, postCtrl.addNewPost);
 

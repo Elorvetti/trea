@@ -29,18 +29,39 @@ namespace admin.Services
             return _ctx.post.ToList();
         }
 
+        public virtual IList<PostsPath> GetAllPath(){
+            var models = new List<PostsPath>();
+            var categories = _ctx.category.ToList();
+
+            foreach(var category in categories){
+                models.Add(new PostsPath(){
+                    id = category.id,
+                    name = category.name,
+                    isChild = false  
+                });
+            };
+
+            var arguments = _ctx.argument.Include(c => c.category).ToList();
+            foreach(var argument in arguments){
+                models.Add(new PostsPath(){
+                    id = argument.id,
+                    name = argument.category.name + " / " + argument.name,
+                    isChild = true
+                });
+            };
+
+            return models.OrderBy( p => p.name).ToList();
+            
+        }
+
         public Post GetById(int id){
             return _ctx.post.First(p => p.id == id);
         }
 
         public void Update(int id, Post model){
             var post = _ctx.post.Find(id);
-            post.idArgument = model.idArgument;
-            post.idTemplate = model.idTemplate;
-            post.idAlbum = model.idAlbum;
-            post.idImmagini = model.idImmagini;
+            post.albumId = model.albumId;
             post.title = model.title;
-            post.subtitle = model.subtitle;
             post.testo = model.testo;
             
             _ctx.SaveChanges();

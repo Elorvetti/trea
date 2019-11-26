@@ -26,22 +26,16 @@ namespace admin.Services
         }
 
         public virtual IList<Argument> GetAll(){
-            return _ctx.argument.ToList();
+            return _ctx.argument.Include(c => c.category).ToList();
+
         }
 
         public virtual Argument GetById(int id){
             return _ctx.argument.First(a => a.id == id);
         }
 
-        public virtual IList<Argument> GetByIdCategory(int idCategory)
-        {
-            return _ctx.argument.Where(a => a.idCategory == idCategory).ToList();
-
-        }
-
         public void Update(int id, Argument model){
             var argument = _ctx.argument.Find(id);
-            argument.idCategory = model.idCategory;
             argument.name = model.name;
             _ctx.SaveChanges();
         }

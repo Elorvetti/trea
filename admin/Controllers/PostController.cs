@@ -32,13 +32,35 @@ namespace admin.Controllers
         [Authorize]
         public IActionResult Index(){
             ViewBag.Title = "Post";
-
+        
             return View();
         }
 
         [HttpPost]
         public IActionResult Index(IFormCollection data){
+            //Create Album with image and video for post
+            var album = new AlbumModel();
+            var albumId = 0;
+            if(data["images"] != "" || data["video"] != "" ){
+                album.idImmagini = data["images"];
+                album.idVideo = data["video"];
+                _albumService.Insert(album);
+
+                albumId = _albumService.GetLast();
+            }
+
+            //Add Post
+            var model = new PostModel();
             
+            model.title = data["title"];
+            model.argumentId = Convert.ToInt32(data["path"]);
+            model.isArgument = Convert.ToBoolean(data["isChild"]);
+            model.albumId = albumId;
+            model.testo = data["testo"];
+            model.pubblico = Convert.ToBoolean(data["public"]);
+
+
+
             return View();
         }
 
@@ -46,6 +68,11 @@ namespace admin.Controllers
         public IList<Post> GetAll(){
 
             return _postService.GetAll();
+        }
+
+        public IList<PostsPath> GetAllPath(){
+            
+            return _postService.GetAllPath();
         }
 
 

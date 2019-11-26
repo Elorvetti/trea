@@ -11,7 +11,6 @@ namespace admin.Services
         void Insert(Argument model);
         IList<Argument> GetAll();
         Argument GetById(int id);
-        IList<Argument> GetByIdCategory(int id);
         void Update(int id, Argument model);
         void Delete(int id);
     }

@@ -16,5 +16,7 @@ namespace admin.Services
         Post GetById(int id);
         void Update(int id, Post model);
         void Delete(int id);
+
+        IList<PostsPath> GetAllPath();
     }
 }

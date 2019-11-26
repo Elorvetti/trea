@@ -46,20 +46,17 @@ namespace admin.Data
 
             modelBuilder.Entity<Argument>(entity => { 
                 entity.HasKey(a => a.id);
-                entity.Property(a => a.idCategory);
                 entity.Property(a => a.name);
+                entity.HasOne(a => a.category).WithMany(a => a.arguments);
             });
 
             modelBuilder.Entity<Post>(entity => { 
                 entity.HasKey(p => p.id);
-                entity.Property(p => p.idArgument);
-                entity.Property(p => p.idTemplate);
-                entity.Property(p => p.idAlbum);
-                entity.Property(p => p.idImmagini);
                 entity.Property(p => p.title);
-                entity.Property(p => p.subtitle);
                 entity.Property(p => p.testo);
                 entity.Property(p => p.pubblico);
+                entity.Property(p => p.isArgument);
+                entity.HasOne(p => p.argument).WithMany(p => p.posts);
             });
 
             modelBuilder.Entity<Photo>(entity => {
@@ -76,7 +73,6 @@ namespace admin.Data
 
             modelBuilder.Entity<Album>(entity => {
                 entity.HasKey(a => a.id);
-                entity.Property(a => a.idPost);
                 entity.Property(a => a.idImmagini);
                 entity.Property(a => a.idVideo);
             });

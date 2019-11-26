@@ -7,7 +7,12 @@ namespace admin.Data
     public partial class Argument
     {
         public int id { get; set; }
-        public int idCategory { get; set; }
         public string name { get; set; }
+
+        public int categoryId { get; set; }
+        public Category category{ get; set; }
+
+        public List<Post> posts { get; set; }
+
     }
 }

@@ -6,9 +6,8 @@ using admin.Data;
 
 namespace admin.Models
 {
-    public class ArgumentModel : Argument
+    public class AlbumModel : Album
     {
-        public string categoryName { get; set; }
-        public IList<Category> categoryList { get; set; }
+
     }
 }

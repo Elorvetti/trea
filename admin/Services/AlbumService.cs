@@ -33,10 +33,9 @@ namespace admin.Services
             return _ctx.album.First(a => a.id == id);
         }
 
-        public virtual Album GetByIdPost(int id){
-            return _ctx.album.First(a => a.idPost == id);
+        public int GetLast(){
+            return _ctx.album.OrderByDescending(a => a.id).FirstOrDefault().id;
         }
-
         public void Update(int id, Album model){
             var album = _ctx.album.Find(id);
             album.idImmagini = model.idImmagini;
