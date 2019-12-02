@@ -69,7 +69,7 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public Argument GetById(int id){
+        public ArgumentModel GetById(int id){
             var model = new ArgumentModel();
 
             var argument = _argumentService.GetById(id);

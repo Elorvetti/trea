@@ -12,8 +12,7 @@ namespace admin.Data
         public string testo { get; set; }
         public bool pubblico { get; set; }
         public bool isArgument { get; set; }
-
+        public int categoryId { get; set; }
         public int argumentId { get; set; }
-        public Argument argument { get; set; }
     }
 }

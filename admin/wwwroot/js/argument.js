@@ -3,9 +3,11 @@ var argumentController = (function(){
     
     var createArgumentList = function(obj, i){
         var element = '';
-        
+        var categoryName = obj[i].categoryName.replace(/\-/g, ' ');
+        var name = obj[i].name.replace(/\-/g, ' ');
+
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p>' + obj[i].categoryName + ' / ' + obj[i].name + '</p>';
+        element = element + '<p>' + categoryName + ' / ' + name + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
@@ -156,9 +158,8 @@ var argumentController = (function(){
         $overlay =app.createOverlay();
 
         var id = parseInt($(event.target).parent().attr('id'));
-        var list = event.data.argumentList;
 
-        event.data = new app.Data(false, id, 'Argument/GetById/', false, $overlay);
+        event.data = new app.Data(false, id, 'Argument/GetById/', false, null);
 
         app.callback(event, CreateEditList);
     };
@@ -169,7 +170,6 @@ var argumentController = (function(){
 
         event.data = new app.Data(true, id, 'Argument/Update/', false, null);
 
-        console.log(event.data);
         app.callback(event, updateArgumentList);
     };
 

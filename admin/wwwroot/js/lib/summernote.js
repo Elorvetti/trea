@@ -7282,8 +7282,8 @@
                 '<input class="note-image-url form-control note-form-control note-input col-md-12" type="text" placeholder="' + this.lang.image.url + '"/>',
                 '</div>',
             ].join('');
-            var buttonClass = 'btn btn-primary note-btn note-btn-primary note-image-btn';
-            var footer = "<input type=\"button\" href=\"#\" class=\"" + buttonClass + "\" value=\"" + this.lang.image.insert + "\" disabled>";
+            var buttonClass = 'btn btn-rounded text-center color-white box-shadow background-color-pink-light margin-top-small note-link-btn';
+            var footer = "<input type='button' href='#' class='" + buttonClass + "' value='" + this.lang.image.insert + "' disabled>";
             this.$dialog = this.ui.dialog({
                 title: this.lang.image.insert,
                 fade: this.options.dialogsFade,

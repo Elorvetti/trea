@@ -37,6 +37,7 @@ namespace admin.Services
             var category = _ctx.category.Find(id);
             category.name = model.name;
             category.displayOrder = model.displayOrder;
+            category.description = model.description;
             _ctx.SaveChanges();
         }
 
@@ -44,10 +45,6 @@ namespace admin.Services
             var category = _ctx.category.First(c => c.id == id);
             _ctx.category.Remove(category);
             _ctx.SaveChanges();
-        }
-
-        public string removeSpaceAndSlash (string folderName){
-            return folderName.Replace(" ", "-").Replace("/", "-");
         }
     }
 

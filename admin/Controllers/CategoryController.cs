@@ -19,10 +19,12 @@ namespace admin.Controllers
 {
     public partial class CategoryController : Controller
     {
+        private readonly ICommonService _commonService;
         private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
 
-        public CategoryController(ICategoryService categoryService, IArgumentService argumentService){
+        public CategoryController(ICommonService commonService, ICategoryService categoryService, IArgumentService argumentService){
+            this._commonService = commonService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
         }
@@ -41,10 +43,12 @@ namespace admin.Controllers
             //Create folder for category
             string path = category["name"];
             int displayOrder = Convert.ToInt32(category["order"]);
-            string pathClean = _categoryService.removeSpaceAndSlash(path);
+            string pathClean = _commonService.removeSpaceAndSlash(path);
 
             model.name = pathClean;
             model.displayOrder = displayOrder;
+            model.description = category["description"];
+
             _categoryService.Insert(model);
 
             return View();
@@ -71,9 +75,10 @@ namespace admin.Controllers
             string categoryName = category["name"];
             int displayOrder = Convert.ToInt32(category["order"]);
 
-            string categoryNameClean = _categoryService.removeSpaceAndSlash(categoryName);
+            string categoryNameClean = _commonService.removeSpaceAndSlash(categoryName);
             model.name = categoryNameClean;
             model.displayOrder = displayOrder;
+            model.description = category["description"];
 
             _categoryService.Update(id, model);
         }

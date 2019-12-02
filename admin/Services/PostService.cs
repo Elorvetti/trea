@@ -20,8 +20,8 @@ namespace admin.Services
             this._ctx = ctx;
         }
 
-        public void Insert(Post model){
-            _ctx.post.Add(model);
+        public void Insert(Post post){
+            _ctx.post.Add(post);
             _ctx.SaveChanges();
         }
 

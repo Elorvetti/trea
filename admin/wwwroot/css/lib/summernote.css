@@ -1000,7 +1000,8 @@ input[disabled]:hover .note-link-btn{
 }
 
 .note-editor.note-frame .note-editing-area {
-    overflow: hidden
+    overflow: hidden;
+    height: 350px;
 }
 
 .note-editor.note-frame .note-editing-area .note-editable {
@@ -1375,7 +1376,8 @@ input[disabled]:hover .note-link-btn{
 
 .note-popover .note-popover-content .note-dropdown-menu .note-dropdown-item>*,
 .note-toolbar .note-dropdown-menu .note-dropdown-item>* {
-    margin: 0
+    margin: 0;
+    line-height: 37px;
 }
 
 .note-popover .note-popover-content .note-fontsize-10,

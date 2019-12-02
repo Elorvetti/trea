@@ -59,6 +59,7 @@ namespace admin
             });
 
             //Custom services
+            services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICategoryService, CategoryService>();

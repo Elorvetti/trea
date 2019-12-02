@@ -22,6 +22,7 @@ var categoryController = (function(){
 
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ categoryName +'" required>';
+        element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ obj.description + '</textarea>';
         element = element + '<input type="number" name="order" class="order" id="order"  autocomplete="off" value="'+ obj.displayOrder +'"  required>';
         
         element = element + '<div class="text-right">';
@@ -62,7 +63,8 @@ var categoryController = (function(){
         var element = '';
         
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
-        element = element + '<input tupe="text" name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required>';
+        element = element + '<input type="text" name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required>';
+        element = element + '<textarea name="description" class="name" id="description" placeholder="Descrizione" autocomplete="off"></textarea>';
         element = element + '<input type="number" name="order" class="order" id="order" placeholder="Ordinamento" autocomplete="off" required>';
         
         element = element + '<div class="text-right">';

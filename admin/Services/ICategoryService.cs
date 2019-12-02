@@ -13,6 +13,5 @@ namespace admin.Services
         Category GetById(int id);
         void Update(int id, Category model);
         void Delete(int id);
-        string removeSpaceAndSlash(string folderName);
     }
 }

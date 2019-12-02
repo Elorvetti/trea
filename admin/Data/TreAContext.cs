@@ -42,6 +42,7 @@ namespace admin.Data
                 entity.HasKey(c => c.id);
                 entity.Property(c => c.name);
                 entity.Property(c => c.displayOrder);
+                entity.Property(c => c.description);
             });
 
             modelBuilder.Entity<Argument>(entity => { 
@@ -56,7 +57,8 @@ namespace admin.Data
                 entity.Property(p => p.testo);
                 entity.Property(p => p.pubblico);
                 entity.Property(p => p.isArgument);
-                entity.HasOne(p => p.argument).WithMany(p => p.posts);
+                entity.Property(p => p.categoryId);
+                entity.Property(p => p.argumentId);
             });
 
             modelBuilder.Entity<Photo>(entity => {

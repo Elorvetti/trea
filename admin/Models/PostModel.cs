@@ -10,6 +10,9 @@ namespace admin.Models
     {
         public IList<PostsPath> PostsPath{ get; set; }
         public Album album { get; set; }
+
+        public string categoryName { get; set; }
+        public string argumentName { get; set; }
     }    
 
 

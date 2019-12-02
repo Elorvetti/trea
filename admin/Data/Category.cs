@@ -10,6 +10,8 @@ namespace admin.Data
         public string name { get; set; }
         public int displayOrder { get; set; }
 
+        public string description { get; set; }
+
         public List<Argument> arguments { get; set; }
     }
 }

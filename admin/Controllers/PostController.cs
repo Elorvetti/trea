@@ -19,11 +19,13 @@ namespace admin.Controllers
 {
     public partial class PostController : Controller
     {
+        private readonly ICommonService _commonService;
         private readonly IPostService _postService;
         private readonly IArgumentService _argumentService;
         private readonly IAlbumService _albumService;
 
-        public PostController(IPostService postService, IArgumentService argumentService, IAlbumService albumService){
+        public PostController(ICommonService commonService, IPostService postService, IArgumentService argumentService, IAlbumService albumService){
+            this._commonService = commonService;
             this._postService = postService;
             this._argumentService = argumentService;
             this._albumService = albumService;
@@ -38,7 +40,7 @@ namespace admin.Controllers
 
         [HttpPost]
         public IActionResult Index(IFormCollection data){
-            //Create Album with image and video for post
+            //Create Album with image and vleaideo for post
             var album = new AlbumModel();
             var albumId = 0;
             if(data["images"] != "" || data["video"] != "" ){
@@ -52,22 +54,56 @@ namespace admin.Controllers
             //Add Post
             var model = new PostModel();
             
-            model.title = data["title"];
-            model.argumentId = Convert.ToInt32(data["path"]);
+            model.title = _commonService.removeSpaceAndSlash(data["title"]);
             model.isArgument = Convert.ToBoolean(data["isChild"]);
+            model.argumentId = Convert.ToInt32(data["path"]);
+           
+            if(model.isArgument == true){
+                model.categoryId = _argumentService.GetById(model.argumentId).categoryId;
+            } else {
+                model.categoryId = 0;
+            }
+
             model.albumId = albumId;
             model.testo = data["testo"];
             model.pubblico = Convert.ToBoolean(data["public"]);
 
-
+            _postService.Insert(model);
 
             return View();
         }
 
         [HttpPost]
-        public IList<Post> GetAll(){
+        public IList<PostModel> GetAll(){
+            
+            var models = new List<PostModel>();
+            var posts = _postService.GetAll();
 
-            return _postService.GetAll();
+            // Add Data to model
+            foreach(var post in posts){
+          
+                models.Add(new PostModel(){
+                    id = post.id,
+                    albumId = post.albumId,
+                    argumentId = post.argumentId,
+                    argumentName = _argumentService.GetById(post.argumentId).name,
+                    isArgument = post.isArgument,
+                    categoryId = post.categoryId,
+                    pubblico = post.pubblico,
+                });
+          
+            }
+
+            //Update Model with category name
+            foreach(var model in models){
+                if(model.isArgument == true){
+                    model.categoryName = _argumentService.GetById(model.argumentId).category.name;
+
+                }
+            }
+            
+
+            return models;
         }
 
         public IList<PostsPath> GetAllPath(){

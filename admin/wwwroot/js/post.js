@@ -1,11 +1,12 @@
 var postController = (function(){
 
     var createPostList = function(obj, i){
-        
+        console.log(obj)
         var element = '';
+        var title = obj[i].title.replace(/\-/g, ' ');
         
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p>' + obj[i].categoryName + ' / ' + obj[i].name + '</p>';
+        element = element + '<p>' + obj[i].categoryName + ' / ' + title + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
@@ -71,8 +72,10 @@ var postController = (function(){
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add post" autocomplete="off">';
         element = element + '<input name="title" class="name" id="name" placeholder="Nome post" autocolplete="off" required />'
         element = element + '<select id="path" name="path">'
+        console.log(obj);
         for(var i in obj){
-            element = element + '<option value="' + obj[i].id + '" isChild="' + obj[i].isChild + '">' + obj[i].name + '</option>';
+            var name = obj[i].name.replace(/\-/g, ' ');
+            element = element + '<option value="' + obj[i].id + '" isChild="' + obj[i].isChild + '">' + name + '</option>';
         }
         element = element + '</select>'
         element = element + '<input name="public" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
