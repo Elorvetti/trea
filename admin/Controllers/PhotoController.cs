@@ -19,13 +19,15 @@ namespace admin.Controllers
 {
     public partial class PhotoController : Controller
     {
+        private readonly ICommonService _commonService;
         private readonly IPhotoService _photoService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
 
 
-        public PhotoController(IPhotoService photoService, IFolderService folderService, IFileService fileService, IUserService userService){
+        public PhotoController(ICommonService commonService, IPhotoService photoService, IFolderService folderService, IFileService fileService, IUserService userService){
+            this._commonService = commonService;
             this._photoService = photoService;
             this._folderService = folderService;
             this._fileService = fileService;
@@ -98,7 +100,7 @@ namespace admin.Controllers
             var path = photo.path;
 
             var ext = Path.GetExtension(path);
-            var fileNameFromPost = _fileService.removeSpaceAndSlash(form["name"]) + ext;
+            var fileNameFromPost = _commonService.cleanStringPath(form["name"]) + ext;
 
             var exist = _fileService.exist("Content\\Images\\", fileNameFromPost);
             if (!exist)

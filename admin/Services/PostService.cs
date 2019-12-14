@@ -35,18 +35,17 @@ namespace admin.Services
 
             foreach(var category in categories){
                 models.Add(new PostsPath(){
-                    id = category.id,
-                    name = category.name,
-                    isChild = false  
+                    categoryId = category.id,
+                    name = category.name
                 });
             };
 
             var arguments = _ctx.argument.Include(c => c.category).ToList();
             foreach(var argument in arguments){
                 models.Add(new PostsPath(){
-                    id = argument.id,
+                    categoryId = argument.category.id,
+                    argumentId = argument.id,
                     name = argument.category.name + " / " + argument.name,
-                    isChild = true
                 });
             };
 

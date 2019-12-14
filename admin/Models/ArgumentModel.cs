@@ -9,6 +9,11 @@ namespace admin.Models
     public class ArgumentModel : Argument
     {
         public string categoryName { get; set; }
-        public IList<Category> categoryList { get; set; }
+        public IList<categories> categories { get; set; }
     }
+    public class categories{
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+    
 }

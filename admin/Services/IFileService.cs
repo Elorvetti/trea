@@ -16,6 +16,5 @@ namespace admin.Services
         bool exist(string path, string file);
         void update(string path, string fileName);
         void Delete(string path);
-        string removeSpaceAndSlash (string folderName);
     }
 }

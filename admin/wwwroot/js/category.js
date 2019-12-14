@@ -4,10 +4,9 @@ var categoryController = (function(){
 
     var createCategoryList = function(obj, i){
         var element = '';
-        var categoryName = obj[i].name.replace(/\-/g, ' ');
 
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p displayOrder="' + obj[i].diplayOrder + '">' + categoryName + '</p>';
+        element = element + '<p displayOrder="' + obj[i].diplayOrder + '">' + obj[i].name + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
@@ -18,10 +17,9 @@ var categoryController = (function(){
     var CreateEditList = function(obj){
 
         var element = '';
-        var categoryName = obj.name.replace(/\-/g, ' ');
 
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ categoryName +'" required>';
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
         element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ obj.description + '</textarea>';
         element = element + '<input type="number" name="order" class="order" id="order"  autocomplete="off" value="'+ obj.displayOrder +'"  required>';
         

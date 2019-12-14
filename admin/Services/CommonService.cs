@@ -2,20 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using admin.Models;
-using admin.Data;
+using System.Text.RegularExpressions;
 
 namespace admin.Services
 {
     public partial class CommonService : ICommonService
     {
-        public string removeSpaceAndSlash (string name){
-            return name.Replace(" ", "-").Replace("/", "-");
+        //remove white space and special char
+        public string cleanStringPath (string name){
+            //Remove whitespace start end from string and replace white space white -
+            string path = name.Trim().Replace(" ", "-").Replace("/", "-").Replace("_", "-");
+
+            //remove accented letters
+            path = path.Replace("à", "a").Replace("è", "e").Replace("é", "e").Replace("ò", "o").Replace("ç", "c").Replace("ù", "u");
+            
+            //remove spacial char
+            path = Regex.Replace(path,"[^0-9a-zA-Z-]+", "");
+
+            return path;
+
         }
     }
 }

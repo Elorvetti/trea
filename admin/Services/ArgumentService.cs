@@ -36,7 +36,12 @@ namespace admin.Services
 
         public void Update(int id, Argument model){
             var argument = _ctx.argument.Find(id);
+            
             argument.name = model.name;
+            argument.categoryId = model.categoryId;
+            argument.description = model.description;
+            argument.slug = model.slug;
+            
             _ctx.SaveChanges();
         }
 
@@ -46,5 +51,18 @@ namespace admin.Services
             _ctx.SaveChanges();
         }
 
+        public virtual IList<categories> GetAllCategory(){
+            var models = new List<categories>();
+            var categories = _ctx.category.ToList();
+
+            foreach(var category in categories){
+                models.Add(new categories(){
+                    id = category.id,
+                    name = category.name
+                });
+            }
+
+            return models.ToList();
+        }
     }
 }

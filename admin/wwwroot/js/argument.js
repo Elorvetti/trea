@@ -21,19 +21,19 @@ var argumentController = (function(){
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         
         element = element + '<select name="idCategory">';
-        for(var i in obj.category){
+        for(var i in obj.categories){
             
-            if(obj.category[i].name == obj.categoryName){
-                element = element + '<option value="' + obj.category[i].id + '" selected>' + obj.category[i].name + '</option>';    
+            if(obj.categories[i].id == obj.categoryId){
+                element = element + '<option value="' + obj.categories[i].id + '" selected>' + obj.categories[i].name + '</option>';    
             } else {
-                element = element + '<option value="' + obj.category[i].id + '">' + obj.category[i].name + '</option>';
+                element = element + '<option value="' + obj.categories[i].id + '">' + obj.categories[i].name + '</option>';
             }
 
         }        
         element = element + '</select>';
 
         element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
-        
+        element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ obj.description + '</textarea>';
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
@@ -78,7 +78,7 @@ var argumentController = (function(){
         element = element + '</select>';
 
         element = element + '<input type="text" name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required>';
-
+        element = element + '<textarea name="description" class="name" id="description" placeholder="Descrizione" autocomplete="off"></textarea>';
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
@@ -159,7 +159,7 @@ var argumentController = (function(){
 
         var id = parseInt($(event.target).parent().attr('id'));
 
-        event.data = new app.Data(false, id, 'Argument/GetById/', false, null);
+        event.data = new app.Data(false, id, 'Argument/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
     };

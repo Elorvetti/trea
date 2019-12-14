@@ -13,5 +13,7 @@ namespace admin.Services
         Argument GetById(int id);
         void Update(int id, Argument model);
         void Delete(int id);
+
+        IList<categories> GetAllCategory();
     }
 }

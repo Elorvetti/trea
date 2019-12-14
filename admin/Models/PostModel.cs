@@ -17,10 +17,9 @@ namespace admin.Models
 
 
     public class PostsPath{
-        public int id { get; set; }
+        public int categoryId { get; set; }
+        public int argumentId { get; set; }
         public string name { get; set; }
-        
-        public bool isChild { get; set; }
         
     }
 }

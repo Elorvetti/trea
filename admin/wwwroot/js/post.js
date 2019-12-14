@@ -1,12 +1,18 @@
 var postController = (function(){
 
     var createPostList = function(obj, i){
-        console.log(obj)
         var element = '';
-        var title = obj[i].title.replace(/\-/g, ' ');
+        var path = '';
         
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p>' + obj[i].categoryName + ' / ' + title + '</p>';
+        
+        if(obj[i].argumentName !== ""){
+            path = obj[i].categoryName + ' / ' + obj[i].argumentName + ' / ' +  obj[i].title;
+        } else {
+            path = obj[i].categoryName + ' / ' +  obj[i].title;
+        }
+        
+        element = element + '<p>' + path + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
@@ -15,8 +21,12 @@ var postController = (function(){
     };
 
     var CreateEditList = function(obj){
+    
+        var $overlay = app.createOverlay();
+        $overlay.addClass("post");
+    
         var element = '';
-
+        
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         
         element = element + '<select name="idCategory">';
@@ -72,13 +82,16 @@ var postController = (function(){
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add post" autocomplete="off">';
         element = element + '<input name="title" class="name" id="name" placeholder="Nome post" autocolplete="off" required />'
         element = element + '<select id="path" name="path">'
-        console.log(obj);
+        
         for(var i in obj){
             var name = obj[i].name.replace(/\-/g, ' ');
-            element = element + '<option value="' + obj[i].id + '" isChild="' + obj[i].isChild + '">' + name + '</option>';
+            element = element + '<option categoryId="' + obj[i].categoryId + '" argumentId="' + obj[i].argumentId + '" value="' + obj[i].name + '">' + name + '</option>';
         }
+        
         element = element + '</select>'
-        element = element + '<input name="public" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+        element = element + '<input type="hidden" name="categoryId" value="">'
+        element = element + '<input type="hidden" name="argumentId" value="">'
+        element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
         element = element + '<input type="hidden" name="images" class="name" id="album">';
         element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
         element = element + '<input type="hidden" name="video" class="name" id="video">';
@@ -362,7 +375,8 @@ var postUI = (function(){
         btnUploadAlbum: '.btn.upload-album',
         btnAddImageToAlbum: 'ul.image > li',
         btnUploadVideo: '.btn.upload-video',
-        btnAddVideoToAlbum: 'ul.video > li'
+        btnAddVideoToAlbum: 'ul.video > li',
+        selectCategory: 'select#path'
     }
 
     return {
@@ -398,7 +412,17 @@ var post = (function(postCtrl, postUI){
         $(document).on('click', DOMElement.btnAddImageToAlbum, postCtrl.addImageToAlbum);
         $(document).on('click', DOMElement.btnUploadVideo, postCtrl.getAllVideo);
         $(document).on('click', DOMElement.btnAddVideoToAlbum, postCtrl.addVideoToPost);
+
+        //Update nput with id of category or argument selected
+        $(document).on('change', DOMElement.selectCategory, updateInputAfterSelect);
     };
+
+    var updateInputAfterSelect = function(){
+        var categoryId = $('select#path option:selected').attr('categoryId');
+        var argumentId = $('select#path option:selected').attr('argumentId');
+        $('input[name="categoryId"]').val(categoryId);
+        $('input[name="argumentId"]').val(argumentId);
+    }
 
     return {
         init: init

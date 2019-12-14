@@ -41,6 +41,7 @@ namespace admin.Data
             modelBuilder.Entity<Category>(entity => {
                 entity.HasKey(c => c.id);
                 entity.Property(c => c.name);
+                entity.Property(c => c.slug);
                 entity.Property(c => c.displayOrder);
                 entity.Property(c => c.description);
             });
@@ -48,15 +49,17 @@ namespace admin.Data
             modelBuilder.Entity<Argument>(entity => { 
                 entity.HasKey(a => a.id);
                 entity.Property(a => a.name);
+                entity.Property(a => a.slug);
+                entity.Property(a => a.description);
                 entity.HasOne(a => a.category).WithMany(a => a.arguments);
             });
 
             modelBuilder.Entity<Post>(entity => { 
                 entity.HasKey(p => p.id);
                 entity.Property(p => p.title);
+                entity.Property(p => p.slug);
                 entity.Property(p => p.testo);
                 entity.Property(p => p.pubblico);
-                entity.Property(p => p.isArgument);
                 entity.Property(p => p.categoryId);
                 entity.Property(p => p.argumentId);
             });

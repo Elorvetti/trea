@@ -22,11 +22,14 @@ namespace admin.Controllers
         private readonly ICommonService _commonService;
         private readonly IPostService _postService;
         private readonly IArgumentService _argumentService;
+
+        private readonly ICategoryService _categoryService;
         private readonly IAlbumService _albumService;
 
-        public PostController(ICommonService commonService, IPostService postService, IArgumentService argumentService, IAlbumService albumService){
+        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService){
             this._commonService = commonService;
             this._postService = postService;
+            this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._albumService = albumService;
         }
@@ -40,7 +43,8 @@ namespace admin.Controllers
 
         [HttpPost]
         public IActionResult Index(IFormCollection data){
-            //Create Album with image and vleaideo for post
+            
+            //Create Album with image and video for post
             var album = new AlbumModel();
             var albumId = 0;
             if(data["images"] != "" || data["video"] != "" ){
@@ -54,16 +58,10 @@ namespace admin.Controllers
             //Add Post
             var model = new PostModel();
             
-            model.title = _commonService.removeSpaceAndSlash(data["title"]);
-            model.isArgument = Convert.ToBoolean(data["isChild"]);
-            model.argumentId = Convert.ToInt32(data["path"]);
-           
-            if(model.isArgument == true){
-                model.categoryId = _argumentService.GetById(model.argumentId).categoryId;
-            } else {
-                model.categoryId = 0;
-            }
-
+            model.title = data["title"];
+            model.slug = _commonService.cleanStringPath(model.title);
+            model.categoryId = Convert.ToInt32(data["categoryId"]);
+            model.argumentId = Convert.ToInt32(data["argumentId"]);
             model.albumId = albumId;
             model.testo = data["testo"];
             model.pubblico = Convert.ToBoolean(data["public"]);
@@ -77,32 +75,31 @@ namespace admin.Controllers
         public IList<PostModel> GetAll(){
             
             var models = new List<PostModel>();
+            var model = new PostModel();
             var posts = _postService.GetAll();
 
             // Add Data to model
             foreach(var post in posts){
-          
+               var argumentName = string.Empty;
+
+                if(post.argumentId > 0){
+                    argumentName = _argumentService.GetById(post.argumentId).name;
+                }
+                
                 models.Add(new PostModel(){
                     id = post.id,
                     albumId = post.albumId,
-                    argumentId = post.argumentId,
-                    argumentName = _argumentService.GetById(post.argumentId).name,
-                    isArgument = post.isArgument,
                     categoryId = post.categoryId,
-                    pubblico = post.pubblico,
+                    categoryName = _categoryService.GetById(post.categoryId).name,
+                    argumentId = post.argumentId,
+                    argumentName = argumentName,
+                    title = post.title,
+                    testo = post.testo,
+                    pubblico = post.pubblico
                 });
           
             }
-
-            //Update Model with category name
-            foreach(var model in models){
-                if(model.isArgument == true){
-                    model.categoryName = _argumentService.GetById(model.argumentId).category.name;
-
-                }
-            }
             
-
             return models;
         }
 
@@ -111,6 +108,24 @@ namespace admin.Controllers
             return _postService.GetAllPath();
         }
 
+
+        public PostModel GetById(int id){            
+            var model = new PostModel();
+            var post = _postService.GetById(id);
+            
+            if(post.albumId > 0){
+                model.album = _albumService.GetById(post.albumId);
+            }
+            
+            model.title = post.title;
+            model.testo = post.testo;
+            model.PostsPath = _postService.GetAllPath();
+            model.categoryId = post.categoryId;
+            model.argumentId = post.argumentId;
+            model.pubblico = post.pubblico;
+            
+            return model;
+        }
 
     }
 }

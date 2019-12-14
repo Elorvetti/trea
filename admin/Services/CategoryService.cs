@@ -36,8 +36,9 @@ namespace admin.Services
         public void Update(int id, Category model){
             var category = _ctx.category.Find(id);
             category.name = model.name;
-            category.displayOrder = model.displayOrder;
+            category.slug = model.slug;
             category.description = model.description;
+            category.displayOrder = model.displayOrder;
             _ctx.SaveChanges();
         }
 

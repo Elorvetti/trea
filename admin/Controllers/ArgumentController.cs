@@ -19,11 +19,12 @@ namespace admin.Controllers
 {
     public partial class ArgumentController : Controller
     {
-
+        private readonly ICommonService _commonService;
         private readonly IArgumentService _argumentService;
         private readonly ICategoryService _categoryService;
 
-        public ArgumentController(IArgumentService argumentService, ICategoryService categoryService){
+        public ArgumentController(ICommonService commonService, IArgumentService argumentService, ICategoryService categoryService){
+            this._commonService = commonService;
             this._argumentService = argumentService;
             this._categoryService = categoryService;
         }
@@ -40,7 +41,9 @@ namespace admin.Controllers
             var model = new ArgumentModel();
             
             //Get folder name
-            model.name = data["name"];            
+            model.name = data["name"];   
+            model.slug = _commonService.cleanStringPath(model.name);
+            model.description = data["description"];
             model.categoryId = Convert.ToInt32(data["idCategory"]);
 
             _argumentService.Insert(model);
@@ -75,8 +78,11 @@ namespace admin.Controllers
             var argument = _argumentService.GetById(id);
 
             model.id = argument.id;
-            model.categoryList = _categoryService.GetAll();
+            model.categories = _argumentService.GetAllCategory();
+            model.categoryId = argument.categoryId;
+            model.categoryName = argument.category.name;
             model.name = argument.name;
+            model.description = argument.description;
             
             return model;
         }
@@ -85,7 +91,11 @@ namespace admin.Controllers
         [HttpPost]
         public void Update(int id, IFormCollection data){
             var model = new ArgumentModel();
+            
             model.name = data["name"];
+            model.slug = _commonService.cleanStringPath(model.name);
+            model.categoryId = Convert.ToInt32(data["idCategory"]);
+            model.description = data["description"];
 
             _argumentService.Update(id, model);
         }

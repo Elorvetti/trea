@@ -8,6 +8,6 @@ namespace admin.Services
 {
     public partial interface ICommonService
     {
-        string removeSpaceAndSlash(string name);
+        string cleanStringPath(string name);
     }
 }

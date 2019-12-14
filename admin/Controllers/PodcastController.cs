@@ -19,11 +19,13 @@ namespace admin.Controllers
 {
     public partial class PodcastController : Controller
     {
+        private readonly ICommonService _commonService;
         private readonly IPodcastService _podcastService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
 
-        public PodcastController(IPodcastService podcastService, IFolderService folderService, IFileService fileService){
+        public PodcastController(ICommonService commonService, IPodcastService podcastService, IFolderService folderService, IFileService fileService){
+            this._commonService = commonService;
             this._podcastService = podcastService;
             this._folderService = folderService;
             this._fileService = fileService;
@@ -93,7 +95,7 @@ namespace admin.Controllers
             var path = podcast.path;
 
             var ext = Path.GetExtension(path);
-            var fileNameFromPost = _fileService.removeSpaceAndSlash(form["name"]) + ext;
+            var fileNameFromPost = _commonService.cleanStringPath(form["name"]) + ext;
 
             var exist = _fileService.exist("Content\\Podcast\\", fileNameFromPost);
             if (!exist)

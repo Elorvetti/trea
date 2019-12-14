@@ -64,10 +64,5 @@ namespace admin.Services
 
             File.Delete(f);
         }
-
-        public string removeSpaceAndSlash (string folderName){
-            return folderName.Replace(" ", "-").Replace("/", "-");
-        }
-        
     }
 }

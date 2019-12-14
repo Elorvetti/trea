@@ -38,16 +38,12 @@ namespace admin.Controllers
 
         [HttpPost]
         public IActionResult Index(IFormCollection category){
-            var model = new CategoryModel();
+            var model = new CategoryModel();            
 
-            //Create folder for category
-            string path = category["name"];
-            int displayOrder = Convert.ToInt32(category["order"]);
-            string pathClean = _commonService.removeSpaceAndSlash(path);
-
-            model.name = pathClean;
-            model.displayOrder = displayOrder;
+            model.name = category["name"];
+            model.slug = _commonService.cleanStringPath(model.name);
             model.description = category["description"];
+            model.displayOrder = Convert.ToInt32(category["order"]);;
 
             _categoryService.Insert(model);
 
@@ -68,16 +64,9 @@ namespace admin.Controllers
         public void Update(int id, IFormCollection category){
             var model = new CategoryModel();
 
-            //get folder name from system
-            var folder = _categoryService.GetById(id);
-
-            //Get data from form
-            string categoryName = category["name"];
-            int displayOrder = Convert.ToInt32(category["order"]);
-
-            string categoryNameClean = _commonService.removeSpaceAndSlash(categoryName);
-            model.name = categoryNameClean;
-            model.displayOrder = displayOrder;
+            model.name = category["name"];
+            model.slug = _commonService.cleanStringPath(model.name);
+            model.displayOrder = Convert.ToInt32(category["order"]);
             model.description = category["description"];
 
             _categoryService.Update(id, model);

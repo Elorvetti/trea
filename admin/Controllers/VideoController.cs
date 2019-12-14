@@ -19,11 +19,13 @@ namespace admin.Controllers
 {
     public partial class VideoController : Controller
     {
+        private readonly ICommonService _commonService;
         private readonly IVideoService _videoService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
 
-        public VideoController(IVideoService videoService, IFolderService folderService, IFileService fileService){
+        public VideoController(ICommonService commonService, IVideoService videoService, IFolderService folderService, IFileService fileService){
+            this._commonService = commonService;
             this._videoService = videoService;
             this._folderService = folderService;
             this._fileService = fileService;
@@ -96,7 +98,7 @@ namespace admin.Controllers
             var path = video.path;
 
             var ext = Path.GetExtension(path);
-            var fileNameFromPost = _fileService.removeSpaceAndSlash(form["name"]) + ext;
+            var fileNameFromPost = _commonService.cleanStringPath(form["name"]) + ext;
 
             var exist = _fileService.exist("Content\\Videos\\", fileNameFromPost);
             if (!exist)
