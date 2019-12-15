@@ -4,6 +4,7 @@ var postController = (function(){
         var element = '';
         var path = '';
         
+        console.log(obj);
         element = element + '<li class="list" id="' + obj[i].id +'">';
         
         if(obj[i].argumentName !== ""){
@@ -12,7 +13,7 @@ var postController = (function(){
             path = obj[i].categoryName + ' / ' +  obj[i].title;
         }
         
-        element = element + '<p>' + path + '</p>';
+        element = element + '<p public="' + obj[i].pubblico + '">' + path + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
         element = element + '</li>';
@@ -96,6 +97,7 @@ var postController = (function(){
         element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
         element = element + '<input type="hidden" name="video" class="name" id="video">';
         element = element + '<span class="btn upload-video text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi video</span>';
+        element = element + '<div class="text-center skeleton-container"></div>'
         element = element + '<textarea name="testo" id="editor"></textarea>'
 
         element = element + '<div class="text-right">';
@@ -242,108 +244,6 @@ var postController = (function(){
         }
     }
 
-    var getAllImage = function(event){
-
-        var element = '';
-        var element = '<div id="select" ><span class="btn close select"></span><ul class="image background-color-white border-radius-small"></ul></div>'
-        $('body').append(element)
-
-        event.data = new app.Data(false, null, 'Photo/GetAll', true, $('div#select > ul.image'));
-
-        app.callback(event, createDOMAlbum);
-
-        $(document).on('click', '.btn.close.select', function(){
-            $('div#select').remove();
-        })
-
-    };
-
-    var createDOMAlbum = function(obj,i){
-        var element = '';
-        var addToAlbum = '';
-        var albumImageId= $('input#album').val().split('|');
-        var elementInAlbum = albumImageId.filter(function(value){
-            return value == obj[i].id
-        });
-
-        if(elementInAlbum.length > 0){ 
-            addToAlbum = 'add-to-album'
-        } else {
-            addToAlbum = '';
-        }
-        
-        element = element + '<li id="' + obj[i].id +'" style="background-image: url(\'' + obj[i].path + '\');" class="select border-radius-small ' + addToAlbum + '"></li>';
-        
-        return element;
-        
-    };
-
-    var addImageToAlbum = function(event){
-        $(this).toggleClass('add-to-album');
-        
-        var value = $('input#album').val();
-
-        if($(this).hasClass('add-to-album')){
-            value = value + $(this).attr('id') + '|';
-        } else {
-            var id = $(this).attr('id') + '|';
-            value = value.replace(id, '');
-        }
-        
-        $('input#album').val(value);
-    };
-
-    var getAllVideo = function(event){
-        var element = '';
-        var element = '<div id="select" ><span class="btn close select"></span><ul class="video background-color-white border-radius-small"></ul></div>'
-        $('body').append(element)
-
-        event.data = new app.Data(false, null, 'Video/GetAll', true, $('div#select > ul.video'));
-
-        app.callback(event, createDOMVideo);
-
-        $(document).on('click', '.btn.close.select', function(){
-            $('div#select').remove();
-        })
-    };
-
-    var createDOMVideo = function(obj,i){
-        var element = '';
-
-        var addToAlbum = '';
-        var videoId= $('input#video').val().split('|');
-        var elementInAlbum = videoId.filter(function(value){
-            return value == obj[i].id
-        });
-
-        if(elementInAlbum.length > 0){ 
-            addToAlbum = 'add-to-album'
-        } else {
-            addToAlbum = '';
-        }
-
-        element = element + '<li class="select border-radius-small ' + addToAlbum + '" style="overflow: hidden" id="' +  obj[i].id + '">'
-        element = element + '<video class="border-radius-small"><source src="' + obj[i].path + '"></video>';
-        element = element + '</li>'
-
-        return element;
-        
-    };
-
-    var addVideoToPost = function(event){
-        $(this).toggleClass('add-to-album');
-        
-        var value = $('input#video').val();
-        
-        if($(this).hasClass('add-to-album')){
-            value = value + $(this).attr('id') + '|';
-        } else {
-            value.replace($(this).attr('id'), '');
-        }
-        
-        $('input#video').val(value);
-    }
-
     return {
         createRemovePost: createRemovePost,
         addNewPost: addNewPost,
@@ -352,10 +252,6 @@ var postController = (function(){
         updatePost: updatePost,
         deletePost: deletePost,
         summernoteDestroy: summernoteDestroy,
-        getAllImage: getAllImage,
-        addImageToAlbum: addImageToAlbum,
-        getAllVideo: getAllVideo,
-        addVideoToPost: addVideoToPost,
         getAllPath: getAllPath
     };
 
@@ -372,10 +268,6 @@ var postUI = (function(){
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
-        btnUploadAlbum: '.btn.upload-album',
-        btnAddImageToAlbum: 'ul.image > li',
-        btnUploadVideo: '.btn.upload-video',
-        btnAddVideoToAlbum: 'ul.video > li',
         selectCategory: 'select#path'
     }
 
@@ -406,12 +298,6 @@ var post = (function(postCtrl, postUI){
         $(document).on('click', DOMElement.btnDelete, postCtrl.deletePost);
 
         $(document).on('click', DOMElement.btnCloseOverlay, postCtrl.summernoteDestroy);
-
-        //Upload album-video
-        $(document).on('click', DOMElement.btnUploadAlbum, postCtrl.getAllImage);
-        $(document).on('click', DOMElement.btnAddImageToAlbum, postCtrl.addImageToAlbum);
-        $(document).on('click', DOMElement.btnUploadVideo, postCtrl.getAllVideo);
-        $(document).on('click', DOMElement.btnAddVideoToAlbum, postCtrl.addVideoToPost);
 
         //Update nput with id of category or argument selected
         $(document).on('change', DOMElement.selectCategory, updateInputAfterSelect);

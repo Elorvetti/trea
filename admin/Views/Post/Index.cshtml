@@ -4,7 +4,11 @@
 
 <script src="~/js/lib/summernote.js"></script>
 <script src="~/js/post.js"></script>
+<script src="~/js/album.js"></script>
 
 <script>
-    $(document).ready(post.init)
+    $(document).ready(function(){
+        post.init();
+        album.init();
+    })
 </script>

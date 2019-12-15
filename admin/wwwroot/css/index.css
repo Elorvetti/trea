@@ -160,7 +160,7 @@ input[disabled]:hover, textarea[disabled]:hover{ border-bottom: 1px solid #1C2E3
 span.text-danger{ position: relative; display: inline-block; padding: 5px 10px; width: 80%; height: auto; font-size: 13px; line-height: 21px; }
 input + span.text-danger{ background-color: transparent; }
 form.login input.btn-submit{ position: relative; display: inline-block; left: 28%; bottom: 20px; right: 10%; width: 120px; height: 40px; font-size: 16px; line-height: 24px; }
-form > span.user-image{ background-image: url('../img/account-blue.png'); background-size: 48px; background-position: center center; background-repeat: no-repeat; }
+form > span.user-image{ display: block; background-image: url('../img/account-blue.png'); background-size: 48px; background-position: center center; background-repeat: no-repeat; }
 
 /*********Menu***********/
 header{ position: relative; display: inline-block; width: 100%; }
@@ -175,12 +175,7 @@ span.btn-hamburger{
     background-repeat: no-repeat;
     background-position: center center;
 }
-div#sidebar{
-    position: absolute;
-    display: inline-block;
-    top: 50px;
-    left: 100%;
-}
+div#sidebar{ position: absolute; display: inline-block; top: 50px; left: 100%; }
 div#sidebar.active{ transform: translateX(0px)!important; left: 0; right: 0; bottom: 0; z-index: 9999;}
 div.content{ position: relative; display: inline-block; width: 100%; height: 100%; }
 span.user-image{
@@ -241,14 +236,12 @@ div#overlay > form input, div#overlay > form textarea{ margin-bottom: 10px; }
 div#overlay > form input.btn, div#overlay > div input.btn{ display: inline-block; margin-left: 10px; max-width: 120px; line-height: 40px; }
 div#overlay > form input + label{ position: relative; display: block; margin: 0 auto; max-width: 80%; color: #E8594E; }
 div#overlay > form select{ position: relative; display: block; margin-bottom: 10px; cursor: pointer; }
-
-
-
 div#overlay p.confirm{ padding: 20px; }
 
 div#select{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; text-align: center; z-index: 9999; background-color: rgba(0,0,0,.9); }
 div#select > span{ position: relative; display: block; margin: 0 auto; top: 40px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
-div#select > ul.image, div#select > ul.video{
+
+div#select > form{
     position: relative;
     display: inline-block;
     top: 40px;
@@ -258,17 +251,38 @@ div#select > ul.image, div#select > ul.video{
     overflow-y: scroll;
     text-align: center;
 }
-div#select > ul.image > li, div#select > ul.video > li{
+div#select > form > div > input[type="checkbox"]{ position: relative; display: inline-block; width: 10px; opacity: 0; }
+div#select > form > div > input[type="checkbox"] + label{
     position: relative;
     display: inline-block;
-    margin: 20px 10px;
-    width: 140px;
-    height: 140px;
+    width: 90px;
+    height: 90px;
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
-    background-repeat: no-repeat;
     cursor: pointer;
 }
+div#select > form > div > input[type="checkbox"] + label > video{
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+}
+
+div#select > form > div > input[type="checkbox"]:checked + label::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.6);
+    background-image: url('../img/post-public.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
 
 @media(max-width: 325px){
     div#overlay > form input.btn, div#overlay > div input.btn{ max-width: 105px; }
@@ -308,6 +322,10 @@ ul.list li p[active]{ padding-left: 40px; background-size: 26px; background-posi
 ul.list li p[active="true"]{ background-image: url('../img/is-active.png'); }
 ul.list li p[active="false"]{ background-image: url('../img/disabled.png'); }
 ul.list li span{ float: right; margin-right: 10px; width: 35px  ; height: 35px; background-size: 26px; }
+
+ul.list li p[public]{ padding-left: 30px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
+ul.list li p[public="false"] { background-image: url('../img/post-not-public.png'); }
+ul.list li p[public="true"] { background-image: url('../img/post-public.png'); }
 
 @media(min-width: 1024px){
     ul.list li p{ max-width: 400px; }
@@ -432,21 +450,62 @@ div.checkbox > input:checked > label::after{ content: attr(data-on); left: 70px;
 span.btn.upload-album{ max-width: 200px; max-height: 40px; line-height: 40px;}
 span.btn.upload-video{ max-width: 200px; max-height: 40px; line-height: 40px;}
 
-@media(min-width: 769px){
-    span.btn.upload-video{ margin-left: 15px; }
-}
-
 ul.image > li.add-to-album, ul.video > li.add-to-album{ border: 5px solid #4CAF50; }
 ul.video > li > video{  position: relative; display: inline-block; width: 100%; height: 100%; }
 
-@media(min-width: 769px){
+@media(min-width: 768px){
+    span.btn.upload-video{ margin-left: 15px; }
     div#overlay > span.post, div#overlay > form.post{ max-width: unset; }
     div.note-editable{ min-height: 400px;}
-
-    .note-modal-content{
-        top: 100px;
-        width: 90%;
-
-    }
+    .note-modal-content{ top: 100px; width: 90%; }
+    div#overlay > span#close.post, div#overlay > span#close.post + form{ max-height: unset; }
 }
 
+@media(max-width: 768px){
+    div#overlay > span#close.post, div#overlay > span#close.post + form{ max-width: unset; width: 90%; }
+    span.btn.upload-album, span.btn.upload-video{ margin: 20px 10px 0 10px; }
+}
+
+div.btn-container{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 55px;
+}
+div.btn-container > input.btn{
+    position: relative;
+    display: inline-block;
+    margin-top: 0;
+    margin-right: 10px;
+    max-width: 120px;
+    line-height: 40px;
+}
+
+span.skeleton{
+    position: relative;
+    display: inline-block;
+    margin: 20px 5px 0px 0px;
+    width: 80px;
+    height: 80px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+span.skeleton > p.skeleton{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    line-height: 80px;
+    font-size: 28px;
+    background-color: rgba(0,0,0,.6);
+    border-radius: 5px;
+}
+
+span.skeleton > video{
+    max-width: 80px;
+    max-height: 80px;
+}
