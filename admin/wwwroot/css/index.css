@@ -264,14 +264,12 @@ div#select > form > div > input[type="checkbox"] + label{
     background-position: center center;
     cursor: pointer;
 }
-
 div#select > form > div > input[type="checkbox"] + label > video{
     position: relative;
     display: inline-block;
     width: 90px;
     height: 90px;
 }
-
 div#select > form > div > input[type="checkbox"]:checked + label::after{
     content: '';
     position: absolute;
@@ -286,6 +284,36 @@ div#select > form > div > input[type="checkbox"]:checked + label::after{
     background-position: center center;
 }
 
+div#select > form > div > input[type="radio"]{ position: relative; display: inline-block; width: 10px; opacity: 0; }
+div#select > form > div > input[type="radio"] + label{
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    cursor: pointer;
+}
+div#select > form > div > input[type="radio"] + label > video{
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+}
+div#select > form > div > input[type="radio"]:checked + label::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.6);
+    background-image: url('../img/post-public.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 
 @media(max-width: 325px){
     div#overlay > form input.btn, div#overlay > div input.btn{ max-width: 105px; }
@@ -533,7 +561,7 @@ ul#home > li.desktop{ display: none;  background-image: url('../img/desktop.png'
 form#container{ position: relative; margin: 20px auto; padding: 0; max-width: unset; }
 
 /* HEADER */
-form#container section.header{ position: relative; margin: 0; background-color: #757575; height: 400px; }
+form#container section.header{ position: relative; margin: 0; background-color: #757575; height: 570px; background-size: cover; background-position: center center; background-repeat: no-repeat; } 
 section.header ul.social{ position: absolute; display: inline-block; width: 35%; z-index: 9996;}
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
 ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
@@ -597,7 +625,7 @@ form#container section.footer > div{ display: inline-block; width: 49%; }
 form#container section.footer > div  p{ font-size: 16px; line-height: 24px; }
 
 /* MEDIA QUERY */
-form#container[device="mobile"]{ max-height: 568px; overflow-y: scroll; }
+form#container[device="mobile"]{ max-height: 568px; overflow-y: scroll; overflow-x: hidden; }
 form#container[device="mobile"] section.header ul.social{ display: none;}
 form#container[device="mobile"] div.about-us{display: none; }
 form#container[device="mobile"] div.edit{display: none; }

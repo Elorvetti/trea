@@ -7,7 +7,12 @@ var albumController = (function(){
         $('body').append(element)
 
         event.data = new app.Data(false, null, 'Photo/GetAll', true,  $('div#select form div'));
-        app.callback(event, createList);
+        
+        if($('ul#home').length == 0){
+            app.callback(event, createList);
+        } else {
+            app.callback(event, createListHp);
+        }
 
         $('div#select form div').after(createBtn());
 
@@ -86,9 +91,16 @@ var albumController = (function(){
 
     var createBtn = function(){
         var element = '';
+        
+        var idName = '';
+        if($('ul#home').length == 0){
+            idName = 'save'
+        } else {
+            idName = 'update'
+        }
 
         element = element + '<div class="text-right btn-container">';
-        element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
+        element = element + '<input type="submit" id="' + idName + '" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
         element = element + '</div>';
 
         return element
@@ -170,7 +182,7 @@ var albumController = (function(){
                     })
             });
 
-    }
+    };
 
     var addSkeletonOfVideo = function(url, stringArray, elemToAppend){
         var element = '';
@@ -189,12 +201,31 @@ var albumController = (function(){
                     })
             });
 
+    };
+
+    //Manege Hp
+    var createListHp = function(obj, i){
+        var element = '';
+        element = element + '<input type="radio" name="image" id="' + obj[i].id + '" class="checkbox-image">';
+        element  = element + '<label for="' + obj[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj[i].path + '\');" ></label>';    
+        
+        return element
+    }
+
+    var updateHpImage = function(){
+        var idImageSelected = $('div#select > form input[type="radio"]:checked').attr('id');
+        var urlImageSelected = $('div#select > form input[type="radio"]:checked + label').css('background-image');
+        
+        $('input#idHeaderImage').val(idImageSelected);
+        $('section.header').css('background-image', urlImageSelected);
+        $('span.btn.close').trigger('click');
     }
 
     return {
         getAllImage: getAllImage,
         getAllVideo: getAllVideo,
         uploadAlbum: uploadAlbum,
+        updateHpImage: updateHpImage,
         addSkeletonOfImage: addSkeletonOfImage,
         addSkeletonOfVideo: addSkeletonOfVideo
     };
@@ -209,7 +240,8 @@ var albumUI = (function(){
         btnUploadVideo: '.btn.upload-video',
         btnUpload: 'div#select > form input#save',
         btnHpHeader: 'span[element="header"].btn.edit',
-        btnHpNewsLetter: 'span[element="newsletter"].btn.edit'
+        btnHpNewsLetter: 'span[element="newsletter"].btn.edit',
+        btnHpUpload: 'input#update'
     }
 
     return {
@@ -231,6 +263,7 @@ var album = (function(albumCtrl, albumUI){
 
         //Home Page Managment image
         $(document).on('click', DOMElement.btnHpHeader, albumCtrl.getAllImage);
+        $(document).on('click', DOMElement.btnHpUpload, albumCtrl.updateHpImage)
     }
 
     var addSkeletonOfImage = albumCtrl.addSkeletonOfImage;
