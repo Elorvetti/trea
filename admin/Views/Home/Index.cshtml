@@ -1,0 +1,117 @@
+<div class="content">
+    <ul id="home" class="list text-center margin-top-xsmall">
+        <li device="mobile" class="mobile btn-circle background-color-white box-shadow active "></li>
+        <li device="tablet" class="tablet btn-circle background-color-white box-shadow"></li>
+        <li device="desktop" class="desktop btn-circle background-color-white box-shadow"></li>
+    </ul>
+
+    <form id="container" class="margin-top-medium box-shadow border-radius-small margin-left-xsmall margin-right-xsmall">
+        <section id="sidebarFE" class="sidebar background-color-blue">
+            <ul class="social border-radius-small text-center">
+                <li class="facebook">
+                    <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="instagram">
+                    <a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a>
+                </li>
+            </ul>
+            <h1 class="text-center color-white"> TRE A </h1>
+        </section>
+        
+        <section class="header border-radius-small">
+            
+            <ul class="social border-radius-small text-center">
+                <li class="facebook">
+                    <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="instagram"><a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a></li>
+            </ul>
+
+            <h1 class="text-center color-white"> TRE A </h1>
+
+            <span class="menu">
+                <span class="border-radius-small color-white background-color-white"></span>
+                <span class="border-radius-small color-white background-color-white"></span>
+                <span class="border-radius-small color-white background-color-white"></span>
+            </span>
+
+            <div class="about-us text-center border-radius-small">
+                <input type="text" name="aboutUsTitle" class="name" id="aboutUsTitle" placeholder="TITOLO" autocomplete="off">
+                <textarea name="text" class="text" name="aboutUsTesto" id="aboutUsTesto" autocomplete="off" placeholder="testo" row="4"></textarea>
+            </div>
+
+            <span class="search-bar border-radius-small background-color-white color-black padding-left-xsmall">Cerca..</span>
+            <span element="header" class="btn btn-circle edit background-color-blue-light"></span>
+        </section>
+
+        <section class="main">
+            <h3 class="text-center">Ultimi post</h3>
+            <p class="text-center">Lista con ultimi 5 post</p>
+            <ul id="lastPost"></ul>
+
+            <h3 class="text-center">Foto</h3>
+            <p class="text-center">Collegare canale instagram</p>
+
+            <div class="newsletter border-radius-small margin-top-xsmall">
+                <input type="hidden" id="newsletterImageId" name="newsletterImageId">
+                <div class="edit text-center">
+                    <input type="text" name="newsletterTitle" class="name" id="newsletterTitle" placeholder="TITOLO" autocomplete="off">
+                    <textarea name="text" class="text" name="newsletterTesto" id="newsletterTesto" autocomplete="off" placeholder="testo" row="4"></textarea>
+                </div>
+
+                <span element="newsletter" class="btn btn-circle edit background-color-blue-light"></span>
+            </div>
+
+            <h3 class="text-center">Video</h3>
+            <p class="text-center">Collegare canale youtube</p>
+
+
+            <h3 class="text-center">Podcast</h3>
+            <p class="text-center">Collegare canale spotify</p>
+
+        </section>
+
+        <section class="footer background-color-blue margin-top-xsmall padding-left-xsmall padding-top-small">
+            <div>
+                <ul>
+                    <li>
+                        <p class="color-white text-center">Mappa del sito</p>
+                    </li>
+                    <li>
+                        <p class="color-white text-center">Privacy Policy</p>
+                    </li>
+                    <li>
+                        <p class="color-white text-center">Cookie policy</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div>
+                <p class="title color-white font-weight-600 text-center">Tre A in Viaggio</p>
+                <ul class="social text-center">
+                    <li class="cartorange">
+                        <a href="https://www.cartorange.com/andreasalvinosettoni/" target="_blank" rel="nofollow"></a>
+                    </li>
+                    <li class="facebook">
+                        <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                    </li>
+                    <li class="instagram">
+                        <a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a>
+                    </li>
+                </ul>
+            </div>
+    
+        </section>
+
+    </form>
+
+
+</div>
+
+<script src="~/js/lib/summernote.js"></script>
+<script src="../js/homepage.js"></script>
+<script src="../js/album.js"></script>
+<script>
+    $(document).ready(hp.init);
+    $(document).ready(album.init);
+</script>

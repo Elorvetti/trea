@@ -1,15 +1,37 @@
 var argumentController = (function(){
 
+    var createFatherInfo = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+        var url = 'Argument/GetById/' + id;
+        var self = $(this);
+
+        fetch(url,{method: 'POST'})
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    var element = ''
+                    element = element + '<section id="argument-path" class="box-shadow border-radius-small text-center color-white">' + data.categoryName + '<section>';
+                    self.after(element);
+                })
+        });
+
+        
+    }
     
+    var closeFatherInfo = function(){
+        if($('section#argument-path').length > 0){
+            $('section#argument-path').remove();
+        }
+    }
+
     var createArgumentList = function(obj, i){
         var element = '';
-        var categoryName = obj[i].categoryName.replace(/\-/g, ' ');
-        var name = obj[i].name.replace(/\-/g, ' ');
 
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p>' + categoryName + ' / ' + name + '</p>';
+        element = element + '<p>' +  obj[i].name + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '<span class="btn btn-circle info background-color-white box-shadow"></span>';
         element = element + '</li>';
         
         return element;
@@ -201,7 +223,9 @@ var argumentController = (function(){
         getAll: getAll,
         editArgument: editArgument,
         updateArgument: updateArgument,
-        deleteArgument: deleteArgument
+        deleteArgument: deleteArgument,
+        createFatherInfo: createFatherInfo,
+        closeFatherInfo: closeFatherInfo
     };
 
 })();
@@ -216,6 +240,7 @@ var argumentUI = (function(){
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
+        btnInfo: '.btn.info'
     }
 
     return {
@@ -240,8 +265,11 @@ var argument = (function(argumentCtrl, argumentUI){
         $(document).on('click', DOMElement.btnEdit, { argumentList: DOMElement.list }, argumentCtrl.editArgument);
         $(document).on('click', DOMElement.btnRemove , argumentCtrl.createRemoveArgument);
         
+        $(document).on('click', DOMElement.btnInfo, argumentCtrl.createFatherInfo);
         $(document).on('click', DOMElement.btnUpdate, argumentCtrl.updateArgument);
         $(document).on('click', DOMElement.btnDelete, argumentCtrl.deleteArgument);
+        
+        $(document).on('click', argumentCtrl.closeFatherInfo);
     };
 
     return {

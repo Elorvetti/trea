@@ -29,7 +29,7 @@ namespace admin.Services
             return _ctx.argument.Include(c => c.category).ToList();
 
         }
-
+        
         public virtual Argument GetById(int id){
             return _ctx.argument.First(a => a.id == id);
         }

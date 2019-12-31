@@ -59,9 +59,15 @@ namespace admin.Services
 
         public void Update(int id, Post model){
             var post = _ctx.post.Find(id);
+            
+            post.categoryId = model.categoryId;
+            post.argumentId = model.argumentId;
             post.albumId = model.albumId;
             post.title = model.title;
             post.testo = model.testo;
+            post.slug = model.slug;
+            post.pubblico = model.pubblico;
+
             
             _ctx.SaveChanges();
         }

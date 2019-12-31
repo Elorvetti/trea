@@ -174,15 +174,16 @@ var appUI = (function(){
         };
 
         //Get user on context and display user name
-        fetch('User/GetUserContext', {method: 'POST'}).then(function(res){
-          res.json()
-            .then(function(data){
-                $('#username').text(data.user);
-                var image = 'url(' + data.photoPath + ')';
-                $('span.user-image').css('background-image', image);
-                $('span.user-image').css('background-size', 'cover');
+        fetch('User/GetUserContext', {method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        $('#username').text(data.user);
+                        var image = 'url(' + data.photoPath + ')';
+                        $('span.user-image').css('background-image', image);
+                        $('span.user-image').css('background-size', 'cover');
+                })
             })
-        })
     
     };
     
@@ -196,7 +197,8 @@ var appUI = (function(){
             video: 'li#video',
             podcast: 'li#podcast',
             arguments: 'li#argument',
-            post: 'li#post'    
+            post: 'li#post',
+            home: 'li#home'    
         }
     };
 

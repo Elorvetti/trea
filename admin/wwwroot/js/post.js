@@ -1,48 +1,99 @@
 var postController = (function(){
 
+    var createFatherInfo = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+        var url = 'Post/GetById/' + id;
+        var self = $(this);
+
+        fetch(url,{method: 'POST'})
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    var element = ''
+                    var  path = data.categoryName;
+
+                    if(data.argumentName !== ""){
+                        path = path + ' / ' + data.argumentName;
+                    }
+
+                    element = element + '<section id="argument-path" class="box-shadow border-radius-small text-center color-white">' + path + '<section>';
+                    self.after(element);
+                })
+        });
+    }
+    
+    var closeFatherInfo = function(){
+        if($('section#argument-path').length > 0){
+            $('section#argument-path').remove();
+        }
+    }
+
     var createPostList = function(obj, i){
         var element = '';
-        var path = '';
         
-        console.log(obj);
         element = element + '<li class="list" id="' + obj[i].id +'">';
         
-        if(obj[i].argumentName !== ""){
-            path = obj[i].categoryName + ' / ' + obj[i].argumentName + ' / ' +  obj[i].title;
-        } else {
-            path = obj[i].categoryName + ' / ' +  obj[i].title;
-        }
+        //if(obj[i].argumentName !== ""){
+        //    path = obj[i].categoryName + ' / ' + obj[i].argumentName + ' / ' +  obj[i].title;
+        //} else {
+        //    path = obj[i].categoryName + ' / ' +  obj[i].title;
+        //}
         
-        element = element + '<p public="' + obj[i].pubblico + '">' + path + '</p>';
+        element = element + '<p public="' + obj[i].pubblico + '">' +  obj[i].title + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+        element = element + '<span class="btn btn-circle info background-color-white box-shadow"></span>';
         element = element + '</li>';
         
         return element;
     };
 
-    var CreateEditList = function(obj){
-    
-        var $overlay = app.createOverlay();
-        $overlay.addClass("post");
+    var CreateEditList = function(obj, elemToAppend){
+        
+        $('div#overlay > span').addClass("post");
     
         var element = '';
-        
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        
-        element = element + '<select name="idCategory">';
-        for(var i in obj.category){
-            
-            if(obj.category[i].name == obj.categoryName){
-                element = element + '<option value="' + obj.category[i].id + '" selected>' + obj.category[i].name + '</option>';    
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit post" autocomplete="off">';
+        element = element + '<input name="title" class="name" id="name" autocolplete="off" value="' + obj.title + '" required />'
+        element = element + '<select id="path" name="path">'
+
+        //Add post path 
+        for(var i in obj.postsPath){
+            var categoryId = obj.postsPath[i].categoryId;
+            var argumentId = obj.postsPath[i].argumentId;
+            var name = obj.postsPath[i].name;
+
+            if( categoryId == obj.categoryId && argumentId == obj.argumentId){
+                element = element + '<option categoryId="' + categoryId + '" argumentId="' + argumentId + '" value="' + name + '" selected>' + name + '</option>';
             } else {
-                element = element + '<option value="' + obj.category[i].id + '">' + obj.category[i].name + '</option>';
+                element = element + '<option categoryId="' + categoryId + '" argumentId="' + argumentId + '" value="' + name + '">' + name + '</option>';
             }
+        }
+        element = element + '</select>'
+        element = element + '<input type="hidden" name="categoryId" value="' + obj.categoryId + '">'
+        element = element + '<input type="hidden" name="argumentId" value="' + obj.argumentId + '">'
+        
+        if(obj.pubblico === true){
+            element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch" checked><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+        } else {
+            element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+        };
 
-        }        
-        element = element + '</select>';
+        if(obj.album !== null && obj.album !== undefined){
+            element = element + '<input type="hidden" name="images" class="name" id="album" value="' + obj.album.idImmagini +'">';
+            element = element + '<input type="hidden" name="video" class="name" id="video" value="' + obj.album.idVideo + '">';
+        } else {
+            element = element + '<input type="hidden" name="images" class="name" id="album">';
+            element = element + '<input type="hidden" name="video" class="name" id="video">';
+        }
+        element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
+        element = element + '<span class="btn upload-video text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi video</span>';
+        
+        //Update skeleton with image or video in album
+        element = element + '<div class="text-center skeleton-container">'
+        element = element + '</div>'
 
-        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
+        element = element + '<textarea name="testo" id="editor">' + obj.testo  + '</textarea>'
         
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
@@ -51,7 +102,7 @@ var postController = (function(){
         
         element = element + '</form>'
 
-        return element;
+        elemToAppend.after(element);
     };
 
     var createRemovePost = function(event){
@@ -60,7 +111,7 @@ var postController = (function(){
 
         var element = '';
 
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la categoria: ' + postName + '?</p>';
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare il post: ' + postName + '?</p>';
         
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
@@ -113,7 +164,6 @@ var postController = (function(){
     };
     
     var summernoteInit = function(){
-
         $('#editor').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -189,23 +239,46 @@ var postController = (function(){
             var feedback = '';
 
             //2.1.3 remove overlay
-            feedback = app.feedbackEvent(true, 'Argomento aggiornata');
+            feedback = app.feedbackEvent(true, 'Post aggiornata');
         } else {
-            feedback = app.feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento dell\'argomento, provare a ricicare la pagina');
+            feedback = app.feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento del post, provare a ricicare la pagina');
         } 
         $overlay.after(feedback);
     };
 
     var editPost = function(event){
         //Ceate overlay
-        $overlay =app.createOverlay();
+        $overlay = app.createOverlay();
 
         var id = parseInt($(event.target).parent().attr('id'));
-        var list = event.data.postList;
+        var url = 'Post/GetById/'+ id;
 
-        event.data = new app.Data(false, id, 'Post/GetById/', false, $overlay);
+        //GET POST DATA FROM SERVER
+        fetch(url,{method: 'POST'})
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    
+                    //CREATE EDIT POST
+                    CreateEditList(data, $overlay);
+                    
+                    //ADD SKELETON FOR ALUBM IMAGE AND VIDEO 
+                    if(data.album !== null){
 
-        app.callback(event, CreateEditList);
+                        if(data.album.idImmagini !== ""){
+                            album.addSkeletonOfImage('Photo/GetById/', data.album.idImmagini, $('.skeleton-container'));
+                        }
+
+                        if(data.album.idVideo !== ""){
+                            album.addSkeletonOfVideo('Video/GetById/', data.album.idVideo, $('.skeleton-container'));
+                        }
+                    }
+
+                    //ADD SUMMERNOTE
+                    summernoteInit()
+                })
+        });
+        
     };
     
     var updatePost = function(event){
@@ -214,7 +287,6 @@ var postController = (function(){
 
         event.data = new app.Data(true, id, 'Post/Update/', false, null);
 
-        console.log(event.data);
         app.callback(event, updatePostList);
     };
 
@@ -252,7 +324,9 @@ var postController = (function(){
         updatePost: updatePost,
         deletePost: deletePost,
         summernoteDestroy: summernoteDestroy,
-        getAllPath: getAllPath
+        getAllPath: getAllPath,
+        createFatherInfo: createFatherInfo,
+        closeFatherInfo: closeFatherInfo
     };
 
 })();
@@ -262,12 +336,13 @@ var postUI = (function(){
     var DOM = {
         btnCloseOverlay: '.btn#close',
         btnAdd: '.btn#add',
-        btnAddPost: '.btn#save',
+        btnAddPost: 'form.add.post .btn#save',
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
+        btnInfo: '.btn.info',
         selectCategory: 'select#path'
     }
 
@@ -294,6 +369,7 @@ var post = (function(postCtrl, postUI){
         $(document).on('click', DOMElement.btnEdit, { postList: DOMElement.list }, postCtrl.editPost);
         $(document).on('click', DOMElement.btnRemove , postCtrl.createRemovePost);
         
+        $(document).on('click', DOMElement.btnInfo, postCtrl.createFatherInfo);
         $(document).on('click', DOMElement.btnUpdate, postCtrl.updatePost);
         $(document).on('click', DOMElement.btnDelete, postCtrl.deletePost);
 
@@ -301,6 +377,8 @@ var post = (function(postCtrl, postUI){
 
         //Update nput with id of category or argument selected
         $(document).on('change', DOMElement.selectCategory, updateInputAfterSelect);
+
+        $(document).on('click', postCtrl.closeFatherInfo);
     };
 
     var updateInputAfterSelect = function(){

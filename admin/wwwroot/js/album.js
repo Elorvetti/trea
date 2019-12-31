@@ -32,6 +32,18 @@ var albumController = (function(){
         })
     };
 
+    var getLastImage = function(arrayIdImages){
+        
+
+        fetch(url,{method: 'POST'})
+                .then(function(res){
+                    return res.json()
+                        .then(function(data){
+                            console.log(data);
+                        })
+                });
+    }
+
     var createList = function(obj, i){
         var element = '';
         var isListOfImage = $('form.image').length;
@@ -49,8 +61,9 @@ var albumController = (function(){
             } else {
                 element = element + '<input type="checkbox" name="album-image" id="' + obj[i].id + '" class="checkbox-image">';
             }
-            element  = element + '<label for="' + obj[i].id + '" class="border-radius-small" style="background-image: url(\'' + obj[i].path + '\');" ></label>';    
-
+            
+            element  = element + '<label for="' + obj[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj[i].path + '\');" ></label>';    
+            
         } else {
 
             var ids = $('input#video').val().split('|');
@@ -58,8 +71,8 @@ var albumController = (function(){
             selected = ids.filter(function(value){
                  return value == obj[i].id
              });
-
-            if(selected.length > 0){
+             
+             if(selected.length > 0){
                 element = element + '<input type="checkbox" name="album-video" id="' + obj[i].id + '" class="checkbox-image" checked>';
             } else {
                 element = element + '<input type="checkbox" name="album-video" id="' + obj[i].id + '" class="checkbox-image">';
@@ -107,24 +120,27 @@ var albumController = (function(){
         if(totalImages > 0){
             createSkeleton(lastElementChecked, totalImages, isListOfImage)
         } else {
-            $('div.skeleton-container .skeleton').remove();
+            if(isListOfImage > 0){
+                $('div.skeleton-container #album').remove();
+            } else {
+                $('div.skeleton-container #video').remove();
+            }
         }
 
         //close popup
         $('.btn.close.select').trigger('click')
     }
 
-    var createSkeleton = function(lastElementChecked, length, isListOfImage){
+    var createSkeleton = function(lastElement, length, isListOfImage){
         var elem = '';
         var background = '';
 
         if(isListOfImage > 0){
-            background = lastElementChecked.css('background-image').replace(/"/g, "");
+            background = lastElement.css('background-image').replace(/"/g, "");
             $('span#album.skeleton').remove();
             elem = elem + '<span id="album" class="skeleton border-radius-small" style="background-image:'+ background +'">';
         } else {
-            //background = lastElementChecked.after().after().css('background-image').replace(/"/g, "");
-            background = lastElementChecked.find('source').attr('src');
+            background = lastElement.find('source').attr('src');
             $('span#video.skeleton').remove();
             elem = elem + '<span id="video" class="skeleton border-radius-small">';
             elem = elem + '<video><source src="' + background  + '"></video>'
@@ -136,13 +152,51 @@ var albumController = (function(){
         
         $('div.skeleton-container').append(elem);
 
-
     };
+
+    var addSkeletonOfImage = function(url, stringArray, elemToAppend){
+        var element = '';
+        var arrayId = stringArray.split('|');
+        var url = url + arrayId[arrayId.length - 1];
+        fetch(url,{method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        element = element + '<span id="album" class="skeleton border-radius-small" style="background-image:url('+ data.path +')">';
+                        element = element + '<p class="text-center color-white skeleton"> +' + arrayId.length + '</p>';
+                        element = element + '</span>';
+                        
+                        elemToAppend.append(element);
+                    })
+            });
+
+    }
+
+    var addSkeletonOfVideo = function(url, stringArray, elemToAppend){
+        var element = '';
+        var arrayId = stringArray.split('|');
+        var url = url + arrayId[arrayId.length - 1];
+        fetch(url,{method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        element = element + '<span id="video" class="skeleton border-radius-small">';
+                        element = element + '<video><source src="' + data.path + '"></video>'
+                        element = element + '<p class="text-center color-white skeleton"> +' + arrayId.length + '</p>';
+                        element = element + '</span>';
+                        
+                        elemToAppend.append(element);
+                    })
+            });
+
+    }
 
     return {
         getAllImage: getAllImage,
         getAllVideo: getAllVideo,
-        uploadAlbum: uploadAlbum
+        uploadAlbum: uploadAlbum,
+        addSkeletonOfImage: addSkeletonOfImage,
+        addSkeletonOfVideo: addSkeletonOfVideo
     };
 
 })();
@@ -153,7 +207,9 @@ var albumUI = (function(){
         btnCloseOverlay: '.btn#close',
         btnUploadAlbum: '.btn.upload-album',
         btnUploadVideo: '.btn.upload-video',
-        btnUpload: 'div#select > form input#save'
+        btnUpload: 'div#select > form input#save',
+        btnHpHeader: 'span[element="header"].btn.edit',
+        btnHpNewsLetter: 'span[element="newsletter"].btn.edit'
     }
 
     return {
@@ -171,11 +227,19 @@ var album = (function(albumCtrl, albumUI){
         //Upload album-video
         $(document).on('click', DOMElement.btnUploadAlbum, albumCtrl.getAllImage);
         $(document).on('click', DOMElement.btnUploadVideo, albumCtrl.getAllVideo);
-        $(document).on('click', DOMElement.btnUpload, albumCtrl.uploadAlbum)
+        $(document).on('click', DOMElement.btnUpload, albumCtrl.uploadAlbum);
+
+        //Home Page Managment image
+        $(document).on('click', DOMElement.btnHpHeader, albumCtrl.getAllImage);
     }
 
+    var addSkeletonOfImage = albumCtrl.addSkeletonOfImage;
+    var addSkeletonOfVideo = albumCtrl.addSkeletonOfVideo;
+
     return {
-        init: init
+        init: init,
+        addSkeletonOfImage: addSkeletonOfImage,
+        addSkeletonOfVideo: addSkeletonOfVideo
     }
 
 })(albumController, albumUI);

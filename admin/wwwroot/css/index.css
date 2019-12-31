@@ -114,6 +114,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .btn.remove{ background-image: url('../img/delete.png'); }
 .btn.edit{ background-image: url('../img/edit.png'); }
 .btn.crop{ background-image: url('../img/crop.png'); }
+.btn.info{ background-image: url('../img/info-blue.png'); }
 .btn.logout{ background-image: url('../img/logout.png'); background-position: center center; background-repeat: no-repeat; }
 
 .btn-rounded{ border-radius: 40px; }
@@ -206,6 +207,7 @@ li#video{ background-image: url('../img/video.png');}
 li#podcast{ background-image: url('../img/podcast.png');}
 li#argument{ background-image: url('../img/arguments.png');}
 li#post{ background-image: url('../img/post.png');}
+li#home{ background-image: url('../img/home.png');}
 
 
 
@@ -262,6 +264,7 @@ div#select > form > div > input[type="checkbox"] + label{
     background-position: center center;
     cursor: pointer;
 }
+
 div#select > form > div > input[type="checkbox"] + label > video{
     position: relative;
     display: inline-block;
@@ -291,6 +294,7 @@ div#select > form > div > input[type="checkbox"]:checked + label::after{
 @media(min-width: 769px){
     div#overlay.crop > div{ max-height: unset; overflow: unset;}
     div#overlay > form, div#overlay > div{ max-height: 770px; overflow: hidden; overflow-y: scroll; }
+    header + section{ margin-left: 300px; }
 }
 
 @media(min-width: 1024px){
@@ -304,7 +308,7 @@ div#select > form > div > input[type="checkbox"]:checked + label::after{
 
 ul.list li{ 
     margin: 0 auto 15px;
-    padding-left: 40px; 
+    padding-left: 30px; 
     height: 40px; 
     width: 90%;
     border-bottom: 1px solid #73AFBA; 
@@ -318,7 +322,7 @@ ul#argument li { background-image: url('../img/arguments-blue.png'); }
 ul#post li { background-image: url('../img/post-blue.png'); }
 ul.list li:hover{ border-bottom: 2px solid #73AFBA; }
 ul.list li p{ position: relative; display: inline-block; width: auto; overflow: hidden; line-height: 40px; max-width: 195px; max-height: 40px; }
-ul.list li p[active]{ padding-left: 40px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
+ul.list li p[active]{ padding-left: 30px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
 ul.list li p[active="true"]{ background-image: url('../img/is-active.png'); }
 ul.list li p[active="false"]{ background-image: url('../img/disabled.png'); }
 ul.list li span{ float: right; margin-right: 10px; width: 35px  ; height: 35px; background-size: 26px; }
@@ -422,24 +426,10 @@ div#overlay > form.post .btn#return{ display: none; }
 .note-icon-close{ font-size: 28px; color: red; }
 .checkbox.sn-checkbox-open-in-new-window{ text-align: center; }
 
-.note-modal-footer > input.btn{
-    display: inline-block;
-    margin-bottom: 10px;;
-    line-height: 40px;
-    max-width: 150px;
-    margin-left: 15px;
-    cursor: pointer;
-}
+.note-modal-footer > input.btn{ display: inline-block; margin-bottom: 10px;; line-height: 40px; max-width: 150px; margin-left: 15px; cursor: pointer; }
+.note-modal-footer > input.btn[disabled]{ border-bottom: 1px solid transparent; opacity: .2; }
 
-.note-modal-footer > input.btn[disabled]{
-    border-bottom: 1px solid transparent;
-    opacity: .2;
-}
-
-div.checkbox > input[type="checkbox"]{
-    visibility: hidden;
-    width: 0;
-}
+div.checkbox > input[type="checkbox"]{ visibility: hidden; width: 0; }
 
 div.checkbox > label{ position: relative; display: block; margin: 0 auto; width: 60px; height: 30px; border-radius: 30px; background: #dad9df; cursor: pointer; transition: .25s ease-in-out; }
 div.checkbox > label::before{ content: ''; position: relative; display: inline-block; width: 30px; height: 30px; border-radius: 100%; background-color: #fff; box-shadow: 0 3px 3px rgba(0, 0, 0, .2), 0 0 0 2px #dddddd; transition: .25s ease-in-out; }
@@ -466,13 +456,7 @@ ul.video > li > video{  position: relative; display: inline-block; width: 100%; 
     span.btn.upload-album, span.btn.upload-video{ margin: 20px 10px 0 10px; }
 }
 
-div.btn-container{
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 55px;
-}
+div.btn-container{ position: absolute; left: 0; right: 0; bottom: 0; height: 55px; }
 div.btn-container > input.btn{
     position: relative;
     display: inline-block;
@@ -505,7 +489,128 @@ span.skeleton > p.skeleton{
     border-radius: 5px;
 }
 
-span.skeleton > video{
-    max-width: 80px;
-    max-height: 80px;
+span.skeleton > video{ max-width: 80px; max-height: 80px; }
+
+section#argument-path{
+    position: absolute;
+    padding: 0 15px;
+    right: 50px;
+    min-width: 150px;
+    background-color: rgba(0,0,0,.9);
+    line-height: 35px;
+    z-index: 9999;
+    float: none;
+}
+
+@media(min-width: 768px){
+    section#argument-path{ right: 70px; }
+}
+
+@media(min-width: 1024px){
+    section#argument-path{ right: 150px; }
+}
+
+
+/* HOME PAGE BE MANAGE */
+
+ul#home > li{
+    display: inline-block;
+    margin: 0 5px;
+    width: 40px; 
+    height: 40px;
+    border-bottom: 1px solid transparent;
+    background-position: center center;
+    background-size: 24px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+ul#home > li.active{ background-color: #4caf50; }
+ul#home > li.mobile{ background-image: url('../img/mobile.png');}
+ul#home > li.tablet{ display: none; background-image: url('../img/tablet.png');}
+ul#home > li.desktop{ display: none;  background-image: url('../img/desktop.png');}
+
+form#container{ position: relative; margin: 20px auto; padding: 0; max-width: unset; }
+
+/* HEADER */
+form#container section.header{ position: relative; margin: 0; background-color: #757575; height: 400px; }
+section.header ul.social{ position: absolute; display: inline-block; width: 35%; z-index: 9996;}
+ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
+ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
+ul.social li.instagram{ background-image: url('../img/social/instagram.png') }
+ul.social li.cartorange{ background-image: url('../img/sponsor/cartorange.png'); }
+ul.social li > a{ position: relative; display: inline-block; width: 100%; height: 100%; }
+
+form#container h1{ position: absolute; display: inline-block; font-size: 28px; font-weight: 600; margin-bottom: .1em; width: 100% }
+
+form#container section.header ul.category{ position: absolute; right: 10px; width: 60%; }
+form#container section.header ul.category > li{ display: inline-block; padding: 0 25px; line-height: 40px; cursor: pointer; background-size: 26px; background-position: 100% 5px; background-repeat: no-repeat; }
+form#container section.header ul.category > li[child="close"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
+form#container section.header ul.category > li[child="open"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
+form#container section.header ul.category > li[child="open"] > ul{ background-color:rgba(0,0,0,.9); }
+
+ul.category > li[child="open"] > ul > li:hover, ul.category > li[child="open"] > ul > li:active{ color: #73AFBA!important; }
+ul.category > li:hover, ul.category > li:active{ color: #73AFBA!important; }
+
+form#container span.menu{ position: absolute; display: inline-block; right: 10px; padding: 6px 0; height: 40px; line-height: 10px; text-align: center; cursor: pointer; }
+form#container span.menu > span{ display: block; margin: 5px auto; width: 30px; height: 3px; }
+
+form#container span.menu.active{ z-index: 9998; }
+form#container span.menu.active > span:nth-child(1){transform: rotate(45deg) translate(6px, 6px); transform-style: preserve-3d; transition: .3s ease-in-out;}
+form#container span.menu.active > span:nth-child(2){ display: none; }
+form#container span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out;}
+
+form#container section.header span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
+
+form#container div.about-us{ position: absolute; display: inline-block; left: 10px; bottom: 60px; max-height: 250px; overflow-y: scroll; width: 40%; background-color: #bdbdbd; }
+form#container .note-editor.note-frame .note-editing-area{ height: 150px;}
+
+form#container span.search-bar{ 
+    position: absolute; 
+    left: 10px; 
+    bottom: 10px; 
+    line-height: 35px; 
+    width: 70%; 
+    background-image: url('../img/search.png'); 
+    background-size: 26px;
+    background-position: 98% center;
+    background-repeat: no-repeat;
+}
+
+/* SIDEBAR FE */
+form#container section#sidebarFE{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 0; z-index: 9997; transform: translateX(4000px); }
+form#container section#sidebarFE > * { position: relative; display: inline-block; width: 100%; }
+form#container section#sidebarFE > ul.category > li{ padding-left: 20px; line-height: 35px; cursor: pointer; background-size: 26px; background-position: 90% 5px; background-repeat: no-repeat; }
+form#container section#sidebarFE.active{  transform: translateX(0); transform-style: preserve-3d; transition: .3s ease-in-out; }
+form#container section#sidebarFE ul > li[child="close"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
+form#container section#sidebarFE ul > li[child="open"]{ background-image: url('../img/chevron-down.png'); max-height: unset; }
+
+/* MAIN */
+form#container section.main{ position: relative; display: inline-block; margin: 0; width: 100%; }
+form#container section.main div.newsletter{ position: relative; display: inline-block; width: 100%; height: 300px; background-color: #757575; }
+form#container div.newsletter div.edit{  position: absolute; left: 10px; bottom: 10px; max-height: 250px; overflow-y: scroll; width: 40%; background-color: #bdbdbd; }
+form#container div.newsletter span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
+
+/* FOOTER */
+form#container section.footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
+form#container section.footer > div{ display: inline-block; width: 49%; }
+form#container section.footer > div  p{ font-size: 16px; line-height: 24px; }
+
+/* MEDIA QUERY */
+form#container[device="mobile"]{ max-height: 568px; overflow-y: scroll; }
+form#container[device="mobile"] section.header ul.social{ display: none;}
+form#container[device="mobile"] div.about-us{display: none; }
+form#container[device="mobile"] div.edit{display: none; }
+form#container[device="mobile"] section.header ul.category{ display: none;}
+form#container[device="tablet"] section.header ul.category{ display: none;}
+
+form#container[device="desktop"] span.menu{display: none; }
+form#container[device="desktop"] section#sidebarFE{ display: none; }
+
+@media(min-width: 768px){
+    ul#home > li.tablet{ display: inline-block; }
+}
+
+@media(min-width: 1024px){
+    ul#home > li.desktop{ display: inline-block;}
 }

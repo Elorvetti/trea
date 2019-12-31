@@ -43,18 +43,9 @@ namespace admin.Controllers
 
         [HttpPost]
         public IActionResult Index(IFormCollection data){
+
+            var albumId = AddAlbumToPost(data);
             
-            //Create Album with image and video for post
-            var album = new AlbumModel();
-            var albumId = 0;
-            if(data["images"] != "" || data["video"] != "" ){
-                album.idImmagini = data["images"];
-                album.idVideo = data["video"];
-                _albumService.Insert(album);
-
-                albumId = _albumService.GetLast();
-            }
-
             //Add Post
             var model = new PostModel();
             
@@ -64,7 +55,12 @@ namespace admin.Controllers
             model.argumentId = Convert.ToInt32(data["argumentId"]);
             model.albumId = albumId;
             model.testo = data["testo"];
-            model.pubblico = Convert.ToBoolean(data["public"]);
+
+            if(data["IsPublic"] == "on"){
+                model.pubblico = true;
+            } else {
+                model.pubblico = false;
+            }
 
             _postService.Insert(model);
 
@@ -108,7 +104,6 @@ namespace admin.Controllers
             return _postService.GetAllPath();
         }
 
-
         public PostModel GetById(int id){            
             var model = new PostModel();
             var post = _postService.GetById(id);
@@ -117,14 +112,96 @@ namespace admin.Controllers
                 model.album = _albumService.GetById(post.albumId);
             }
             
+            model.id = post.id;
+            model.albumId = post.albumId;
             model.title = post.title;
             model.testo = post.testo;
             model.PostsPath = _postService.GetAllPath();
             model.categoryId = post.categoryId;
             model.argumentId = post.argumentId;
             model.pubblico = post.pubblico;
+
+            //Get category and argument name
+            model.categoryName = _categoryService.GetById(post.categoryId).name;
+
+            if(post.argumentId > 0){
+                model.argumentName = _argumentService.GetById(post.argumentId).name;
+            } else {
+                model.argumentName = "";
+            }
             
             return model;
+        }
+        
+        public void Update(int id, IFormCollection data){
+            var post = new Post();
+
+            post.categoryId = Convert.ToInt32(data["categoryId"]);
+            post.argumentId = Convert.ToInt32(data["argumentId"]);
+            post.title = data["title"];
+            post.testo = data["testo"];
+            post.slug = _commonService.cleanStringPath(post.title);
+
+            if(data["IsPublic"] == "on"){
+                post.pubblico = true;
+            } else {
+                post.pubblico = false;
+            }
+
+            post.albumId = UpdateAlbumPost(id, data);
+
+            _postService.Update(id, post);
+        }
+    
+        public void Delete(int id){
+            
+            int albumiId = _postService.GetById(id).albumId;
+            _postService.Delete(id);
+
+            if(albumiId > 0){
+                _albumService.Delete(albumiId);
+            }
+
+        }
+
+        public int AddAlbumToPost(IFormCollection data){
+            var album = new AlbumModel();
+            var albumId = 0;
+
+            if(data["images"] != "" || data["video"] != "" ){
+                album.idImmagini = data["images"];
+                album.idVideo = data["video"];
+                _albumService.Insert(album);
+
+                albumId = _albumService.GetLast();
+            }
+
+            return albumId;
+        }
+
+        public int UpdateAlbumPost(int postId, IFormCollection data){
+            var album = new AlbumModel();
+            int albumId = _postService.GetById(postId).albumId;
+
+            // Update album image and video
+            if(albumId > 0){                
+                //update album with video and image
+                if(data["images"] != "" || data["video"] != "" ){
+                    album.idImmagini = data["images"];
+                    album.idVideo = data["video"];
+
+                    _albumService.Update(albumId, album);
+                } else {
+                    //remove album from post
+                    _albumService.Delete(albumId);
+                    albumId = 0;
+                }
+            } else {
+                //create album 
+                albumId = AddAlbumToPost(data);
+            }
+
+            return albumId;
         }
 
     }
