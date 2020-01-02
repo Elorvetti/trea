@@ -15,5 +15,6 @@ namespace admin.Data
         public bool pubblico { get; set; }
         public int categoryId { get; set; }
         public int argumentId { get; set; }
+        public int PhotoId { get; set; }
     }
 }

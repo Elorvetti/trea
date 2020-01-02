@@ -22,16 +22,18 @@ namespace admin.Controllers
         private readonly ICommonService _commonService;
         private readonly IPostService _postService;
         private readonly IArgumentService _argumentService;
-
         private readonly ICategoryService _categoryService;
         private readonly IAlbumService _albumService;
 
-        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService){
+        private readonly IPhotoService _photoService;
+
+        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService, IPhotoService photoService){
             this._commonService = commonService;
             this._postService = postService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._albumService = albumService;
+            this._photoService = photoService;
         }
 
         [Authorize]
@@ -55,6 +57,7 @@ namespace admin.Controllers
             model.argumentId = Convert.ToInt32(data["argumentId"]);
             model.albumId = albumId;
             model.testo = data["testo"];
+            model.PhotoId = Convert.ToInt32(data["coverImage"]);
 
             if(data["IsPublic"] == "on"){
                 model.pubblico = true;
@@ -71,7 +74,6 @@ namespace admin.Controllers
         public IList<PostModel> GetAll(){
             
             var models = new List<PostModel>();
-            var model = new PostModel();
             var posts = _postService.GetAll();
 
             // Add Data to model
@@ -114,6 +116,7 @@ namespace admin.Controllers
             
             model.id = post.id;
             model.albumId = post.albumId;
+            model.PhotoId = post.PhotoId;
             model.title = post.title;
             model.testo = post.testo;
             model.PostsPath = _postService.GetAllPath();
@@ -141,6 +144,7 @@ namespace admin.Controllers
             post.title = data["title"];
             post.testo = data["testo"];
             post.slug = _commonService.cleanStringPath(post.title);
+            post.PhotoId = Convert.ToInt32(data["coverImage"]);
 
             if(data["IsPublic"] == "on"){
                 post.pubblico = true;
@@ -202,6 +206,25 @@ namespace admin.Controllers
             }
 
             return albumId;
+        }
+
+        [HttpPost]
+        public IList<PostDisplay> GetLast(int id){            
+            var model = new List<PostDisplay>();
+            var posts = _postService.GetLast(id);
+           
+           foreach(var post in posts){
+                model.Add(new PostDisplay(){
+                    id = post.id,
+                    slug = post.slug,
+                    coverImage = _photoService.GetById(post.PhotoId).path,
+                    title = post.title,
+                    testo = post.testo
+                });
+           }
+           
+           
+           return model;
         }
 
     }

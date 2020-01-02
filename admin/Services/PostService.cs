@@ -26,9 +26,12 @@ namespace admin.Services
         }
 
         public virtual IList<Post> GetAll(){
-            return _ctx.post.ToList();
+            return _ctx.post.OrderBy(p => p.categoryId).ThenBy(p => p.argumentId).ToList();
         }
 
+        public virtual IList<Post> GetLast(int nPost){
+            return _ctx.post.Where(p => p.pubblico == true).OrderByDescending(p => p.id).Take(nPost).ToList();
+        }
         public virtual IList<PostsPath> GetAllPath(){
             var models = new List<PostsPath>();
             var categories = _ctx.category.ToList();
@@ -62,6 +65,7 @@ namespace admin.Services
             
             post.categoryId = model.categoryId;
             post.argumentId = model.argumentId;
+            post.PhotoId = model.PhotoId;
             post.albumId = model.albumId;
             post.title = model.title;
             post.testo = model.testo;

@@ -4,17 +4,19 @@ var albumController = (function(){
 
         var element = '';
         var element = '<div id="select" ><span class="btn close select"></span><form class="image background-color-white border-radius-small"><div class="text-center"></div></form></div>'
+        
         $('body').append(element)
 
         event.data = new app.Data(false, null, 'Photo/GetAll', true,  $('div#select form div'));
         
-        if($('ul#home').length == 0){
-            app.callback(event, createList);
+        if($('ul#home').length > 0 || $(this).hasClass('cover')){
+            app.callback(event, createListRadio);
+            $('div#select form div').after(createBtnRadio());
         } else {
-            app.callback(event, createListHp);
+            app.callback(event, createList);
+            $('div#select form div').after(createBtn());
         }
 
-        $('div#select form div').after(createBtn());
 
         $(document).on('click', '.btn.close.select', function(){
             $('div#select').remove();
@@ -36,18 +38,6 @@ var albumController = (function(){
             $('div#select').remove();
         })
     };
-
-    var getLastImage = function(arrayIdImages){
-        
-
-        fetch(url,{method: 'POST'})
-                .then(function(res){
-                    return res.json()
-                        .then(function(data){
-                            console.log(data);
-                        })
-                });
-    }
 
     var createList = function(obj, i){
         var element = '';
@@ -90,17 +80,10 @@ var albumController = (function(){
     };
 
     var createBtn = function(){
-        var element = '';
-        
-        var idName = '';
-        if($('ul#home').length == 0){
-            idName = 'save'
-        } else {
-            idName = 'update'
-        }
+        var element = '';     
 
         element = element + '<div class="text-right btn-container">';
-        element = element + '<input type="submit" id="' + idName + '" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
+        element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
         element = element + '</div>';
 
         return element
@@ -203,30 +186,87 @@ var albumController = (function(){
 
     };
 
-    //Manege Hp
-    var createListHp = function(obj, i){
+    //Manege Choice Image  from radio btn
+    var createListRadio = function(obj, i){
         var element = '';
-        element = element + '<input type="radio" name="image" id="' + obj[i].id + '" class="checkbox-image">';
+        var id = '';
+
+        if($('ul#home').length > 0){
+            id = $('input#idHeaderImage').val();
+        } else {
+            id = $('input#cover').val();
+        }
+
+        if(id == obj[i].id ){
+            element = element + '<input type="radio" name="group" id="' + obj[i].id + '" checked/>';
+        } else {
+            element = element + '<input type="radio" name="group" id="' + obj[i].id + '" />';
+        }
+        
         element  = element + '<label for="' + obj[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj[i].path + '\');" ></label>';    
         
         return element
     }
 
-    var updateHpImage = function(){
-        var idImageSelected = $('div#select > form input[type="radio"]:checked').attr('id');
-        var urlImageSelected = $('div#select > form input[type="radio"]:checked + label').css('background-image');
-        
-        $('input#idHeaderImage').val(idImageSelected);
-        $('section.header').css('background-image', urlImageSelected);
-        $('span.btn.close').trigger('click');
+    var createBtnRadio = function(){
+        var element = '';
+
+        element = element + '<div class="text-right btn-container">';
+        element = element + '<input type="submit" id="setImage" class="btn btn-rounded btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
+        element = element + '</div>';
+
+        return element
+    };
+
+    var createSkeletonFromRadio = function(element){
+        var background = background = element.css('background-image').replace(/"/g, "");
+        var elementToAppend = '';
+        $('span#cover.skeleton').remove();
+        elementToAppend = elementToAppend + '<span id="cover" class="skeleton border-radius-small" style="background-image:'+ background +'"></span>';
+        $('div.skeleton-container').prepend(elementToAppend);
     }
+
+    var updateSelectFromRadio = function(event){
+        event.preventDefault();
+
+        var idImageSelected = $('div#select > form input[type="radio"]:checked').attr('id');
+        
+        if($('ul#home').length > 0){
+            var urlImageSelected = $('div#select > form input[type="radio"]:checked + label').css('background-image');
+            $('input#idHeaderImage').val(idImageSelected);
+            $('section.header').css('background-image', urlImageSelected);
+        } else {
+            $('input#cover').val(idImageSelected);
+            var elementChecked = $('div#select > form input[type="radio"]:checked + label').last();
+            createSkeletonFromRadio(elementChecked);
+        }         
+        
+        $('div#select > span.btn.close').trigger('click');
+    }
+
+    var addSkeletonOfImageForRadio = function(url, id, elemToAppend){
+        var element = '';
+        var url = url + id;
+        fetch(url,{method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        element = element + '<span id="album" class="skeleton border-radius-small" style="background-image:url('+ data.path +')"></span>';
+                        
+                        elemToAppend.prepend(element);
+                    })
+            });
+
+    };
+
 
     return {
         getAllImage: getAllImage,
         getAllVideo: getAllVideo,
         uploadAlbum: uploadAlbum,
-        updateHpImage: updateHpImage,
         addSkeletonOfImage: addSkeletonOfImage,
+        updateSelectFromRadio: updateSelectFromRadio,
+        addSkeletonOfImageForRadio: addSkeletonOfImageForRadio,
         addSkeletonOfVideo: addSkeletonOfVideo
     };
 
@@ -236,12 +276,15 @@ var albumUI = (function(){
 
     var DOM = {
         btnCloseOverlay: '.btn#close',
+        btnCoverImage: '.btn.cover',
         btnUploadAlbum: '.btn.upload-album',
         btnUploadVideo: '.btn.upload-video',
         btnUpload: 'div#select > form input#save',
         btnHpHeader: 'span[element="header"].btn.edit',
         btnHpNewsLetter: 'span[element="newsletter"].btn.edit',
-        btnHpUpload: 'input#update'
+        btnHpUpload: 'input#setImage',
+        btnImgRadio: 'div#select > form input[type="radio"] + label',
+        btnImgCheckBox: 'div#select > form input[type="radio"] + label'
     }
 
     return {
@@ -256,6 +299,9 @@ var album = (function(albumCtrl, albumUI){
     var init = function(){
         console.log('album init');
 
+        //Cover Image
+        $(document).on('click', DOMElement.btnCoverImage, albumCtrl.getAllImage);
+
         //Upload album-video
         $(document).on('click', DOMElement.btnUploadAlbum, albumCtrl.getAllImage);
         $(document).on('click', DOMElement.btnUploadVideo, albumCtrl.getAllVideo);
@@ -263,16 +309,18 @@ var album = (function(albumCtrl, albumUI){
 
         //Home Page Managment image
         $(document).on('click', DOMElement.btnHpHeader, albumCtrl.getAllImage);
-        $(document).on('click', DOMElement.btnHpUpload, albumCtrl.updateHpImage)
+        $(document).on('click', DOMElement.btnHpUpload, albumCtrl.updateSelectFromRadio);
     }
 
     var addSkeletonOfImage = albumCtrl.addSkeletonOfImage;
     var addSkeletonOfVideo = albumCtrl.addSkeletonOfVideo;
+    var addSkeletonOfImageForRadio = albumCtrl.addSkeletonOfImageForRadio;
 
     return {
         init: init,
         addSkeletonOfImage: addSkeletonOfImage,
-        addSkeletonOfVideo: addSkeletonOfVideo
+        addSkeletonOfVideo: addSkeletonOfVideo,
+        addSkeletonOfImageForRadio: addSkeletonOfImageForRadio
     }
 
 })(albumController, albumUI);

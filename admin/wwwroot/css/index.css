@@ -80,6 +80,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 
 .margin-remove{ margin: 0; }
 
+.padding-xsmall{ padding: 10px; }
 .padding-top-xsmall{ padding-top: 10px; }
 .padding-left-xsmall{ padding-left: 10px; }
 .padding-right-xsmall{ padding-right: 10px; }
@@ -406,7 +407,7 @@ ul#photo li span, ul#video li span, ul#podcast li span{
 ul#photo li span.btn, ul#video li span.btn, ul#podcast li span.btn{ position: absolute; display: inline-block; width: 35px; height: 35px; background-size: 26px; z-index: 9997; }
 ul#photo li span.btn.edit, ul#video li span.btn.edit, ul#podcast li span.btn.edit{ right: 10px; }
 ul#photo li span.btn.remove, ul#video li span.btn.remove, ul#podcast li span.btn.remove{ right: 50px; }
-ul#photo li p, ul#video li p, ul#podcast li p{ position: relative; display: inline-block; margin-top: 5px; width: 100%; line-height: 21px; text-align: center; }
+ul#photo li p, ul#video li p, ul#podcast li p{ position: relative; display: inline-block; margin-top: 5px; width: 100%; line-height: 21px; text-align: center; max-height: 25px; overflow: hidden; } 
 ul#photo li:hover, ul#photo li:focus, ul#photo li:active{ border: 1px solid transparent; }
 ul#video li > video{ position: relative; display: inline-block; margin-top: 10px; max-width: 175px; height: auto;}
 form > span{
@@ -465,6 +466,7 @@ div.checkbox > label::after{ content: attr(data-off); position: absolute; displa
 div.checkbox > input:checked > label{ box-shadow:inset 0 0 0 18px rgba(19,191,17,1),0 0 0 2px rgba(19,191,17,1); }
 div.checkbox > input:checked > label::before{ left: 30px; box-shadow: 0 0 0 2px transparent, 0 3px 3px rgba(0, 0, 0, .3); transition: .25s ease-in-out; }
 div.checkbox > input:checked > label::after{ content: attr(data-on); left: 70px; width: 110px; text-align: left; color:rgb(19, 191, 17); }
+span.btn.cover{ max-width: 200px; max-height: 40px; line-height: 40px;}
 span.btn.upload-album{ max-width: 200px; max-height: 40px; line-height: 40px;}
 span.btn.upload-video{ max-width: 200px; max-height: 40px; line-height: 40px;}
 
@@ -472,6 +474,7 @@ ul.image > li.add-to-album, ul.video > li.add-to-album{ border: 5px solid #4CAF5
 ul.video > li > video{  position: relative; display: inline-block; width: 100%; height: 100%; }
 
 @media(min-width: 768px){
+    span.btn.upload-album{ margin-left: 15px; }
     span.btn.upload-video{ margin-left: 15px; }
     div#overlay > span.post, div#overlay > form.post{ max-width: unset; }
     div.note-editable{ min-height: 400px;}
@@ -590,8 +593,10 @@ form#container span.menu.active > span:nth-child(3){transform: rotate(-45deg); t
 
 form#container section.header span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
 
-form#container div.about-us{ position: absolute; display: inline-block; left: 10px; bottom: 60px; max-height: 250px; overflow-y: scroll; width: 40%; background-color: #bdbdbd; }
+form#container div.about-us{ position: absolute; display: inline-block; left: 10px; bottom: 60px; max-height: 355px; overflow-y: scroll; width: 40%; background-color: #bdbdbd; }
 form#container .note-editor.note-frame .note-editing-area{ height: 150px;}
+form#container div.about-us > h3{ margin: .3em 0; font-size: 22px; line-height: 33px; }
+form#container div.about-us > p{ font-size: 16px; line-height: 24px; }
 
 form#container span.search-bar{ 
     position: absolute; 
@@ -619,6 +624,10 @@ form#container section.main div.newsletter{ position: relative; display: inline-
 form#container div.newsletter div.edit{  position: absolute; left: 10px; bottom: 10px; max-height: 250px; overflow-y: scroll; width: 40%; background-color: #bdbdbd; }
 form#container div.newsletter span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
 
+/* LAST POST */
+div#lastPost{ width: 100%; }
+
+
 /* FOOTER */
 form#container section.footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
 form#container section.footer > div{ display: inline-block; width: 49%; }
@@ -628,12 +637,16 @@ form#container section.footer > div  p{ font-size: 16px; line-height: 24px; }
 form#container[device="mobile"]{ max-height: 568px; overflow-y: scroll; overflow-x: hidden; }
 form#container[device="mobile"] section.header ul.social{ display: none;}
 form#container[device="mobile"] div.about-us{display: none; }
+form#container[device="mobile"] div.about-us.mobile{ display: inline-block; width: 70%; background-color: rgba(0,0,0,.9); overflow-y: hidden;}
 form#container[device="mobile"] div.edit{display: none; }
 form#container[device="mobile"] section.header ul.category{ display: none;}
+
 form#container[device="tablet"] section.header ul.category{ display: none;}
+form#container[device="tablet"] div.about-us.mobile{display: none; }
 
 form#container[device="desktop"] span.menu{display: none; }
 form#container[device="desktop"] section#sidebarFE{ display: none; }
+form#container[device="desktop"] div.about-us.mobile{display: none; }
 
 @media(min-width: 768px){
     ul#home > li.tablet{ display: inline-block; }

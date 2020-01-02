@@ -62,6 +62,7 @@ namespace admin.Data
                 entity.Property(p => p.pubblico);
                 entity.Property(p => p.categoryId);
                 entity.Property(p => p.argumentId);
+                entity.Property(p => p.PhotoId);
             });
 
             modelBuilder.Entity<Photo>(entity => {

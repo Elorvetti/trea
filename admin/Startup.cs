@@ -113,7 +113,8 @@ namespace admin
                 
                 routes.MapRoute(
                     name: "Login",
-                    template: "{controller=Login}/{action=Index}/{id?}");
+                    template: "{controller=Login}/{action=Index}/{id?}"
+                );
 
             });
         }

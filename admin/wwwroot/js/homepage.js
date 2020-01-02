@@ -2,6 +2,37 @@
 
 var hpController = (function(){
 
+    /* EMULATOR DEVICE WIDTH */
+    var changeDeviceView = function(){
+        $('ul#home > li').each(function(){
+            $(this).removeClass('active');
+        })
+
+        $(this).addClass('active');
+        
+        var deviceType = $(this).attr('device');
+        setContainerWidth(deviceType);
+    }
+
+    var setContainerWidth = function(deviceType){
+        var width = "";
+        switch(deviceType){
+            case "mobile":
+                width = 320 + 'px';            
+                break;
+            case "tablet":
+                width = 768 + 'px';
+                break;
+            case "desktop":
+                width= 1440 + 'px';
+                break;
+        }
+
+        $('form#container').css('width', width);
+        $('form#container').attr('device', deviceType);
+    }
+
+    /* MENU */
     var toggleSubList = function(){
         var subchildAttr = $(this).attr('child');
         if(subchildAttr !== undefined){
@@ -71,6 +102,36 @@ var hpController = (function(){
         $('form#container h1').after(element);
     }
 
+    /* LAST 5 POST */
+    var getLastPost = function(){
+        var element = ''
+        fetch('Post/GetLast/4', {method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        element = element + '<div class="carousel-wrapper">';
+                        element = element + '<div class="carousel">';
+                        
+                        for(var i in data){
+                            element = element + '<section id="' + data[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + data[i].coverImage + '\')">';
+                            element = element + '<h3 class="text-center color-white border-radius-small">' + data[i].title + '</h3>';
+                            element = element + '</section>';
+                        }
+
+                        element = element + '<div class="carousel__button--next box-shadow"></div>';
+                        element = element + '<div class="carousel__button--prev box-shadow"></div>';
+                        element = element + '</div>';
+                        element = element + '</div>';
+
+                        $('div#lastPost').append(element);
+                        
+                        //Init carousel
+                        carousel.init();
+                    })
+            })
+    }
+
+    /* SUMMERNOTE */
     var summernoteInit = function(elem){
         elem.summernote({
             toolbar: [
@@ -90,42 +151,14 @@ var hpController = (function(){
 
     }  
 
-    var changeDeviceView = function(){
-        $('ul#home > li').each(function(){
-            $(this).removeClass('active');
-        })
-
-        $(this).addClass('active');
-        
-        var deviceType = $(this).attr('device');
-        setContainerWidth(deviceType);
-    }
-
-    var setContainerWidth = function(deviceType){
-        var width = "";
-        switch(deviceType){
-            case "mobile":
-                width = 320 + 'px';            
-                break;
-            case "tablet":
-                width = 768 + 'px';
-                break;
-            case "desktop":
-                width= 1440 + 'px';
-                break;
-        }
-
-        $('form#container').css('width', width);
-        $('form#container').attr('device', deviceType);
-    }
-
 
     return{
         changeDeviceView: changeDeviceView,
-        getMenu: getMenu,
         setContainerWidth: setContainerWidth,
+        getMenu: getMenu,
         toggleMenu: toggleMenu,
         toggleSubList: toggleSubList,
+        getLastPost: getLastPost,
         summernoteInit: summernoteInit
     }
 
@@ -157,8 +190,11 @@ var hp = (function(hpUI, hpCtrl){
         hpCtrl.summernoteInit($('#aboutUsTesto'));
         hpCtrl.summernoteInit($('#newsletterTesto'));
 
-        //Get all category and argument
+        //Get all category and argument for manage menu
         hpCtrl.getMenu();
+
+        //Get Last 5 post insert
+        hpCtrl.getLastPost();
         
         $(document).on('click', DOMElement.btnDevice, hpCtrl.changeDeviceView);
         $(document).on('click', DOMElement.btnHamburger, hpCtrl.toggleMenu);

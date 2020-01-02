@@ -11,15 +11,27 @@ namespace admin.Models
         public IList<PostsPath> PostsPath{ get; set; }
         public Album album { get; set; }
 
+        public IList<PostDisplay> PostDisplays{ get; set; }
+
         public string categoryName { get; set; }
         public string argumentName { get; set; }
     }    
-
 
     public class PostsPath{
         public int categoryId { get; set; }
         public int argumentId { get; set; }
         public string name { get; set; }
+        
+    }
+
+    public class PostDisplay{
+        public int id { get; set; }
+        public string slug { get; set; }
+        public string coverImage{ get; set; }
+
+        public string title { get; set; }
+
+        public string testo { get; set; }
         
     }
 }

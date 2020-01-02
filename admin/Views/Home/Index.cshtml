@@ -40,6 +40,11 @@
                 <textarea name="text" class="text" name="aboutUsTesto" id="aboutUsTesto" autocomplete="off" placeholder="testo" row="4"></textarea>
             </div>
 
+            <div class="about-us mobile text-center border-radius-small padding-xsmall">
+                <h3 class="color-white text-center font-weight-600">Lorem ipsum</h3>
+                <p class="color-white text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+            </div>
+
             <span class="search-bar border-radius-small background-color-white color-black padding-left-xsmall">Cerca..</span>
             <span element="header" class="btn btn-circle edit background-color-blue-light"></span>
 
@@ -48,8 +53,7 @@
 
         <section class="main">
             <h3 class="text-center">Ultimi post</h3>
-            <p class="text-center">Lista con ultimi 5 post</p>
-            <ul id="lastPost"></ul>
+            <div id="lastPost"></div>
 
             <h3 class="text-center">Foto</h3>
             <p class="text-center">Collegare canale instagram</p>
@@ -113,7 +117,11 @@
 <script src="~/js/lib/summernote.js"></script>
 <script src="../js/homepage.js"></script>
 <script src="../js/album.js"></script>
+<script src="../js/lib/carousel.js"></script>
+
 <script>
-    $(document).ready(hp.init);
-    $(document).ready(album.init);
+    $(document).ready(function(){
+        hp.init();
+        album.init();
+    });
 </script>

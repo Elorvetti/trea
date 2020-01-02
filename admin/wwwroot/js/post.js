@@ -32,13 +32,6 @@ var postController = (function(){
         var element = '';
         
         element = element + '<li class="list" id="' + obj[i].id +'">';
-        
-        //if(obj[i].argumentName !== ""){
-        //    path = obj[i].categoryName + ' / ' + obj[i].argumentName + ' / ' +  obj[i].title;
-        //} else {
-        //    path = obj[i].categoryName + ' / ' +  obj[i].title;
-        //}
-        
         element = element + '<p public="' + obj[i].pubblico + '">' +  obj[i].title + '</p>';
         element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
         element = element + '<span class="btn btn-circle remove background-color-red"></span>';
@@ -79,6 +72,8 @@ var postController = (function(){
             element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
         };
 
+        element = element + '<input type="hidden" name="coverImage" class="name" id="cover" value="' + obj.photoId + '">';
+
         if(obj.album !== null && obj.album !== undefined){
             element = element + '<input type="hidden" name="images" class="name" id="album" value="' + obj.album.idImmagini +'">';
             element = element + '<input type="hidden" name="video" class="name" id="video" value="' + obj.album.idVideo + '">';
@@ -86,6 +81,8 @@ var postController = (function(){
             element = element + '<input type="hidden" name="images" class="name" id="album">';
             element = element + '<input type="hidden" name="video" class="name" id="video">';
         }
+
+        element = element + '<span class="btn cover text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Cover image</span>';
         element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
         element = element + '<span class="btn upload-video text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi video</span>';
         
@@ -144,6 +141,8 @@ var postController = (function(){
         element = element + '<input type="hidden" name="categoryId" value="">'
         element = element + '<input type="hidden" name="argumentId" value="">'
         element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+        element = element + '<input type="hidden" name="coverImage" class="name" id="cover">';
+        element = element + '<span class="btn cover text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Cover image</span>';
         element = element + '<input type="hidden" name="images" class="name" id="album">';
         element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
         element = element + '<input type="hidden" name="video" class="name" id="video">';
@@ -258,11 +257,13 @@ var postController = (function(){
         .then(function(res){
             res.json()
                 .then(function(data){
-                    
+                    console.log(data);
                     //CREATE EDIT POST
                     CreateEditList(data, $overlay);
                     
                     //ADD SKELETON FOR ALUBM IMAGE AND VIDEO 
+                    album.addSkeletonOfImageForRadio('Photo/GetById/', data.photoId, $('.skeleton-container'));
+                    
                     if(data.album !== null){
 
                         if(data.album.idImmagini !== ""){
