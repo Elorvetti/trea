@@ -29,6 +29,10 @@ namespace admin.Services
             return _ctx.photo.ToList();
         }
 
+        public virtual IList<Photo> GetAll(int excludeRecord, int pageSize){
+            return _ctx.photo.Skip(excludeRecord).Take(pageSize).ToList();
+        }
+
         public Photo GetById(int id){
             return _ctx.photo.First(p => p.id == id);
         }

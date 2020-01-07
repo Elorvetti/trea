@@ -29,6 +29,9 @@ namespace admin.Services
             return _ctx.podcast.ToList();
         }
 
+        public virtual IList<Podcast> GetAll(int excludeRecord, int pageSize){
+            return _ctx.podcast.Skip(excludeRecord).Take(pageSize).ToList();
+        }
         public Podcast GetById(int id){
             return _ctx.podcast.First(p => p.id == id);
         }

@@ -71,34 +71,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<PostModel> GetAll(){
+        public PostModel GetAll(int pageSize, int pageNumber){
+            var model = new PostModel();
             
-            var models = new List<PostModel>();
-            var posts = _postService.GetAll();
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _photoService.GetAll().Count;
 
-            // Add Data to model
-            foreach(var post in posts){
-               var argumentName = string.Empty;
+            model.sectionName = "Photo";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.posts = _postService.GetAll(excludeRecords, pageSize);
 
-                if(post.argumentId > 0){
-                    argumentName = _argumentService.GetById(post.argumentId).name;
-                }
-                
-                models.Add(new PostModel(){
-                    id = post.id,
-                    albumId = post.albumId,
-                    categoryId = post.categoryId,
-                    categoryName = _categoryService.GetById(post.categoryId).name,
-                    argumentId = post.argumentId,
-                    argumentName = argumentName,
-                    title = post.title,
-                    testo = post.testo,
-                    pubblico = post.pubblico
-                });
-          
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
             }
             
-            return models;
+            return model;
         }
 
         public IList<PostsPath> GetAllPath(){

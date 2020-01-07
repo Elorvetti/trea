@@ -10,6 +10,7 @@ namespace admin.Services
     {
         void Insert(Video model);
         IList<Video> GetAll();
+        IList<Video> GetAll(int excludeRecord, int pageSize);
         Video GetById(int id);
         void Update(int id, Video model);
         void Delete(int id);   

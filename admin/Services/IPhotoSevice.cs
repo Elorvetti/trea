@@ -10,6 +10,7 @@ namespace admin.Services
     {
         void Insert(Photo model);
         IList<Photo> GetAll();
+        IList<Photo> GetAll(int excludeRecord, int pageSize);
         Photo GetById(int id);
         void Update(int id, Photo model);
         void Delete(int id);

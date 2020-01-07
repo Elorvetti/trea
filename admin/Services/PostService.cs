@@ -26,9 +26,13 @@ namespace admin.Services
         }
 
         public virtual IList<Post> GetAll(){
-            return _ctx.post.OrderBy(p => p.categoryId).ThenBy(p => p.argumentId).ToList();
+            return _ctx.post.ToList();
         }
 
+        public virtual IList<Post> GetAll(int excludeRecord, int pageSize){
+            return _ctx.post.OrderBy(p => p.categoryId).ThenBy(p => p.argumentId).Skip(excludeRecord).Take(pageSize).ToList();
+        }
+        
         public virtual IList<Post> GetLast(int nPost){
             return _ctx.post.Where(p => p.pubblico == true).OrderByDescending(p => p.id).Take(nPost).ToList();
         }

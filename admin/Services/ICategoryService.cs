@@ -10,6 +10,7 @@ namespace admin.Services
     {
         void Insert(Category model);
         IList<Category> GetAll();
+        IList<Category> GetAll(int excludeRecord, int pageSize);
         Category GetById(int id);
         void Update(int id, Category model);
         void Delete(int id);

@@ -1,92 +1,31 @@
+"use strict";
+
 var argumentController = (function(){
+    /* GET ALL */
+    var getAll = function(){
+        var event = {};
+        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Argument/GetAll', true, $('div.content > ul.list'));
+        app.callback(event, createArgumentList);
+    };
 
-    var createFatherInfo = function(event){
-        var id = parseInt($(event.target).parent().attr('id'));
-        var url = 'Argument/GetById/' + id;
-        var self = $(this);
+    var createArgumentList = function(obj){
+        $('div.content > ul.list > li').remove();
+        var element = '';
 
-        fetch(url,{method: 'POST'})
-        .then(function(res){
-            res.json()
-                .then(function(data){
-                    var element = ''
-                    element = element + '<section id="argument-path" class="box-shadow border-radius-small text-center color-white">' + data.categoryName + '<section>';
-                    self.after(element);
-                })
-        });
-
-        
-    }
-    
-    var closeFatherInfo = function(){
-        if($('section#argument-path').length > 0){
-            $('section#argument-path').remove();
+        for(var i in obj.arguments){
+            element = element + '<li class="list" id="' + obj.arguments[i].id +'">';
+            element = element + '<p>' +  obj.arguments[i].name + '</p>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<span class="btn btn-circle info background-color-white box-shadow"></span>';
+            element = element + '</li>';
         }
-    }
-
-    var createArgumentList = function(obj, i){
-        var element = '';
-
-        element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p>' +  obj[i].name + '</p>';
-        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
-        element = element + '<span class="btn btn-circle info background-color-white box-shadow"></span>';
-        element = element + '</li>';
         
         return element;
     };
 
-    var CreateEditList = function(obj){
-        var element = '';
-
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        
-        element = element + '<select name="idCategory">';
-        for(var i in obj.categories){
-            
-            if(obj.categories[i].id == obj.categoryId){
-                element = element + '<option value="' + obj.categories[i].id + '" selected>' + obj.categories[i].name + '</option>';    
-            } else {
-                element = element + '<option value="' + obj.categories[i].id + '">' + obj.categories[i].name + '</option>';
-            }
-
-        }        
-        element = element + '</select>';
-
-        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
-        element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ obj.description + '</textarea>';
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
-        element = element + '</div>';
-        
-        element = element + '</form>'
-
-        return element;
-    };
-
-    var createRemoveArgument = function(event){
-        var id = $(this).parent().attr('id');
-        var argumentName = $(this).prev().prev().text();
-
-        var element = '';
-
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la categoria: ' + argumentName + '?</p>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
-        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
-        element = element + '</div>';
-
-        element = element + '</div>';
-
-        var $overlay = app.createOverlay();
-        $overlay.after(element);
-    };
-
+    /* ADD NEW */
     var createNewArgumentForm = function(obj){
-
         var $overlay = app.createOverlay();
 
         var element = '';
@@ -94,8 +33,8 @@ var argumentController = (function(){
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">'
 
         element = element + '<select name="idCategory">';
-        for(var i in obj){
-            element = element + '<option value="' + obj[i].id + '">' + obj[i].name + '</option>';
+        for(var i in obj.categories){
+            element = element + '<option value="' + obj.categories[i].id + '">' + obj.categories[i].name + '</option>';
         }        
         element = element + '</select>';
 
@@ -149,9 +88,54 @@ var argumentController = (function(){
         })
 
         if(valid){
-            event.data = new app.Data(true, null, 'Argument/Index', false, null);
+            event.data = new app.Data(true, null, null, 'Argument/Index', false, null);
             app.callback(event, updateArgumentList);
         }
+    };
+
+    /* EDIT */
+    var editArgument = function(event){
+        $overlay =app.createOverlay();
+
+        var id = parseInt($(event.target).parent().attr('id'));
+
+        event.data = new app.Data(false, id, null, 'Argument/GetById/', false, $overlay);
+        app.callback(event, CreateEditList);
+    };
+
+    var CreateEditList = function(obj){
+        var element = '';
+
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        element = element + '<select name="idCategory">';
+        
+        for(var i in obj.categories){
+            if(obj.categories[i].id ===  obj.categoryId){
+                element = element + '<option value="' + obj.categories[i].id + '" selected>' + obj.categories[i].name + '</option>'; 
+            } else {
+                element = element + '<option value="' + obj.categories[i].id + '">' + obj.categories[i].name + '</option>'; 
+            }
+        }
+
+        element = element + '</select>';
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
+        element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ obj.description + '</textarea>';
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
+        element = element + '</div>';
+        element = element + '</form>'
+
+        return element;
+    };
+
+    var updateArgument = function(event){
+        event.preventDefault();
+        var id = $('form').attr('id');
+
+        event.data = new app.Data(true, id, null, 'Argument/Update/', false, null);
+
+        app.callback(event, updateArgumentList);
     };
 
     var updateArgumentList = function(event){
@@ -175,48 +159,80 @@ var argumentController = (function(){
         $overlay.after(feedback);
     };
 
-    var editArgument = function(event){
-        //Ceate overlay
-        $overlay =app.createOverlay();
-
-        var id = parseInt($(event.target).parent().attr('id'));
-
-        event.data = new app.Data(false, id, 'Argument/GetById/', false, $overlay);
-
-        app.callback(event, CreateEditList);
-    };
-    
-    var updateArgument = function(event){
-        event.preventDefault();
-        var id = $('form').attr('id');
-
-        event.data = new app.Data(true, id, 'Argument/Update/', false, null);
-
-        app.callback(event, updateArgumentList);
-    };
-
+    /* DELETE */
     var deleteArgument = function(event){
         var id = $('div.delete').attr('id');
         
-        event.data = new app.Data(true, id, 'Argument/Delete/', false, null);
+        event.data = new app.Data(true, id, null, 'Argument/Delete/', false, null);
         app.callback(event, updateArgumentList);
     };
+    
+    var createRemoveArgument = function(event){
+        var id = $(this).parent().attr('id');
+        var argumentName = $(this).prev().prev().text();
 
+        var element = '';
+
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la categoria: ' + argumentName + '?</p>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
+        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        element = element + '</div>';
+
+        element = element + '</div>';
+
+        var $overlay = app.createOverlay();
+        $overlay.after(element);
+    };
+
+    /* GET ARGUMENT */
     var getAllArgument = function(event){
-        event.data = new app.Data(false, null, '/Category/GetAll', false, null);
+        event.data = new app.Data(false, null, '?pageSize=200&pageNumber=1', '/Category/GetAll', false, null);
         app.callback(event, createNewArgumentForm);
     };
 
-    var getAll = function(){
+    /* GET AND DISPLAY ARGUMENT FOR CATEGORY */
+    var createFatherInfo = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+        var url = 'Argument/GetById/' + id;
+        var self = $(this);
 
-        var event = {};
-        event.data = new app.Data(false, null, 'Argument/GetAll', true, $('div.content > ul.list'))
+        fetch(url,{method: 'POST'})
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    var element = ''
+                    element = element + '<section id="argument-path" class="box-shadow border-radius-small text-center color-white">' + data.category.name + '<section>';
+                    self.after(element);
+                })
+        });
+    }
+    
+    var closeFatherInfo = function(){
+        if($('section#argument-path').length > 0){
+            $('section#argument-path').remove();
+        }
+    }
 
-        app.callback(event, createArgumentList)
-    };
+    /* CHANGE PAGE */
+    var changePage = function(event){
+        //Remove active class
+        $('span.btn.paginator').each(function(){
+          $(this).removeClass('active');
+        });
+        
+        //Add class active to element pressed and take page attribute
+        $(this).addClass('active');
+
+        var href = $(this).attr('page');
+        
+        event.data = new app.Data(false, null, href, 'Argument/GetAll', true, $('div.content > ul.list'));
+        app.callback(event, createArgumentList);
+
+    }
 
     return {
-        createNewArgumentForm: createNewArgumentForm,
         createRemoveArgument: createRemoveArgument,
         getAllArgument: getAllArgument,
         addNewArgument: addNewArgument,
@@ -225,7 +241,8 @@ var argumentController = (function(){
         updateArgument: updateArgument,
         deleteArgument: deleteArgument,
         createFatherInfo: createFatherInfo,
-        closeFatherInfo: closeFatherInfo
+        closeFatherInfo: closeFatherInfo,
+        changePage: changePage
     };
 
 })();
@@ -240,7 +257,8 @@ var argumentUI = (function(){
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
-        btnInfo: '.btn.info'
+        btnInfo: '.btn.info',
+        btnChangePage: 'span.btn.paginator'
     }
 
     return {
@@ -270,6 +288,9 @@ var argument = (function(argumentCtrl, argumentUI){
         $(document).on('click', DOMElement.btnDelete, argumentCtrl.deleteArgument);
         
         $(document).on('click', argumentCtrl.closeFatherInfo);
+
+        //Change page 
+        $(document).on('click', DOMElement.btnChangePage, argumentCtrl.changePage);
     };
 
     return {
@@ -277,5 +298,3 @@ var argument = (function(argumentCtrl, argumentUI){
     };
 
 })(argumentController, argumentUI);
-
-//var folderName = obj.name.replace(/\-/g, ' ')

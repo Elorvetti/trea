@@ -1,76 +1,33 @@
 "use strict";
 
 var photoController = (function(){
+    /* GET ALL */
+    var getAll = function(){
+        var event = {};
+        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Photo/GetAll', true, $('div.content > ul.list'));
+        app.callback(event, createPhotoList);
+    };
 
-    var createPhotoList = function(obj, i){
-        var name = obj[i].name.replace(/\.[^/.]+$/, "");
-
+    var createPhotoList = function(obj){
+        $('div.content > ul.list > li').remove();
         var element = '';
-        element = element + '<li class="list box-shadow border-radius-medium" id="' + obj[i].id +'">';
-        element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-        element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
-        element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
-        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj[i].path + '\')"></span>';
-        element = element + '<p>' + name + '</p>';
-        element = element + '</li>';
+
+        for(var i in obj.photos){
+            var name = obj.photos[i].name.replace(/\.[^/.]+$/, "");
+            element = element + '<li class="list box-shadow border-radius-medium" id="' + obj.photos[i].id +'">';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
+            element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
+            element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj.photos[i].path + '\')"></span>';
+            element = element + '<p>' + name + '</p>';
+            element = element + '</li>';
+        }
+        
         
         return element;
     };
     
-    var CreateEditList = function(obj){
-        var name = obj.name.replace(/\.[^/.]+$/, "");
-
-        var element = '';
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
-        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj.path + '\')"></span>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
-        element = element + '</div>';
-        element = element + '</form>';
-        
-
-        return element;
-    };
-
-    var CreateCrop = function(obj){
-
-        var $overlay = app.createOverlay();
-
-        var name = obj.name.replace(/\.[^/.]+$/, "");
-
-        var element = '';
-        element = element + '<div class="box-shadow border-radius-small text-center background-color-white">';
-        element = element + '<p>' + name + '</p>';
-        element = element + '<img class="border-radius-small" src="' + obj.path +  '">';
-        element = element + '</div>';
-
-        $('div#overlay').addClass('crop');
-        $overlay.after(element);
-
-    };
-    
-    var createRemovePhoto = function(event){
-        var id = $(this).parent().attr('id');
-        var photoName = $(this).next().next().text();
-
-        var element = '';
-
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la foto: ' + photoName + '?</p>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
-        element = element + '</div>';
-
-        element = element + '</div>';
-
-        var $overlay = app.createOverlay();
-        $overlay.after(element);
-    };
-
+    /* ADD NEW */
     var createNewPhotoForm = function(){
         
         var $overlay = app.createOverlay();
@@ -105,7 +62,6 @@ var photoController = (function(){
                 
                 //check exist && size && format
                 arrayFileOk.push(files[file] && files[file].size < 15 * 1048576 && regex.test(files[file].name)); 
-
             };
         };
 
@@ -127,16 +83,54 @@ var photoController = (function(){
 
     var changeInputText = function(event){
         var files = $(this).prop('files');  
-        
+
         var filename = $(this).val();
         if(files.length === 1){
             filename = filename.replace('C:\\fakepath\\', '');
         } else{
             filename = files.length + ' files';
         };
-        
+
         $('label#files').text(filename);
+
+    };
+
+    /* EDIT */
+    var editPhoto = function(event){
+        //Create overalay
+        var $overlay = app.createOverlay();
+
+        var id = parseInt($(event.target).parent().attr('id'));
+        var list = event.data.photoList;
+
+        event.data = new app.Data(false, id, null, 'Photo/GetById/', false, $overlay);
+
+        app.callback(event, CreateEditList);
+    };
+
+    var CreateEditList = function(obj){
+        var name = obj.name.replace(/\.[^/.]+$/, "");
+
+        var element = '';
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
+        element = element + '<span class="border-radius-small" style="background-image: url(\'' + obj.path + '\')"></span>';
         
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
+        element = element + '</div>';
+        element = element + '</form>';
+        
+
+        return element;
+    };
+
+    var updatePhoto = function(event){
+        var id = $('form').attr('id');
+
+        event.data = new app.Data(true, id, null, 'Photo/Update/', false, null);
+        app.callback(event, updatePhotoList);
     };
 
     var updatePhotoList = function(event){
@@ -160,47 +154,72 @@ var photoController = (function(){
         $overlay.after(feedback);
     };
 
-    var editPhoto = function(event){
-        //Create overalay
-        var $overlay = app.createOverlay();
-
-        var id = parseInt($(event.target).parent().attr('id'));
-        var list = event.data.photoList;
-
-        event.data = new app.Data(false, id, 'Photo/GetById/', false, $overlay);
-
-        app.callback(event, CreateEditList);
-    };
-
-    var cropPhoto = function(event){
-        var id = parseInt($(event.target).parent().attr('id'));
-
-        event.data = new app.Data(false, id, 'Photo/GetById/', false, null);
-
-        app.callback(event, CreateCrop);
-    };
-
-    var updatePhoto = function(event){
-        var id = $('form').attr('id');
-
-        event.data = new app.Data(true, id, 'Photo/Update/', false, null);
-        app.callback(event, updatePhotoList);
-    };
-
+    /* DELETE */
     var deletePhoto = function(event){
         var id = $('div.delete').attr('id');
         
-        event.data = new app.Data(true, id, 'Photo/Delete/', false, null);
+        event.data = new app.Data(true, id, null, 'Photo/Delete/', false, null);
         app.callback(event, updatePhotoList);
     };
 
-    var getAll = function(){
+    var createRemovePhoto = function(event){
+        var id = $(this).parent().attr('id');
+        var photoName = $(this).next().next().text();
 
-        var event = {};
-        event.data = new app.Data(false, null, 'Photo/GetAll', true, $('div.content > ul.list'));
+        var element = '';
 
-        app.callback(event, createPhotoList);
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare la foto: ' + photoName + '?</p>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        element = element + '</div>';
+
+        element = element + '</div>';
+
+        var $overlay = app.createOverlay();
+        $overlay.after(element);
     };
+
+    /* CROP PHOTO */
+    var cropPhoto = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+        event.data = new app.Data(false, id, null, 'Photo/GetById/', false, null);
+        app.callback(event, CreateCrop);
+    };
+
+    var CreateCrop = function(obj){
+
+        var $overlay = app.createOverlay();
+
+        var name = obj.name.replace(/\.[^/.]+$/, "");
+
+        var element = '';
+        element = element + '<div class="box-shadow border-radius-small text-center background-color-white">';
+        element = element + '<p>' + name + '</p>';
+        element = element + '<img class="border-radius-small" src="' + obj.path +  '">';
+        element = element + '</div>';
+
+        $('div#overlay').addClass('crop');
+        $overlay.after(element);
+
+    };
+    
+    /* CHANGE PAGE */
+    var changePage = function(event){
+        //Remove active class
+        $('span.btn.paginator').each(function(){
+          $(this).removeClass('active');
+        });
+        
+        //Add class active to element pressed and take page attribute
+        $(this).addClass('active');
+
+        var href = $(this).attr('page');
+        
+        event.data = new app.Data(false, null, href, 'Photo/GetAll', true, $('div.content > ul.list'));
+        app.callback(event, createPhotoList);
+    }
 
     //Constructor
     var UploadData = function(input, id, url){
@@ -222,7 +241,8 @@ var photoController = (function(){
         editPhoto: editPhoto,
         updatePhoto: updatePhoto,
         deletePhoto: deletePhoto,
-        changeInputText: changeInputText
+        changeInputText: changeInputText,
+        changePage: changePage
     };
 })();
 
@@ -237,7 +257,8 @@ var photoUI = (function(){
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
-        formFiles: 'input#images'
+        formFiles: 'input#images',
+        btnChangePage: 'span.btn.paginator'
     };
 
     return {
@@ -269,6 +290,9 @@ var photo = (function(photoCtrl, photoUI){
         
         $(document).on('click', DOMElement.btnUpdate, photoCtrl.updatePhoto);
         $(document).on('click', DOMElement.btnDelete, photoCtrl.deletePhoto);
+
+        //Change page 
+        $(document).on('click', DOMElement.btnChangePage, photoCtrl.changePage);
     }
 
     return {

@@ -2,75 +2,34 @@
 
 var podcastController = (function(){
 
-    var createPodcastList = function(obj, i){
-        var name = obj[i].name.replace(/\.[^/.]+$/, "");
-
-        var element = '';
-        element = element + '<li class="list box-shadow border-radius-medium" id="' + obj[i].id +'">';
-        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-        element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
-        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
-        element = element + '<audio class="border-radius-small"><source src="' + obj[i].path + '"></audio>' ;
-        element = element + '<p>' + name + '</p>';
-        element = element + '</li>';
-        
-        return element;
+    /* GET ALL */
+    var getAll = function(){
+        var event = {};
+        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Podcast/GetAll', true, $('div.content > ul.list'));
+        app.callback(event, createPodcastList);
     };
-    
-    var CreateEditList = function(obj){
-        var name = obj.name.replace(/\.[^/.]+$/, "");
 
+    var createPodcastList = function(obj){
+        $('div.content > ul.list > li').remove();
         var element = '';
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
-        element = element + '<audio class="border-radius-small"><source src="' + obj.path + '"></audio>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
-        element = element + '</div>';
-        element = element + '</form>';
+
+        for(var i in obj.podcastList){
+            var name = obj.podcastList[i].name.replace(/\.[^/.]+$/, "");
+
+            element = element + '<li class="list box-shadow border-radius-medium" id="' + obj.podcastList[i].id +'">';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+            element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<audio class="border-radius-small"><source src="' + obj.podcastList[i].path + '"></audio>' ;
+            element = element + '<p>' + name + '</p>';
+            element = element + '</li>';
+        }
         
         return element;
     };
 
-    var CreateCrop = function(obj){
-
-        var $overlay = app.createOverlay();
-
-        var name = obj.name.replace(/\.[^/.]+$/, "");
-
-        var element = '';
-        element = element + '<div class="box-shadow border-radius-small text-center background-color-white">';
-        element = element + '<p class="text-center">' + name + '</p>';
-        element = element + '<audio class="border-radius-small" controls><source src="' + obj.path + '"></audio>' ;
-        element = element + '</div>';
-
-        $overlay.after(element);
-
-    };
-    
-    var createRemovePodcast = function(event){
-        var id = $(this).parent().attr('id');
-        var podcastName = $(this).next().next().text();
-
-        var element = '';
-
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare il podcast: ' + podcastName + '?</p>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
-        element = element + '</div>';
-
-        element = element + '</div>';
-
-        var $overlay = app.createOverlay();
-        $overlay.after(element);
-    };
-
+    /* ADD NEW */
     var createNewPodcastForm = function(){
-        
         var $overlay = app.createOverlay();
 
         var element = '';
@@ -134,6 +93,43 @@ var podcastController = (function(){
         $('label#files').text(filename);
     };
 
+    /* EDIT */
+    var editPodcast = function(event){
+        //Create overalay
+        var $overlay = app.createOverlay();
+
+        var id = parseInt($(event.target).parent().attr('id'));
+        var list = event.data.podcastList;
+
+        event.data = new app.Data(false, id, null, 'Podcast/GetById/', false, $overlay);
+
+        app.callback(event, CreateEditList);
+    };
+
+    var CreateEditList = function(obj){
+        var name = obj.name.replace(/\.[^/.]+$/, "");
+
+        var element = '';
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
+        element = element + '<audio class="border-radius-small"><source src="' + obj.path + '"></audio>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
+        element = element + '</div>';
+        element = element + '</form>';
+        
+        return element;
+    };
+
+    var updatePodcast = function(event){
+        var id = $('form').attr('id');
+
+        event.data = new app.Data(true, id, null, 'Podcast/Update/', false, null);
+        app.callback(event, updatePodcastList);
+    };
+
     var updatePodcastList = function(event){
         //remove element to DOM
         $('#overlay').remove();
@@ -155,47 +151,71 @@ var podcastController = (function(){
         $overlay.after(feedback);
     };
 
-    var editPodcast = function(event){
-        //Create overalay
-        var $overlay = app.createOverlay();
-
-        var id = parseInt($(event.target).parent().attr('id'));
-        var list = event.data.podcastList;
-
-        event.data = new app.Data(false, id, 'Podcast/GetById/', false, $overlay);
-
-        app.callback(event, CreateEditList);
-    };
-
-    var cropPodcast = function(event){
-        var id = parseInt($(event.target).parent().attr('id'));
-
-        event.data = new app.Data(false, id, 'Podcast/GetById/', false, null);
-
-        app.callback(event, CreateCrop);
-    };
-
-    var updatePodcast = function(event){
-        var id = $('form').attr('id');
-
-        event.data = new app.Data(true, id, 'Podcast/Update/', false, null);
-        app.callback(event, updatePodcastList);
-    };
-
+    /* DELETE */
     var deletePodcast = function(event){
         var id = $('div.delete').attr('id');
         
-        event.data = new app.Data(true, id, 'Podcast/Delete/', false, null);
+        event.data = new app.Data(true, id, null, 'Podcast/Delete/', false, null);
         app.callback(event, updatePodcastList);
     };
 
-    var getAll = function(){
-        
-        var event = {};
-        event.data = new app.Data(false, null, 'Podcast/GetAll', true, $('div.content > ul.list'));
+    var createRemovePodcast = function(event){
+        var id = $(this).parent().attr('id');
+        var podcastName = $(this).next().next().text();
 
-        app.callback(event, createPodcastList);
+        var element = '';
+
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare il podcast: ' + podcastName + '?</p>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        element = element + '</div>';
+
+        element = element + '</div>';
+
+        var $overlay = app.createOverlay();
+        $overlay.after(element);
+    }; 
+
+    /* CROP PODCAST */
+    var cropPodcast = function(event){
+        var id = parseInt($(event.target).parent().attr('id'));
+        event.data = new app.Data(false, id, null, 'Podcast/GetById/', false, null);
+        app.callback(event, CreateCrop);
     };
+
+    var CreateCrop = function(obj){
+
+        var $overlay = app.createOverlay();
+
+        var name = obj.name.replace(/\.[^/.]+$/, "");
+
+        var element = '';
+        element = element + '<div class="box-shadow border-radius-small text-center background-color-white">';
+        element = element + '<p class="text-center">' + name + '</p>';
+        element = element + '<audio class="border-radius-small" controls><source src="' + obj.path + '"></audio>' ;
+        element = element + '</div>';
+
+        $overlay.after(element);
+
+    };
+    
+    /* CHANGE PAGE */
+    var changePage = function(event){
+        //Remove active class
+        $('span.btn.paginator').each(function(){
+          $(this).removeClass('active');
+        });
+        
+        //Add class active to element pressed and take page attribute
+        $(this).addClass('active');
+
+        var href = $(this).attr('page');
+        
+        event.data = new app.Data(false, null, href, 'Podcasr/GetAll', true, $('div.content > ul.list'));
+        app.callback(event, createPodcastList);
+    }
 
     //Constructor
     var UploadData = function(input, id, url){
@@ -217,7 +237,8 @@ var podcastController = (function(){
         editPodcast: editPodcast,
         updatePodcast: updatePodcast,
         deletePodcast: deletePodcast,
-        changeInputText: changeInputText
+        changeInputText: changeInputText,
+        changePage: changePage
     };
 })();
 
@@ -232,7 +253,8 @@ var podcastUI = (function(){
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
-        formFiles: 'input#podcasts'
+        formFiles: 'input#podcasts',
+        btnChangePage: 'span.btn.paginator'
     };
 
     return {
@@ -263,6 +285,9 @@ var podcast = (function(podcastCtrl, podcastUI){
         
         $(document).on('click', DOMElement.btnUpdate, podcastCtrl.updatePodcast);
         $(document).on('click', DOMElement.btnDelete, podcastCtrl.deletePodcast);
+
+        //Change page 
+        $(document).on('click', DOMElement.btnChangePage, podcastCtrl.changePage);
     };
 
     return {

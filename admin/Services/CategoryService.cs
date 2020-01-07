@@ -26,9 +26,12 @@ namespace admin.Services
         }
 
         public virtual IList<Category> GetAll(){
-            return _ctx.category.OrderBy(a => a.displayOrder).ToList();
+            return _ctx.category.ToList();
         }
 
+        public virtual IList<Category> GetAll(int excludeRecord, int pageSize){
+            return _ctx.category.OrderBy(a => a.displayOrder).Skip(excludeRecord).Take(pageSize).ToList();
+        }
         public virtual Category GetById(int id){
             return _ctx.category.First(a => a.id == id);
         }

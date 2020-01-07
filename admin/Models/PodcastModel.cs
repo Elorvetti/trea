@@ -10,5 +10,11 @@ namespace admin.Models
     public class PodcastModel : Podcast
     {
         public IList<IFormFile> podcasts { get; set; }
+        public int pageSize { get; set; }
+        public double pageTotal { get; set; }
+        public bool displayPagination{ get; set; }
+        public string sectionName { get; set; }
+        public IList<Podcast> podcastList { get; set; }
+
     }
 }

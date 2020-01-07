@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using admin.Models;
 using admin.Data;
+using admin.Commons;
  
  namespace admin.Services
  {
@@ -25,11 +26,14 @@ using admin.Data;
             _ctx.SaveChanges(); 
          }
 
-         public virtual IList<Administrator> GetAll(){
+        public virtual IList<Administrator> GetAll(){
             return _ctx.administrator.ToList();
          }
+         public virtual IList<Administrator> GetAll(int excludeRecord, int pageSize){
+            return _ctx.administrator.Skip(excludeRecord).Take(pageSize).ToList();
+         }
 
-        public virtual IList<Administrator>GetByPhotoId(int photoId)
+        public virtual IList<Administrator> GetByPhotoId(int photoId)
         {
             return _ctx.administrator.Where(a => a.photoId == photoId).ToList();
         }

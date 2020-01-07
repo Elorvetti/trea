@@ -50,7 +50,7 @@ namespace admin.Controllers
                 {
                     id = argument.id,
                     categoryId = argument.category.id,
-                    categoryName = argument.category.name,
+                    //categoryName = argument.category.name,
                     slug = argument.slug,
                     name = argument.name
                 });

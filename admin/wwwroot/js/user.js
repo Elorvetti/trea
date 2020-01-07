@@ -1,76 +1,30 @@
 "use strict";
 
 var userController = (function(){
+    /* GET ALL */
+    var getAll = function(){
+        var event = {};
+        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'User/GetAll', true, $('div.content > ul.list'));
 
-    var createUserList = function(obj, i){
+        return app.callback(event, createUserList);
+    };
+
+    var createUserList = function(obj){
+        $('div.content > ul.list > li').remove();
         var element = '';
         
-        element = element + '<li class="list" id="' + obj[i].id +'">';
-        element = element + '<p active="' + obj[i].isActive + '">' + obj[i].user + '</p>';
-        element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-        element = element + '<span class="btn btn-circle remove background-color-red"></span>';
-        element = element + '</li>';
+        for(var i in obj.administrators){
+            element = element + '<li class="list" id="' + obj.administrators[i].id +'">';
+            element = element + '<p active="' + obj.administrators[i].isActive + '">' + obj.administrators[i].user + '</p>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '</li>';
+        }
         
         return element;
     };
     
-    var CreateEditList = function(obj){
-        var element = '';
-
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
-        if(obj.photoId > 0){
-            element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');"></span>'
-        } else {
-            element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
-        }
-        element = element + '<input id="photoId" name="photoId" automplete="off" type="hidden" value="' + obj.photoId + '"/>'
-        element = element + '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
-        
-        if(obj.isActive === true){
-            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';
-        } else {
-            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">';
-        };
-
-        element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
-        element = element + '</div>';
-        
-        element = element + '</form>';
-
-        return element;
-    };
-
-    var createAddUserPhoto = function(obj,i){
-        var element = '';
-        element = element + '<li id="' + obj[i].id +'" style="background-image: url(\'' + obj[i].path + '\');" class="select border-radius-small"></li>';
-
-        return element;
-        
-    };
-
-    var createRemoveUser = function(event){
-        var id = $(this).parent().attr('id');
-        var userName = $(this).prev().prev().text();
-
-        var element = '';
-
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
-        element = element + '</div>';
-
-        element = element + '</div>';
-
-        var $overlay = app.createOverlay();
-        $overlay.after(element);
-    };
-
+    /* ADD NEW */
     var createNewUserForm = function(){
         
         var $overlay = app.createOverlay();
@@ -157,9 +111,59 @@ var userController = (function(){
         });
 
         if(valid){
-            event.data = new app.Data(true, null, '/User/Index', false, null);
+            event.data = new app.Data(true, null, null, '/User/Index', false, null);
             app.callback(event, updateUserList);
         };
+    };
+
+    /* EDIT */
+    var editUser = function(event){
+        //Add overlay
+        var $overlay = app.createOverlay();
+
+        var id = parseInt($(event.target).parent().attr('id'));
+        var list = event.data.userList;
+
+        event.data = new app.Data(false, id, null, 'User/GetById/', false, $overlay);
+
+        app.callback(event, CreateEditList);
+    };
+
+    var CreateEditList = function(obj){
+        var element = '';
+
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        if(obj.photoId > 0){
+            element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');"></span>'
+        } else {
+            element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
+        }
+        element = element + '<input id="photoId" name="photoId" automplete="off" type="hidden" value="' + obj.photoId + '"/>'
+        element = element + '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
+        
+        if(obj.isActive === true){
+            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';
+        } else {
+            element =  element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch">';
+        };
+
+        element = element + '<label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
+        element = element + '</div>';
+        
+        element = element + '</form>';
+
+        return element;
+    };
+
+    var updateUser = function(event){
+        var id = $('form').attr('id');
+
+        event.data = new app.Data(true, id, null, 'User/Update/', false, null);
+        app.callback(event, updateUserList);
     };
 
     var updateUserList = function(event){
@@ -183,30 +187,66 @@ var userController = (function(){
         $overlay.after(feedback);
     };
 
-    var editUser = function(event){
-        //Add overlay
-        var $overlay = app.createOverlay();
-
-        var id = parseInt($(event.target).parent().attr('id'));
-        var list = event.data.userList;
-
-        event.data = new app.Data(false, id, 'User/GetById/', false, $overlay);
-
-        app.callback(event, CreateEditList);
+    /* DELETE */
+    var deleteUser = function(event){
+        var id = $('div.delete').attr('id');
+        
+        event.data = new app.Data(true, id, null, 'User/Delete/', false, null);
+        app.callback(event, updateUserList);
     };
 
+    var createRemoveUser = function(event){
+        var id = $(this).parent().attr('id');
+        var userName = $(this).prev().prev().text();
+
+        var element = '';
+
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete"><p class="text-center confirm">Sei sicuro di voler eliminare l\'utente: ' + userName + '?</p>';
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        element = element + '</div>';
+
+        element = element + '</div>';
+
+        var $overlay = app.createOverlay();
+        $overlay.after(element);
+    };
+
+    /* ADD USER PHOTO */
     var addUserPhoto = function(event){
         var element = '';
-        var element = '<div id="select" ><span class="btn close select"></span><ul class="image background-color-white border-radius-small"></ul></div>'
+        var element = '<div id="select" ><span class="btn close select"></span><section class="image background-color-white border-radius-small text-center padding-small margin-bottom-medium"></div>'
         $('body').append(element)
 
-        event.data = new app.Data(false, null, 'Photo/GetAll', true, $('div#select > ul.image'));
-
+        event.data = new app.Data(false, null, '?pageSize=20&pageNumber=1', 'Photo/GetAll', true, $('div#select > section.image'));
+        
         app.callback(event, createAddUserPhoto);
 
         $(document).on('click', '.btn.close.select', function(){
             $('div#select').remove();
         })
+    };
+
+    var createAddUserPhoto = function(obj){
+        $('div#select > section.image > *:not(div.paginator)').remove();
+
+        var id = $('input#photoId').val()
+        var element = '';
+
+        for(var i in obj.photos){
+            if(id == obj.photos[i].id ){
+                element = element + '<input type="radio" name="group" id="img-' + obj.photos[i].id + '" checked/>';
+            } else {
+                element = element + '<input type="radio" name="group" id="img-' + obj.photos[i].id + '" />';
+            }
+            
+            element  = element + '<label for="img-' + obj.photos[i].id + '" id="' + obj.photos[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj.photos[i].path + '\');" ></label>';    
+        }
+
+        return element;
+        
     };
 
     var selectedImage = function(event){
@@ -221,26 +261,28 @@ var userController = (function(){
 
     };
 
-    var updateUser = function(event){
-        var id = $('form').attr('id');
-
-        event.data = new app.Data(true, id, 'User/Update/', false, null);
-        app.callback(event, updateUserList);
-    };
-
-    var deleteUser = function(event){
-        var id = $('div.delete').attr('id');
+    /* CHANGE PAGE */
+    var changePage = function(event){
+        //Remove active class
+        $('span.btn.paginator').each(function(){
+          $(this).removeClass('active');
+        });
         
-        event.data = new app.Data(true, id, 'User/Delete/', false, null);
-        app.callback(event, updateUserList);
-    };
+        //Add class active to element pressed and take page attribute
+        $(this).addClass('active');
 
-    var getAll = function(){
-        var event = {};
-        event.data = new app.Data(false, null, 'User/GetAll', true, $('div.content > ul.list'));
+        var href = $(this).attr('page');
+        var sectionName = $(this).attr('section');
+        
+        if(sectionName === 'Photo'){
+            event.data = new app.Data(false, null, href, 'Photo/GetAll', true, $('div#select > section.image'));
+            app.callback(event, createAddUserPhoto);
+        } else if( sectionName === 'User' ){
+            event.data = new app.Data(false, null, href, 'User/GetAll', true, $('div.content > ul.list'));
+            app.callback(event, createUserList);
+        }
 
-        return app.callback(event, createUserList);
-    };
+    }
 
     return {
         createNewUserForm: createNewUserForm,
@@ -251,7 +293,8 @@ var userController = (function(){
         addUserPhoto: addUserPhoto,
         selectedImage: selectedImage,
         updateUser: updateUser,
-        deleteUser: deleteUser
+        deleteUser: deleteUser,
+        changePage: changePage
     };
 })();
 
@@ -266,7 +309,8 @@ var userUI = (function(){
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
         btnUserPhoto: '.btn.user-image',
-        btnSelect: 'li.select'
+        btnAvatarImageSelect: 'section input[type="radio"] + label',
+        btnChangePage: 'span.btn.paginator'
     };
 
     return {
@@ -292,10 +336,13 @@ var user = (function(userCtrl, userUI){
         $(document).on('click', DOMElement.btnRemove , userCtrl.createRemoveUser);
         
         $(document).on('click', DOMElement.btnUserPhoto, userCtrl.addUserPhoto);
-        $(document).on('click', DOMElement.btnSelect, userCtrl.selectedImage)
+        $(document).on('click', DOMElement.btnAvatarImageSelect, userCtrl.selectedImage)
         
         $(document).on('click', DOMElement.btnUpdate, userCtrl.updateUser);
         $(document).on('click', DOMElement.btnDelete, userCtrl.deleteUser);
+
+        //Change page 
+        $(document).on('click', DOMElement.btnChangePage, userCtrl.changePage);
     };
 
     return {

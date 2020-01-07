@@ -83,8 +83,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<Photo> GetAll(){
-            return _photoService.GetAll();
+        public PhotoModel GetAll(int pageSize, int pageNumber){
+            var model = new PhotoModel();
+
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _photoService.GetAll().Count;
+
+            model.sectionName = "Photo";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.photos = _photoService.GetAll(excludeRecords, pageSize);
+            
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
+            }
+
+            return model;
         }
 
         [HttpPost]

@@ -78,8 +78,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<Podcast> GetAll(){
-            return _podcastService.GetAll();
+        public PodcastModel GetAll(int pageSize, int pageNumber){
+            var model = new PodcastModel();
+
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _podcastService.GetAll().Count;
+
+            model.sectionName = "Photo";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.podcastList = _podcastService.GetAll(excludeRecords, pageSize);
+            
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
+            }
+
+            return model;
         }
 
         [HttpPost]

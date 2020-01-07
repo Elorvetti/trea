@@ -51,8 +51,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<Category> GetAll(){
-            return _categoryService.GetAll();
+        public CategoryModel GetAll(int pageSize, int pageNumber){
+            var model = new CategoryModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _categoryService.GetAll().Count;
+
+            model.sectionName = "Category";
+            model.pageSize = pageSize;
+            model.pageTotal = Math.Ceiling((double)total / pageSize);
+            model.categories = _categoryService.GetAll(excludeRecords, pageSize);
+
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
+            }
+
+            return model;
         }
 
         [HttpPost]

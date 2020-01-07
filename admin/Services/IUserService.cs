@@ -10,6 +10,7 @@ namespace admin.Services
     {
         void Insert(Administrator model);
         IList<Administrator> GetAll();
+        IList<Administrator> GetAll(int excludeRecord, int pageSize);
         Administrator GetById(int id);
         IList<Administrator> GetByPhotoId(int idPhoto);
         Administrator GetByEmail(string email);

@@ -29,6 +29,11 @@ namespace admin.Services
             return _ctx.video.ToList();
         }
 
+        public virtual IList<Video> GetAll(int excludeRecord, int pageSize){
+            return _ctx.video.Skip(excludeRecord).Take(pageSize).ToList();
+        }
+        
+
         public Video GetById(int id){
             return _ctx.video.First(v => v.id == id);
         }

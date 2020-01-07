@@ -12,6 +12,7 @@ var hpController = (function(){
         
         var deviceType = $(this).attr('device');
         setContainerWidth(deviceType);
+        carouselInit();
     }
 
     var setContainerWidth = function(deviceType){
@@ -102,6 +103,47 @@ var hpController = (function(){
         $('form#container h1').after(element);
     }
 
+    /* EDIT HEADER */
+    var editHeader = function(){
+        var $overlay = app.createOverlay();
+        var elementToAppend = '';
+        
+        var headerTitle = $('input#titleHeader').val();
+        var headerText = $('input#testoHeader').val();
+        
+        elementToAppend = elementToAppend  + '<form id="edit-header" class="box-shadow border-radius-small text-center background-color-white" autocomplete="off">';
+        elementToAppend = elementToAppend  + '<input name="title" class="name" id="title" placeholder="Titolo" autocolplete="off" value="' + headerTitle + '" required />';
+        elementToAppend = elementToAppend  + '<textarea name="testo" id="editor">' + headerText + '</textarea>';
+        
+        elementToAppend = elementToAppend + '<div class="text-right">';
+        elementToAppend = elementToAppend + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        elementToAppend = elementToAppend + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
+        elementToAppend = elementToAppend + '</div>';
+        
+        elementToAppend = elementToAppend  + '</form>';
+        
+        $overlay.after(elementToAppend);
+
+        summernoteInit($('#editor'));
+    }
+
+    var saveHeader = function(event){
+        event.preventDefault();
+
+        var headerTitle = $('form#edit-header > input').val();
+        var headerText = $('form#edit-header > textarea').val();
+
+        //update input
+        $('input#titleHeader').val(headerTitle);
+        $('input#testoHeader').val(headerText);
+
+        //update view 
+        $('div.about-us > h3').text(headerTitle);
+        $('div.about-us > p').html(headerText);
+
+        $('#overlay').remove();
+    }
+
     /* LAST 5 POST */
     var getLastPost = function(){
         var element = ''
@@ -110,25 +152,147 @@ var hpController = (function(){
                 res.json()
                     .then(function(data){
                         element = element + '<div class="carousel-wrapper">';
-                        element = element + '<div class="carousel">';
+                        element = element + '<div class="owl-carousel owl-theme">';
                         
                         for(var i in data){
-                            element = element + '<section id="' + data[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + data[i].coverImage + '\')">';
+                            element = element + '<div id="' + data[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + data[i].coverImage + '\')">';
                             element = element + '<h3 class="text-center color-white border-radius-small">' + data[i].title + '</h3>';
-                            element = element + '</section>';
+                            element = element + '</div>';
                         }
-
-                        element = element + '<div class="carousel__button--next box-shadow"></div>';
-                        element = element + '<div class="carousel__button--prev box-shadow"></div>';
                         element = element + '</div>';
                         element = element + '</div>';
 
                         $('div#lastPost').append(element);
                         
                         //Init carousel
-                        carousel.init();
+                        carouselInit();
                     })
             })
+    }
+
+    /* INSTAGRAM PHOTOS */
+    var instagram = function(elem){
+        var element = ''
+
+        var  data = {
+            get: 'users',
+            userId: '2276800813',
+            accessToken: '2276800813.1677ed0.654454a21887433286b9b67dfdd9c767',
+            limit: 10
+        }
+
+        var url = 'https://api.instagram.com/v1/' + data.get + '/' + data.userId + '/media/recent?access_token=' + data.accessToken + '&count=' + data.limit;
+        
+        fetch(url)
+            .then(function(res){
+                res.json()
+                    .then(function(insta){
+                        element = element + '<div class="carousel-wrapper">';
+                        element = element + '<div class="owl-carousel owl-theme">';
+
+                        var images = insta.data;
+
+                        for(var i in images){
+                            element = element + '<div id="' + images[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + images[i].images.standard_resolution.url + '\')">';
+                            element = element + '<section class="interactions border-radius-small text-center">'
+                            element = element + '<h3 class="text-center color-white border-radius-small padding-top-large">' + images[i].caption.text + '</h3>';
+                            element = element + '<span class="text-center margin-right-small color-white border-radius-small likes">' + images[i].likes.count + '</span>';
+                            element = element + '<span class="text-center color-white border-radius-small comments">' + images[i].comments.count + '</span>';
+                            element = element + '</section>'
+                            element = element + '</div>';
+                        }
+
+                        element = element + '</div>';
+                        element = element + '</div>';
+
+                        $(elem).append(element);
+
+                        //Init carousel
+                        carouselInsta();
+
+                    })
+            })
+
+    }
+
+    var youtube = function(elem){
+        var element = '';
+        var data = {
+            part: 'snipped',
+            chanelId: 'UCAwsqjnD-64ZpWJ-umXfTaA'
+        }
+
+        var url = 'https://www.googleapis.com/youtube/v3/playlists?part='+ data.part +'&channelId=' + data.chanelId;
+        fetch(url)
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        console.log(data)    
+                })
+            })
+    }
+
+    /* CAROUSEL INIT */
+    var carouselInit = function(){
+        if($('form#container').attr('device') === 'mobile'){
+            $(".owl-carousel").owlCarousel('destroy'); 
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: false,
+                dots: true,
+                items: 2,
+            });
+        } else if($('form#container').attr('device') === 'tablet'){
+            $(".owl-carousel").owlCarousel('destroy'); 
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: false,
+                dots: true,
+                dotsEach: 2, 
+                items: 2,
+            });
+        } else {
+            $(".owl-carousel").owlCarousel('destroy'); 
+            $(".owl-carousel").owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: false,
+                items: 4,
+            });
+        }
+    }
+
+    var carouselInsta = function(){
+        if($('form#container').attr('device') === 'mobile'){
+            $(".owl-carousel").owlCarousel('destroy'); 
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: false,
+                dots: true,
+                items: 2,
+            });
+        } else if($('form#container').attr('device') === 'tablet'){
+            $(".owl-carousel").owlCarousel('destroy'); 
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: false,
+                dots: true,
+                dotsEach: 2, 
+                items: 2,
+            });
+        } else {
+            $(".owl-carousel").owlCarousel('destroy'); 
+            $(".owl-carousel").owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: false,
+                items: 4,
+            });
+        }
     }
 
     /* SUMMERNOTE */
@@ -143,7 +307,7 @@ var hpController = (function(){
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
                 ['height', ['height']],
-                ['insert', ['link',"picture"]],
+                ['insert', ['link']],
                 ['view', ['fullscreen', 'codeview']],
                 ['style', ['style']],
             ],
@@ -158,7 +322,11 @@ var hpController = (function(){
         getMenu: getMenu,
         toggleMenu: toggleMenu,
         toggleSubList: toggleSubList,
+        editHeader: editHeader,
+        saveHeader: saveHeader, 
         getLastPost: getLastPost,
+        instagram: instagram,
+        youtube: youtube,
         summernoteInit: summernoteInit
     }
 
@@ -168,7 +336,10 @@ var hpUI = (function(){
     var DOM = {
         btnDevice: 'ul#home > li',
         btnHamburger: 'span.menu',
-        btnSubMenu: 'ul.category > li'
+        btnSubMenu: 'ul.category > li',
+        btnEditorHeader: 'span#addEditorHeader',
+        btnSaveHeader: 'input#save',
+        instagramContainer: 'div#instafeed',
     }
 
     return {
@@ -186,21 +357,25 @@ var hp = (function(hpUI, hpCtrl){
         $('span#add').remove();
         hpCtrl.setContainerWidth('mobile');
 
-        //Add editor
-        hpCtrl.summernoteInit($('#aboutUsTesto'));
-        hpCtrl.summernoteInit($('#newsletterTesto'));
-
         //Get all category and argument for manage menu
         hpCtrl.getMenu();
 
         //Get Last 5 post insert
         hpCtrl.getLastPost();
+
+        //Add instagram photos
+        hpCtrl.instagram(DOMElement.instagramContainer);
+
+        //Add video from youtube playlists
+        hpCtrl.youtube();
         
         $(document).on('click', DOMElement.btnDevice, hpCtrl.changeDeviceView);
         $(document).on('click', DOMElement.btnHamburger, hpCtrl.toggleMenu);
         $(document).on('click', DOMElement.btnSubMenu, hpCtrl.toggleSubList);
 
-
+        //Editor header
+        $(document).on('click', DOMElement.btnEditorHeader, hpCtrl.editHeader);
+        $(document).on('click', DOMElement.btnSaveHeader, hpCtrl.saveHeader);
     }
 
     return{

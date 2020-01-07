@@ -13,6 +13,7 @@ namespace admin.Services
     {
         void Insert(Post model);
         IList<Post> GetAll();
+        IList<Post> GetAll(int excludeRecord, int pageSize);
         IList<Post> GetLast(int nPost);
         Post GetById(int id);
         void Update(int id, Post model);

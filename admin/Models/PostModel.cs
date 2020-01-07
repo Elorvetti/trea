@@ -15,6 +15,16 @@ namespace admin.Models
 
         public string categoryName { get; set; }
         public string argumentName { get; set; }
+
+        public int pageSize { get; set; }
+        public double pageTotal { get; set; }
+        public bool displayPagination{ get; set; }
+        public string sectionName { get; set; }
+        public IList<Post> posts { get; set; }
+        public Category category { get; set; }
+        public Argument argument { get; set; }
+        public IList<Category> categories { get; set; }
+        public IList<Argument> arguments { get; set; }
     }    
 
     public class PostsPath{

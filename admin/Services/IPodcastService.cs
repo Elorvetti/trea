@@ -10,6 +10,7 @@ namespace admin.Services
     {
         void Insert(Podcast model);
         IList<Podcast> GetAll();
+        IList<Podcast> GetAll(int excludeRecord, int pageSize);
         Podcast GetById(int id);
         void Update(int id, Podcast model);
         void Delete(int id);   

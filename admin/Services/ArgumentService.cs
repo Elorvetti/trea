@@ -27,9 +27,11 @@ namespace admin.Services
 
         public virtual IList<Argument> GetAll(){
             return _ctx.argument.Include(c => c.category).ToList();
-
         }
         
+        public virtual IList<Argument> GetAll(int excludeRecord, int pageSize){
+            return _ctx.argument.Skip(excludeRecord).Take(pageSize).ToList();
+        }
         public virtual Argument GetById(int id){
             return _ctx.argument.First(a => a.id == id);
         }
@@ -49,20 +51,6 @@ namespace admin.Services
             var argument = _ctx.argument.First(a => a.id == id);
             _ctx.argument.Remove(argument);
             _ctx.SaveChanges();
-        }
-
-        public virtual IList<categories> GetAllCategory(){
-            var models = new List<categories>();
-            var categories = _ctx.category.ToList();
-
-            foreach(var category in categories){
-                models.Add(new categories(){
-                    id = category.id,
-                    name = category.name
-                });
-            }
-
-            return models.ToList();
         }
     }
 }

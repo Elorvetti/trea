@@ -12,7 +12,5 @@ namespace admin.Models
         [Display(Name = "Conferma Password")]
         public string ConfirmPassword { get; set; }
 
-        public int photoId {get; set;}
-
     }
 }

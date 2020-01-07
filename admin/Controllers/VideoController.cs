@@ -81,8 +81,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<Video> GetAll(){
-            return _videoService.GetAll();
+        public VideoModel GetAll(int pageSize, int pageNumber){
+            var model = new VideoModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _videoService.GetAll().Count;
+            
+            model.sectionName = "Video";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.videoList = _videoService.GetAll(excludeRecords, pageSize);
+
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
+            }
+            
+            return model;
         }
 
         [HttpPost]

@@ -52,23 +52,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<ArgumentModel> GetAll(){
+        public ArgumentModel GetAll(int pageSize, int pageNumber){
+            var model = new ArgumentModel();
             
-            var models = new List<ArgumentModel>();
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _argumentService.GetAll().Count;
 
-            var arguments = _argumentService.GetAll();
-            foreach(var argument in arguments)
-            {
-                models.Add(new ArgumentModel()
-                {
-                    id = argument.id,
-                    categoryName = argument.category.name,
-                    name = argument.name
-                });
+            model.sectionName = "Argomenti";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.arguments = _argumentService.GetAll(excludeRecords, pageSize);
 
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
             }
 
-            return models;
+            return model;
         }
 
         [HttpPost]
@@ -78,9 +79,9 @@ namespace admin.Controllers
             var argument = _argumentService.GetById(id);
 
             model.id = argument.id;
-            model.categories = _argumentService.GetAllCategory();
             model.categoryId = argument.categoryId;
-            model.categoryName = argument.category.name;
+            model.category = _categoryService.GetById(argument.categoryId);
+            model.categories = _categoryService.GetAll();
             model.name = argument.name;
             model.description = argument.description;
             

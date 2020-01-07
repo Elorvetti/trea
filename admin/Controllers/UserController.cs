@@ -78,11 +78,24 @@ namespace admin.Controllers
         }
 
         [HttpPost]
-        public IList<Administrator> GetAll(){
-            
-            var users = _userService.GetAll();
+        public AdministratorModel GetAll(int pageSize, int pageNumber){
+            var model = new AdministratorModel();
 
-            return users;
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total = _userService.GetAll().Count;
+            
+            model.sectionName = "User";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.administrators = _userService.GetAll(excludeRecords, pageSize);
+
+            if(model.pageTotal > 1){
+                model.displayPagination = true;
+            } else {
+                model.displayPagination = false;
+            }
+
+            return model;
         }
 
         [HttpPost]

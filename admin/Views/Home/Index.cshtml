@@ -18,7 +18,7 @@
             <h1 class="text-center color-white"> TRE A </h1>
         </section>
         
-        <section class="header border-radius-small">
+        <section class="header">
             
             <ul class="social border-radius-small text-center">
                 <li class="facebook">
@@ -35,14 +35,12 @@
                 <span class="border-radius-small color-white background-color-white"></span>
             </span>
 
-            <div class="about-us text-center border-radius-small">
-                <input type="text" name="aboutUsTitle" class="name" id="aboutUsTitle" placeholder="TITOLO" autocomplete="off">
-                <textarea name="text" class="text" name="aboutUsTesto" id="aboutUsTesto" autocomplete="off" placeholder="testo" row="4"></textarea>
-            </div>
-
-            <div class="about-us mobile text-center border-radius-small padding-xsmall">
+            <div class="about-us text-center border-radius-small padding-xsmall">
                 <h3 class="color-white text-center font-weight-600">Lorem ipsum</h3>
                 <p class="color-white text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                <span id="addEditorHeader" class="btn btn-circle edit background-color-blue-light"></span>    
+                <input type="hidden" id="titleHeader" name="titleHeader">
+                <input type="hidden" id="testoHeader" name="testoHeader">
             </div>
 
             <span class="search-bar border-radius-small background-color-white color-black padding-left-xsmall">Cerca..</span>
@@ -53,19 +51,24 @@
 
         <section class="main">
             <h3 class="text-center">Ultimi post</h3>
-            <div id="lastPost"></div>
+            <div id="lastPost" class="padding-bottom-small"></div>
 
-            <h3 class="text-center">Foto</h3>
-            <p class="text-center">Collegare canale instagram</p>
-
-            <div class="newsletter border-radius-small margin-top-xsmall">
-                <input type="hidden" id="newsletterImageId" name="newsletterImageId">
-                <div class="edit text-center">
-                    <input type="text" name="newsletterTitle" class="name" id="newsletterTitle" placeholder="TITOLO" autocomplete="off">
-                    <textarea name="text" class="text" name="newsletterTesto" id="newsletterTesto" autocomplete="off" placeholder="testo" row="4"></textarea>
-                </div>
-
+            <div class="newsletter text-center border-radius-small padding-xsmall">
+                <section id="subscrive" class="edit text-center border-radius-small">
+                    <h3 class="color-white text-center font-weight-600">Newsletter</h3>
+                    <input type="text" name="name" class="name margin-top-xsmall" id="name" placeholder="Nome" autocomplete="off" disabled>
+                    <input type="text" name="email" class="email margin-top-xsmall" id="email" placeholder="Email" autocomplete="off" disabled>
+                    <div class="text-right">
+                        <input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia" disabled>
+                    </div>
+                </section>
                 <span element="newsletter" class="btn btn-circle edit background-color-blue-light"></span>
+                <input type="hidden" id="idNewsletterImage" name="idNewsletterImage">
+            </div>
+
+            <div class="instagram">
+                <h3 class="text-center">Instagram</h3>
+                <div id="instafeed" class="margin-bottom-xsmall"></div>
             </div>
 
             <h3 class="text-center">Video</h3>
@@ -115,13 +118,49 @@
 </div>
 
 <script src="~/js/lib/summernote.js"></script>
+<script src="https://apis.google.com/js/api.js"></script>
 <script src="../js/homepage.js"></script>
 <script src="../js/album.js"></script>
-<script src="../js/lib/carousel.js"></script>
 
 <script>
     $(document).ready(function(){
         hp.init();
         album.init();
     });
+</script>
+
+<script>
+  /**
+   * Sample JavaScript code for youtube.playlists.list
+   * See instructions for running APIs Explorer code samples locally:
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+
+  function authenticate() {
+    return gapi.auth2.getAuthInstance()
+        .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
+        .then(function() { console.log("Sign-in successful"); },
+              function(err) { console.error("Error signing in", err); });
+  }
+  function loadClient() {
+    gapi.client.setApiKey("YOUR_API_KEY");
+    return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+        .then(function() { console.log("GAPI client loaded for API"); },
+              function(err) { console.error("Error loading GAPI client for API", err); });
+  }
+  // Make sure the client is loaded and sign-in is complete before calling this method.
+  function execute() {
+    return gapi.client.youtube.playlists.list({
+      "part": "snippet",
+      "channelId": "UCAwsqjnD-64ZpWJ-umXfTaA"
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+              },
+              function(err) { console.error("Execute error", err); });
+  }
+  gapi.load("client:auth2", function() {
+    gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
+  });
 </script>

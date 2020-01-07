@@ -19,11 +19,11 @@ var appController = (function(){
 
     var callbackServer = function(event, callback){
         var parameter = {
-            post : event.data.post,
+            post : event.data.method,
             url: event.data.url,
         }
 
-        if(event.data.post){
+        if(event.data.method){
             event.preventDefault();
 
             var data = $('form').serialize();
@@ -84,23 +84,47 @@ var appController = (function(){
             father: event.data.father,
             updateList: event.data.updateList,
         };
-
+        
         await fetch(url,{method: 'POST'})
                 .then(function(res){
                     return res.json()
                         .then(function(data){
+                            var element = callback(data);
+                            var paginator = addPagination(data);
+
                             if(param.updateList){
-                                for(var i in data){
-                                    var element = callback(data, i);
-                                    $(param.father).append(element);
-                                };
+                                $(param.father).append(element);
+                                if($('div.paginator').length === 0){
+                                    $(param.father).append(paginator);
+                                }
                             } else {
-                                var element = callback(data);
                                 $(param.father).after(element);
                             };
                         })
                 });
     };
+
+    var addPagination = function(data){
+        var element = '';
+        var i = 1;
+
+        if(data.displayPagination){
+            element = element + '<div class="paginator text-center">'
+            
+            for(i; i <= data.pageTotal; i++){
+                
+                if(i === 1){
+                    element = element + '<span class="btn paginator active box-shadow text-center" section="' + data.sectionName + '" page="?pageSize=' + data.pageSize + '&pageNumber=' + i +'">' + i + '</span>'
+                } else {
+                    element = element + '<span class="btn paginator text-center box-shadow" section="' + data.sectionName + '" page="?pageSize=' + data.pageSize + '&pageNumber=' + i +'">' + i + '</span>'
+                }
+            }
+
+            element = element + '</div>'
+        }
+
+        return element;
+    }
 
     var createOverlay = function(){
         
@@ -124,14 +148,19 @@ var appController = (function(){
     };
 
     //Constructor
-    var Data = function(post, id, url, updateList, father){
-        this.post = post;
+    var Data = function(method, id, parameter, url, updateList, father){
+
+        this.method = method;
         this.id = id;
-        if(id === null || id === undefined){
-            this.url = url;
-        } else {
+        this.parameter = parameter;
+        this.url = url;
+
+        if(id !== null && id !== undefined){
             this.url = url + this.id;
+        } else if (parameter !== null) {
+            this.url = url + this.parameter;
         };
+        
         this.updateList = updateList;
         this.father = father;
     };
@@ -243,7 +272,7 @@ var app = (function(UICtrl, appCtrl){
         callback: appCtrl.callbackServer,
         createOverlay: appCtrl.createOverlay,
         feedbackEvent: appCtrl.feedbackEvent,
-        callbackUpload: appCtrl.callbackUpload
+        callbackUpload: appCtrl.callbackUpload,
     }
 
 })(appUI, appController);

@@ -8,12 +8,11 @@ namespace admin.Models
 {
     public class ArgumentModel : Argument
     {
-        public string categoryName { get; set; }
-        public IList<categories> categories { get; set; }
+        public int pageSize { get; set; }
+        public double pageTotal { get; set; }
+        public bool displayPagination{ get; set; }
+        public string sectionName { get; set; }
+        public IList<Argument> arguments { get; set; }
+        public IList<Category> categories{ get; set; }
     }
-    public class categories{
-        public int id { get; set; }
-        public string name { get; set; }
-    }
-    
 }

@@ -10,5 +10,10 @@ namespace admin.Models
     public class VideoModel : Video
     {
         public IList<IFormFile> videos { get; set; }
+        public int pageSize { get; set; }
+        public double pageTotal { get; set; }
+        public bool displayPagination{ get; set; }
+        public string sectionName { get; set; }
+        public IList<Video> videoList { get; set; }
     }
 }

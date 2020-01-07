@@ -51,7 +51,7 @@ namespace admin.Data
                 entity.Property(a => a.name);
                 entity.Property(a => a.slug);
                 entity.Property(a => a.description);
-                entity.HasOne(a => a.category).WithMany(a => a.arguments);
+                entity.HasOne(c => c.category);
             });
 
             modelBuilder.Entity<Post>(entity => { 
