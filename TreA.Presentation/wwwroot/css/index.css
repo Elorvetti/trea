@@ -240,6 +240,7 @@ section .btn.add{ position: relative; display: inline-block; width: 40px; height
 /** Add element struct **/
 div#overlay{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,.9); text-align: center; z-index: 9999; }
 div#overlay > span{ position: relative; display: block; margin: 0 auto; top: 40px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
+div#overlay > span.error{ height: 80px; font-size: 18px; background-color: #E8594E; }
 div#overlay > span.success{ height: 80px; font-size: 18px; line-height: 80px; font-weight: 600; background-color: #4caf50; }
 div#overlay > form, div#overlay > div, div#select > section{ position: relative; margin: 0 auto; top: 40px; max-height: 550px; overflow: hidden; overflow-y: scroll; }
 div#overlay > form > div, div#overlay > div > div{ margin: 0 auto; width: 80%; }

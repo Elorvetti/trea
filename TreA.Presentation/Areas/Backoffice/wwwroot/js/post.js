@@ -27,7 +27,7 @@ var postController = (function(){
 
     /* ADD NEW */
     var getAllPath = function(event){
-        event.data = new app.Data(false, null, null, '/Post/GetAllPath', false, null);
+        event.data = new app.Data(false, null, null, 'Post/GetAllPath', false, null);
         app.callback(event, createNewPostForm);
     }
 

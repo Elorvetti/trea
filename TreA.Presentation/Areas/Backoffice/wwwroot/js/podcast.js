@@ -70,7 +70,7 @@ var podcastController = (function(){
         });
 
         if(error.length === 0){
-            event.data = new UploadData('input#podcasts', null, '/Podcast/Index');
+            event.data = new UploadData('input#podcasts', null, 'Podcast/Index');
             app.callbackUpload(event, updatePodcastList); 
         } else {
             if($('form.add > span').length === 0){

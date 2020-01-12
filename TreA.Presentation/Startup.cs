@@ -115,11 +115,9 @@ namespace TreA.Presentation
 
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Areas/adminroot")),
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Areas/Backoffice/wwwroot")),
                 RequestPath = new PathString("/adminroot")
             });
-
-
 
             app.UseCookiePolicy();
 

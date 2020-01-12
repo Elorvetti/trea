@@ -8,13 +8,14 @@ var appController = (function(){
         if(success){
             element = '<span class="box-shadow border-radius-small success text-center color-white">';    
         } else {
-            element = '<span class="box-shadow border-radius-small error text-center color-white">';    
+            element = '<span class="box-shadow border-radius-small error text-center color-white padding-small">';    
         };
         element = element + message;
         element = element + '</span>';
-
-        return element;
         
+        $('#overlay').remove();
+        var $overlay = createOverlay();
+        $overlay.after(element);
     };
 
     var callbackServer = function(event, callback){
@@ -53,7 +54,8 @@ var appController = (function(){
             url: event.data.url,
             success: function (result) {    
                 if(result === "Error"){
-                    feedbackEvent(false, 'Dati non validi');
+
+                    feedbackEvent(false, 'Impossibile eseguire l\'azione, ti preghiamo di riprovare più tardi.');
                     return;
                 };
                 callback(event);
@@ -69,8 +71,9 @@ var appController = (function(){
             data: data,
             url: url,
             success: function (result) {    
+                console.log(result)
                 if(result === "Error"){
-                    feedbackEvent(false, 'Dati non validi');
+                    feedbackEvent(false, 'Impossibile eseguire l\'azione, ti preghiamo di riprovare più tardi.');
                     return;
                 };
                 callback(event)
@@ -203,7 +206,7 @@ var appUI = (function(){
         };
 
         //Get user on context and display user name
-        fetch('User/GetUserContext', {method: 'POST'})
+        fetch('/Backoffice/User/GetUserContext', {method: 'POST'})
             .then(function(res){
                 res.json()
                     .then(function(data){

@@ -47,6 +47,7 @@ var userController = (function(){
         element = element + '</form>';
 
         $overlay.after(element);
+        validateNewUser();
 
     };
 
@@ -170,7 +171,7 @@ var userController = (function(){
         //remove element to DOM
         $('#overlay').remove();
         $('ul.list li').remove();
-
+        
         if($('#overlay').length === 0){
             var $overlay = app.createOverlay();
         };

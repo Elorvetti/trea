@@ -11,3 +11,16 @@ C:\Users\Elorvetti\Desktop\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Data.
 C:\Users\Elorvetti\Desktop\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.csproj.CopyComplete
 C:\Users\Elorvetti\Desktop\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.dll
 C:\Users\Elorvetti\Desktop\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.pdb
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Services.deps.json
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Services.runtimeconfig.json
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Services.runtimeconfig.dev.json
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Services.dll
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Services.pdb
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Data.dll
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\bin\Debug\netcoreapp2.2\TreA.Data.pdb
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.csprojAssemblyReference.cache
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.AssemblyInfoInputs.cache
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.AssemblyInfo.cs
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.csproj.CopyComplete
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.dll
+C:\Users\Elorvetti\Desktop\work\TreA\TreA.Services\obj\Debug\netcoreapp2.2\TreA.Services.pdb

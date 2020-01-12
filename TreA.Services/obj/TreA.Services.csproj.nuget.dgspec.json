@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Services\\TreA.Services.csproj": {}
+    "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Services\\TreA.Services.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Data\\TreA.Data.csproj": {
+    "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Data\\TreA.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Data\\TreA.Data.csproj",
+        "projectUniqueName": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Data\\TreA.Data.csproj",
         "projectName": "TreA.Data",
-        "projectPath": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Data\\TreA.Data.csproj",
+        "projectPath": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Data\\TreA.Data.csproj",
         "packagesPath": "C:\\Users\\Elorvetti\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Data\\obj\\",
+        "outputPath": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -79,14 +79,14 @@
         }
       }
     },
-    "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Services\\TreA.Services.csproj": {
+    "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Services\\TreA.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Services\\TreA.Services.csproj",
+        "projectUniqueName": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Services\\TreA.Services.csproj",
         "projectName": "TreA.Services",
-        "projectPath": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Services\\TreA.Services.csproj",
+        "projectPath": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Services\\TreA.Services.csproj",
         "packagesPath": "C:\\Users\\Elorvetti\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Services\\obj\\",
+        "outputPath": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -107,8 +107,8 @@
         "frameworks": {
           "netcoreapp2.2": {
             "projectReferences": {
-              "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Data\\TreA.Data.csproj": {
-                "projectPath": "C:\\Users\\Elorvetti\\Desktop\\TreA\\TreA.Data\\TreA.Data.csproj"
+              "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Data\\TreA.Data.csproj": {
+                "projectPath": "C:\\Users\\Elorvetti\\Desktop\\work\\TreA\\TreA.Data\\TreA.Data.csproj"
               }
             }
           }

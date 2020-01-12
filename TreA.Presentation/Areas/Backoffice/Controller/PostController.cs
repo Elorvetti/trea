@@ -52,11 +52,11 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         public IActionResult Index(IFormCollection data){
 
             var albumId = AddAlbumToPost(data);
-            
+            var a = data["categoryId"];
             //Add Post
             var model = new PostModel();
-            var categoryId = Convert.ToInt32(data["categoryId"]);
-            var argumentId = Convert.ToInt32(data["argumentId"]);
+            int categoryId = Convert.ToInt32(data["categoryId"]);
+            int argumentId = Convert.ToInt32(data["argumentId"]);
             var postSlug = "";
 
             if(argumentId == 0 ){

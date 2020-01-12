@@ -68,7 +68,7 @@ var videoController = (function(){
         });
 
         if(error.length === 0){
-            event.data = new UploadData('input#videos', null, '/Video/Index');
+            event.data = new UploadData('input#videos', null, 'Video/Index');
             app.callbackUpload(event, updateVideoList); 
         } else {
             if($('form.add > span').length === 0){

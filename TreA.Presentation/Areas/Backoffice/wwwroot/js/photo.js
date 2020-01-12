@@ -71,7 +71,7 @@ var photoController = (function(){
         });
 
         if(error.length === 0){
-            event.data = new UploadData('input#images', null, '/Photo/Index');
+            event.data = new UploadData('input#images', null, 'Photo/Index');
             app.callbackUpload(event, updatePhotoList); 
         } else {
             if($('form.add > span').length === 0){

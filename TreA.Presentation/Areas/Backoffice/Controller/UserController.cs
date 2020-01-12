@@ -129,9 +129,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var user = new IdentityUser{ UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
             if(result.Succeeded){
-               await _signInManager.SignInAsync(user, isPersistent: false );
                
-               // 2.1. Update repository
+               // 2.1 Update repository
                 _userService.Insert(admin);
                
                return Json("Inser ok");
@@ -182,7 +181,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             //Get user Identity
             var user = await _userManager.FindByEmailAsync(admin.user);
 
-            if(user == null){
+            if(user == null || id == 1){
                 return Json("Error");
             } else {
                 var result = await _userManager.DeleteAsync(user);
@@ -198,11 +197,13 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new UserModel();
 
             var userContext = _userManager.GetUserName(HttpContext.User);
-            var user = _userService.GetByEmail(userContext);
-
-            model.user = user.user;
-            model.photoPath = _photoService.GetById(user.photoId).path;
-
+            
+            if(userContext != null){
+                var user = _userService.GetByEmail(userContext);
+                model.user = user.user;
+                model.photoPath = _photoService.GetById(user.photoId).path;
+            }
+            
             return model;
         }
 

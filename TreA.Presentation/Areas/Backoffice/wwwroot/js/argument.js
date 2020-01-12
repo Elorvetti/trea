@@ -188,7 +188,7 @@ var argumentController = (function(){
 
     /* GET ARGUMENT */
     var getAllArgument = function(event){
-        event.data = new app.Data(false, null, '?pageSize=200&pageNumber=1', '/Category/GetAll', false, null);
+        event.data = new app.Data(false, null, '?pageSize=200&pageNumber=1', 'Category/GetAll', false, null);
         app.callback(event, createNewArgumentForm);
     };
 

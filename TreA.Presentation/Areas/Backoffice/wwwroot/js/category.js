@@ -87,7 +87,7 @@ var categoryController = (function(){
         })
 
         if(valid){
-            event.data = new app.Data(true, null, null, '/Category/Index', false, null);
+            event.data = new app.Data(true, null, null, 'Category/Index', false, null);
             app.callback(event, updateCategoryList);
         }
         
@@ -158,7 +158,7 @@ var categoryController = (function(){
 
         var element = '';
 
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete">;'
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white delete">';
         element = element + '<p class="text-center confirm">Sei sicuro di voler eliminare la categoria: ' + categoryName + '?</p>';
         element = element + '<p class="text-center confirm color-red">Cancellando la categoria ' + categoryName + ' verranno cancellati anche i relativi argomenti';
         
