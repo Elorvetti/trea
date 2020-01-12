@@ -32,7 +32,8 @@ TreA.Data/bin/*
 TreA.Presentation/obj/*
 TreA.Presentation/bin/*
 TreA.Presentation/App_Data/*
-
+TreA.Services/bin/*
+TreA.Services/obj/*
 
 admin/Properties/*
 admin/App_Data/*

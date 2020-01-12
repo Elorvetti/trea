@@ -16,5 +16,7 @@ namespace TreA.Data.Entities
         public int categoryId { get; set; }
         public int argumentId { get; set; }
         public int PhotoId { get; set; }
+
+        public DateTime dateInsert { get; set; }
     }
 }

@@ -1,8 +1,23 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model HomeModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@Html.Partial("/Views/Partial/Home/_LastPost.cshtml", Model)
+
+@Html.Partial("/Views/Partial/Home/_Newsletter.cshtml", Model)
+
+<div class="instagram">
+    <h3 class="text-center">Instagram</h3>
+    <div id="instafeed" class="margin-bottom-xsmall"></div>
 </div>
+
+<h3 class="text-center">Video</h3>
+<p class="text-center">Collegare canale youtube</p>
+
+
+<h3 class="text-center">Podcast</h3>
+<p class="text-center">Collegare canale spotify</p>
+
+
+<script src="~/js/home.js"></script>
+<script>
+    $(document).ready(home.init);
+</script>

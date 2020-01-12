@@ -35,7 +35,7 @@ var hpController = (function(){
 
     /* SAVE SETTING */
     var saveSetting = function(event){
-        event.data = new app.Data(true, null, null, '/Home/Index', false, null);
+        event.data = new app.Data(true, null, null, '/Backoffice/Home/Index', false, null);
         app.callback(event, getSetting);
     }
  

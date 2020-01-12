@@ -54,7 +54,6 @@ var appController = (function(){
             url: event.data.url,
             success: function (result) {    
                 if(result === "Error"){
-
                     feedbackEvent(false, 'Impossibile eseguire l\'azione, ti preghiamo di riprovare più tardi.');
                     return;
                 };
@@ -71,7 +70,6 @@ var appController = (function(){
             data: data,
             url: url,
             success: function (result) {    
-                console.log(result)
                 if(result === "Error"){
                     feedbackEvent(false, 'Impossibile eseguire l\'azione, ti preghiamo di riprovare più tardi.');
                     return;

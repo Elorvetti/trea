@@ -50,28 +50,32 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
         [HttpPost]
         public IActionResult Index(IFormCollection data){
-
-            var albumId = AddAlbumToPost(data);
-            var a = data["categoryId"];
-            //Add Post
             var model = new PostModel();
+            
+            var albumId = AddAlbumToPost(data);
+
+            //Add Post
+            var title = data["title"];
             int categoryId = Convert.ToInt32(data["categoryId"]);
             int argumentId = Convert.ToInt32(data["argumentId"]);
             var postSlug = "";
+            
 
             if(argumentId == 0 ){
-                postSlug = string.Concat(_categoryService.GetById(categoryId).slug, _commonService.cleanStringPath(model.title), '/');
+                postSlug = string.Concat(_categoryService.GetById(categoryId).slug, _commonService.cleanStringPath(title), '/');
             } else {
-                postSlug = string.Concat(_argumentService.GetById(argumentId).slug, _commonService.cleanStringPath(model.title), '/');
+                postSlug = string.Concat(_argumentService.GetById(argumentId).slug, _commonService.cleanStringPath(title), '/');
             }
 
-            model.title = data["title"];
+            
+            model.title = title;
             model.slug = postSlug;
             model.categoryId = categoryId;
             model.argumentId = argumentId;
             model.albumId = albumId;
             model.testo = data["testo"];
             model.PhotoId = Convert.ToInt32(data["coverImage"]);
+            model.dateInsert = DateTime.Now;
 
             if(data["IsPublic"] == "on"){
                 model.pubblico = true;

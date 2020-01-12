@@ -1,0 +1,12 @@
+@model HomeModel
+
+<div class="newsletter text-center border-radius-small padding-xsmall"  style="background-image: url('@Model.Newsletter.backgroundImage');">
+    <form id="subscrive" class="text-center border-radius-small">
+        <h3 class="color-white text-center font-weight-600">Newsletter</h3>
+        <input type="text" name="name" class="name margin-top-xsmall" id="name" placeholder="Nome" autocomplete="off" required>
+        <input type="text" name="email" class="email margin-top-xsmall" id="email" placeholder="Email" autocomplete="off" required>
+        <div class="text-right">
+            <input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia" disabled>
+        </div>
+    </form>
+</div>

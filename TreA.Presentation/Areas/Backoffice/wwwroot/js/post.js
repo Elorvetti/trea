@@ -43,13 +43,12 @@ var postController = (function(){
         element = element + '<select id="path" name="path">'
         
         for(var i in obj){
-            var name = obj[i].name.replace(/\-/g, ' ');
-            element = element + '<option categoryId="' + obj[i].categoryId + '" argumentId="' + obj[i].argumentId + '" value="' + obj[i].name + '">' + name + '</option>';
+            element = element + '<option categoryId="' + obj[i].categoryId + '" argumentId="' + obj[i].argumentId + '" value="' + obj[i].name + '">' + obj[i].name + '</option>';
         }
         
         element = element + '</select>'
-        element = element + '<input type="hidden" name="categoryId" value="">'
-        element = element + '<input type="hidden" name="argumentId" value="">'
+        element = element + '<input type="hidden" name="categoryId" value="' + obj[0].categoryId  + '">'
+        element = element + '<input type="hidden" name="argumentId" value="' + obj[0].argumentId  + '">'
         element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
         element = element + '<input type="hidden" name="coverImage" class="name" id="cover">';
         element = element + '<span class="btn cover text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Cover image</span>';

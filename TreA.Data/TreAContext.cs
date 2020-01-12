@@ -65,6 +65,7 @@ namespace TreA.Data
                 entity.Property(p => p.categoryId);
                 entity.Property(p => p.argumentId);
                 entity.Property(p => p.PhotoId);
+                entity.Property(p => p.dateInsert);
             });
 
             modelBuilder.Entity<Photos>(entity => {

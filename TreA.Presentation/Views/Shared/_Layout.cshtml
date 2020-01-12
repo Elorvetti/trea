@@ -2,9 +2,8 @@
 <html>
 <head>
 <meta charset="utf-8">
-    <title>TreA</title>
+    <title>Tre A</title>
     <link rel="shortcut icon" href=".~/favicon.ico" type="image">
-    <link rel="stylesheet" href="~/css/lib/summernote.css" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/index.css" />
 
@@ -21,23 +20,85 @@
     <meta property="og:title" content="TreA"/>
 </head>
 <body>
-
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
     <script src ="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <section id="sidebar" class="sidebar background-color-blue">
+        <ul class="social border-radius-small text-center">
+            <li class="facebook">
+                <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+            </li>
+            <li class="instagram">
+                <a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a>
+            </li>
+        </ul>
+        <h1 class="text-center color-white title"> TRE A </h1>
+    </section>
+        
+    <header>
+        <ul class="social border-radius-small text-center">
+            <li class="facebook">
+                <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+            </li>
+            <li class="instagram"><a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a></li>
+        </ul>
+
+        <h1 class="text-center color-white title"> TRE A </h1>
+
+        <span class="menu">
+            <span class="border-radius-small color-white background-color-white"></span>
+            <span class="border-radius-small color-white background-color-white"></span>
+            <span class="border-radius-small color-white background-color-white"></span>
+        </span>
+
+        <div class="about-us text-center border-radius-small padding-xsmall">
+            <h3 class="color-white text-center font-weight-600"></h3>
+            <p class="color-white text-center"></p>
+        </div>
+        <input type="text" class="search-bar border-radius-small background-color-white color-black padding-left-xsmall" placeholder="Cerca..." />
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="background-color-blue margin-top-xsmall padding-top-small">
+        <div>
+            <ul>
+                <li>
+                    <a asp-area="" asp-controller="SiteMap" asp-action="Index" class="color-white text-center">Mappa del sito</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Privacy" asp-action="Index" class="color-white text-center">Privacy Policy</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Cookie" asp-action="Index" class="color-white text-center">Cookie policy</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div>
+            <p class="title color-white font-weight-600 text-center">Tre A in Viaggio</p>
+            <ul class="social text-center">
+                <li class="cartorange">
+                    <a href="https://www.cartorange.com/andreasalvinosettoni/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="facebook">
+                    <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="instagram">
+                    <a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a>
+                </li>
+            </ul>
+        </div>
+    </footer>
 
     <script src="~/js/index.js" asp-append-version="true"></script>
     
     <script>
         $(document).ready(app.init)
     </script>
-
-    <main role="main">
-        @RenderBody()
-    </main>
-
-
 
     @RenderSection("Scripts", required: false)
 </body>
