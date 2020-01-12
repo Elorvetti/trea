@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.2",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.2": {
+      "TreA.Services/1.0.0": {
+        "dependencies": {
+          "TreA.Data": "1.0.0"
+        },
+        "runtime": {
+          "TreA.Services.dll": {}
+        }
+      },
+      "TreA.Data/1.0.0": {
+        "runtime": {
+          "TreA.Data.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TreA.Services/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TreA.Data/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

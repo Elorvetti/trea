@@ -19,20 +19,24 @@ jboss/server/minimal/work/**/*
 *.DEPLOYED
 
 #DOC
-DOC/*
+TreA.DOC/*
 
 #Conn String
-admin/appsettings.json
-client/appsettings.json
+TreA.Presentation/appsettings.json
 
 #file bin
-admin/obj/*
-admin/bin/*
+TreA.Common/obj/*
+TreA.Common/bin/*
+TreA.Data/obj/*
+TreA.Data/bin/*
+TreA.Presentation/obj/*
+TreA.Presentation/bin/*
+TreA.Presentation/App_Data/*
+
+
 admin/Properties/*
 admin/App_Data/*
-client/obj/*
-client/bin/*
-client/Properties/*
+
 
 #image
 admin/wwwroot/img/*

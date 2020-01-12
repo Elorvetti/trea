@@ -1,0 +1,131 @@
+<div class="content">
+    <ul id="home" class="list text-center margin-top-xsmall">
+        <li device="mobile" class="mobile btn-circle background-color-white box-shadow active "></li>
+        <li device="tablet" class="tablet btn-circle background-color-white box-shadow"></li>
+        <li device="desktop" class="desktop btn-circle background-color-white box-shadow"></li>
+    </ul>
+
+    <form id="container" class="margin-top-medium box-shadow border-radius-small margin-left-xsmall margin-right-xsmall">
+        <section id="sidebarFE" class="sidebar background-color-blue">
+            <ul class="social border-radius-small text-center">
+                <li class="facebook">
+                    <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="instagram">
+                    <a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a>
+                </li>
+            </ul>
+            <h1 class="text-center color-white"> TRE A </h1>
+        </section>
+        
+        <section class="header">
+            
+            <ul class="social border-radius-small text-center">
+                <li class="facebook">
+                    <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="instagram"><a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a></li>
+            </ul>
+
+            <h1 class="text-center color-white"> TRE A </h1>
+
+            <span class="menu">
+                <span class="border-radius-small color-white background-color-white"></span>
+                <span class="border-radius-small color-white background-color-white"></span>
+                <span class="border-radius-small color-white background-color-white"></span>
+            </span>
+
+            <div class="about-us text-center border-radius-small padding-xsmall">
+                <h3 class="color-white text-center font-weight-600">Lorem ipsum</h3>
+                <p class="color-white text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                <span id="addEditorHeader" class="btn btn-circle edit background-color-blue-light"></span>    
+                <input type="hidden" id="titleHeader" name="titleHeader">
+                <input type="hidden" id="testoHeader" name="testoHeader">
+            </div>
+
+            <span class="search-bar border-radius-small background-color-white color-black padding-left-xsmall">Cerca..</span>
+            <span element="header" class="btn btn-circle edit background-color-blue-light"></span>
+
+            <input type="hidden" id="idHeaderImage" name="idHeaderImage">
+        </section>
+
+        <section class="main">
+            <h3 class="text-center">Ultimi post</h3>
+            <div id="lastPost" class="padding-bottom-small"></div>
+
+            <div class="newsletter text-center border-radius-small padding-xsmall">
+                <section id="subscrive" class="edit text-center border-radius-small">
+                    <h3 class="color-white text-center font-weight-600">Newsletter</h3>
+                    <input type="text" name="name" class="name margin-top-xsmall" id="name" placeholder="Nome" autocomplete="off" disabled>
+                    <input type="text" name="email" class="email margin-top-xsmall" id="email" placeholder="Email" autocomplete="off" disabled>
+                    <div class="text-right">
+                        <input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia" disabled>
+                    </div>
+                </section>
+                <span element="newsletter" class="btn btn-circle edit background-color-blue-light"></span>
+                <input type="hidden" id="idNewsletterImage" name="idNewsletterImage">
+            </div>
+
+            <div class="instagram">
+                <h3 class="text-center">Instagram</h3>
+                <div id="instafeed" class="margin-bottom-xsmall"></div>
+            </div>
+
+            <h3 class="text-center">Video</h3>
+            <p class="text-center">Collegare canale youtube</p>
+
+
+            <h3 class="text-center">Podcast</h3>
+            <p class="text-center">Collegare canale spotify</p>
+
+        </section>
+
+        <section class="footer background-color-blue margin-top-xsmall padding-left-xsmall padding-top-small">
+            <div>
+                <ul>
+                    <li>
+                        <p class="color-white text-center">Mappa del sito</p>
+                    </li>
+                    <li>
+                        <p class="color-white text-center">Privacy Policy</p>
+                    </li>
+                    <li>
+                        <p class="color-white text-center">Cookie policy</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div>
+                <p class="title color-white font-weight-600 text-center">Tre A in Viaggio</p>
+                <ul class="social text-center">
+                    <li class="cartorange">
+                        <a href="https://www.cartorange.com/andreasalvinosettoni/" target="_blank" rel="nofollow"></a>
+                    </li>
+                    <li class="facebook">
+                        <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                    </li>
+                    <li class="instagram">
+                        <a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a>
+                    </li>
+                </ul>
+            </div>
+    
+        </section>
+    </form>
+
+    <span id="saveSetting" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small margin-right-medium margin-bottom-small">Salva</span>
+
+
+</div>
+
+<script src="/adminroot/js/lib/summernote.js"></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="/adminroot/js/homepage.js"></script>
+<script src="/adminroot/js/album.js"></script>
+
+<script>
+    $(document).ready(function(){
+        hp.init();
+        album.init();
+    });
+</script>
