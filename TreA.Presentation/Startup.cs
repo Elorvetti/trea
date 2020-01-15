@@ -31,6 +31,7 @@ using TreA.Services.Podcast;
 using TreA.Services.Post;
 using TreA.Services.User;
 using TreA.Services.Video;
+using TreA.Services.Slug;
 
 namespace TreA.Presentation
 {
@@ -82,6 +83,7 @@ namespace TreA.Presentation
             services.AddScoped<IPodcastService, PodcastService>();
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ISlugService, SlugService>();
             services.AddScoped<IHomeService, HomeService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -132,8 +134,10 @@ namespace TreA.Presentation
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                );
             });
+            
         }
     }
 }

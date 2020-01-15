@@ -19,8 +19,8 @@ namespace TreA.Data
         public virtual DbSet<Videos> video { get; set; }
         public virtual DbSet<Albums> album { get; set; }
         public virtual DbSet<Podcasts> podcast { get; set; }
-
         public virtual DbSet<Homes> home { get; set; }
+        public virtual DbSet<Slugs> slug { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
             optionsBuilder
                 .ConfigureWarnings(warnings => 
@@ -43,7 +43,7 @@ namespace TreA.Data
             modelBuilder.Entity<Categories>(entity => {
                 entity.HasKey(c => c.id);
                 entity.Property(c => c.name);
-                entity.Property(c => c.slug);
+                entity.Property(c => c.slugId);
                 entity.Property(c => c.displayOrder);
                 entity.Property(c => c.description);
             });
@@ -51,15 +51,16 @@ namespace TreA.Data
             modelBuilder.Entity<Arguments>(entity => { 
                 entity.HasKey(a => a.id);
                 entity.Property(a => a.name);
-                entity.Property(a => a.slug);
+                entity.Property(a => a.slugId);
                 entity.Property(a => a.description);
+                entity.Property(c => c.coverImageId);
                 entity.HasOne(c => c.category);
             });
 
             modelBuilder.Entity<Posts>(entity => { 
                 entity.HasKey(p => p.id);
                 entity.Property(p => p.title);
-                entity.Property(p => p.slug);
+                entity.Property(p => p.slugId);
                 entity.Property(p => p.testo);
                 entity.Property(p => p.pubblico);
                 entity.Property(p => p.categoryId);
@@ -98,6 +99,11 @@ namespace TreA.Data
                 entity.Property(h => h.headerTesto);
                 entity.Property(h => h.headerImageId);
                 entity.Property(h => h.newsletterImageId);
+            });
+
+            modelBuilder.Entity<Slugs>(entity => {
+                entity.HasKey( s => s.id);
+                entity.Property(s => s.name);
             });
 
         }

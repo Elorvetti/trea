@@ -42,7 +42,7 @@ namespace TreA.Services.Argument
             argument.name = model.name;
             argument.categoryId = model.categoryId;
             argument.description = model.description;
-            argument.slug = model.slug;
+            argument.coverImageId = model.coverImageId;
             
             _ctx.SaveChanges();
         }

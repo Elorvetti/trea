@@ -17,6 +17,7 @@ using TreA.Services.Photo;
 using TreA.Services.Category;
 using TreA.Services.Argument;
 using TreA.Services.Home;
+using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
 {
@@ -26,13 +27,14 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly IPhotoService _photoService;
         private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
-
         private readonly IHomeService _homeService;
-        public HomeController(ICategoryService categoryService, IArgumentService argumentService, IHomeService homeService, IPhotoService photoService){
+        private readonly ISlugService _slugService;
+        public HomeController(ICategoryService categoryService, IArgumentService argumentService, IHomeService homeService, IPhotoService photoService, ISlugService slugService){
             this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._homeService = homeService;
             this._photoService = photoService;
+            this._slugService = slugService;
         }
 
         public IActionResult Index(){
@@ -97,12 +99,12 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 {
                     id = argument.id,
                     categoryId = argument.category.id,
-                    slug = argument.slug,
+                    slug = _slugService.GetById(argument.slugId).name,
                     name = argument.name
                 });
 
             }
-
+            
             return models;
         }
     }

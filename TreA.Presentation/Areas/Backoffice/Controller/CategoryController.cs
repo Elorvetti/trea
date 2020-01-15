@@ -16,6 +16,7 @@ using TreA.Data.Entities;
 using TreA.Services.Common;
 using TreA.Services.Category;
 using TreA.Services.Argument;
+using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
 {
@@ -26,10 +27,12 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
 
-        public CategoryController(ICommonService commonService, ICategoryService categoryService, IArgumentService argumentService){
+        private readonly ISlugService _slugService;
+        public CategoryController(ICommonService commonService, ICategoryService categoryService, IArgumentService argumentService, ISlugService slugService){
             this._commonService = commonService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
+            this._slugService = slugService;
         }
 
         [Authorize]
@@ -44,9 +47,9 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new CategoryModel();            
 
             model.name = category["name"];
-            model.slug = string.Concat('/', _commonService.cleanStringPath(model.name), '/');
             model.description = category["description"];
             model.displayOrder = Convert.ToInt32(category["order"]);;
+            model.slugId = InsertSlug(model);
 
             _categoryService.Insert(model);
 
@@ -84,19 +87,40 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new CategoryModel();
 
             model.name = category["name"];
-            model.slug = string.Concat('/', _commonService.cleanStringPath(model.name), '/');
             model.displayOrder = Convert.ToInt32(category["order"]);
             model.description = category["description"];
+            
+            UpdateSlug(model);
 
             _categoryService.Update(id, model);
+
         }
 
         [HttpPost]
         public void Delete(int id){
-            var folder = _categoryService.GetById(id);
-
+            var category = _categoryService.GetById(id);
+            
             _categoryService.Delete(id);
+            _slugService.Delete(category.slugId);
 
+        }
+ 
+        public int InsertSlug(CategoryModel category){
+            var name = string.Concat('/', _commonService.cleanStringPath(category.name), '/');
+            
+            var model = new SlugModel();
+            model.name = name;
+
+            _slugService.Insert(model);
+            
+            return _slugService.GetByName(name).id;
+        }
+
+        public void UpdateSlug(CategoryModel category){
+            string  name = string.Concat('/', _commonService.cleanStringPath(category.name), '/');
+
+            _slugService.Update(category.slugId, name);
+            
         }
     }
 }

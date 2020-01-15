@@ -19,6 +19,7 @@ using TreA.Services.Argument;
 using TreA.Services.Category;
 using TreA.Services.Album;
 using TreA.Services.Photo;
+using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
 {
@@ -31,14 +32,16 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IAlbumService _albumService;
         private readonly IPhotoService _photoService;
+        private readonly ISlugService _slugService;
 
-        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService, IPhotoService photoService){
+        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService, IPhotoService photoService, ISlugService slugService){
             this._commonService = commonService;
             this._postService = postService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._albumService = albumService;
             this._photoService = photoService;
+            this._slugService = slugService;
         }
 
         [Authorize]
@@ -58,24 +61,15 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var title = data["title"];
             int categoryId = Convert.ToInt32(data["categoryId"]);
             int argumentId = Convert.ToInt32(data["argumentId"]);
-            var postSlug = "";
-            
 
-            if(argumentId == 0 ){
-                postSlug = string.Concat(_categoryService.GetById(categoryId).slug, _commonService.cleanStringPath(title), '/');
-            } else {
-                postSlug = string.Concat(_argumentService.GetById(argumentId).slug, _commonService.cleanStringPath(title), '/');
-            }
-
-            
             model.title = title;
-            model.slug = postSlug;
             model.categoryId = categoryId;
             model.argumentId = argumentId;
             model.albumId = albumId;
             model.testo = data["testo"];
             model.PhotoId = Convert.ToInt32(data["coverImage"]);
             model.dateInsert = DateTime.Now;
+            model.slugId = InsertSlug(model, categoryId, argumentId);
 
             if(data["IsPublic"] == "on"){
                 model.pubblico = true;
@@ -131,7 +125,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
             return models.OrderBy( p => p.name).ToList();
         }
-
         public PostModel GetById(int id){            
             var model = new PostModel();
             var post = _postService.GetById(id);
@@ -168,20 +161,14 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var postTitle = data["title"]; 
             var categoryId = Convert.ToInt32(data["categoryId"]);
             var argumentId = Convert.ToInt32(data["argumentId"]);
-            var postSlug = "";
-
-            if(argumentId == 0){
-                postSlug = string.Concat(_categoryService.GetById(categoryId).slug, _commonService.cleanStringPath(postTitle), '/');
-            } else {
-                postSlug = string.Concat(_argumentService.GetById(argumentId).slug, _commonService.cleanStringPath(postTitle), '/');
-            }
 
             post.categoryId = categoryId;
             post.argumentId = argumentId;
             post.title = postTitle;
             post.testo = data["testo"];
-            post.slug = postSlug;
             post.PhotoId = Convert.ToInt32(data["coverImage"]);
+
+            UpdateSlug(post, categoryId, argumentId);
 
             if(data["IsPublic"] == "on"){
                 post.pubblico = true;
@@ -192,19 +179,17 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             post.albumId = UpdateAlbumPost(id, data);
 
             _postService.Update(id, post);
-        }
-    
+        }  
         public void Delete(int id){
-            
-            int albumiId = _postService.GetById(id).albumId;
+            var post = _postService.GetById(id);
+
             _postService.Delete(id);
+            _slugService.Delete(post.slugId);
 
-            if(albumiId > 0){
-                _albumService.Delete(albumiId);
+            if(post.albumId > 0){
+                _albumService.Delete(post.albumId);
             }
-
         }
-
         public int AddAlbumToPost(IFormCollection data){
             var album = new AlbumModel();
             var albumId = 0;
@@ -219,7 +204,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
             return albumId;
         }
-
         public int UpdateAlbumPost(int postId, IFormCollection data){
             var album = new AlbumModel();
             int albumId = _postService.GetById(postId).albumId;
@@ -253,7 +237,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
            foreach(var post in posts){
                 model.Add(new PostDisplay(){
                     id = post.id,
-                    slug = post.slug,
+                    slug = _slugService.GetById(post.slugId).name,
                     coverImage = _photoService.GetById(post.PhotoId).path,
                     title = post.title,
                     testo = post.testo
@@ -264,5 +248,39 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
            return model;
         }
 
+        public int InsertSlug(PostModel post, int categoryId, int argumentId){
+            int slugId = 0;
+            if(argumentId == 0 ){
+                slugId = _categoryService.GetById(categoryId).slugId;
+            } else {
+                slugId = _argumentService.GetById(argumentId).slugId;
+            }
+
+            var categoryArgumentSlug = _slugService.GetById(slugId).name;
+            var name = string.Concat(categoryArgumentSlug, _commonService.cleanStringPath(post.title), '/');
+            
+            var model = new SlugModel();
+            model.name = name;
+
+            _slugService.Insert(model);
+            
+            return _slugService.GetByName(name).id;
+        }
+
+        public void UpdateSlug(Posts model, int categoryId, int argumentId){
+            int slugId = 0; 
+
+            if(argumentId == 0){
+                slugId = _categoryService.GetById(categoryId).slugId;
+            } else {
+                slugId = _argumentService.GetById(argumentId).slugId;
+            }
+
+            var categoryArgumentSlug = _slugService.GetById(slugId).name;
+            string  name = string.Concat(categoryArgumentSlug, _commonService.cleanStringPath(model.title), '/');
+            
+            _slugService.Update(model.slugId, name);
+            
+        }
     }
 }

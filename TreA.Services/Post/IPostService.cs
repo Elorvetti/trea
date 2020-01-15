@@ -16,7 +16,7 @@ namespace TreA.Services.Post
         IList<Posts> GetAll(int excludeRecord, int pageSize);
         IList<Posts> GetLast(int nPost);
         Posts GetById(int id);
-        void Update(int id, Posts model);
+        void Update(int id, Posts name);
         void Delete(int id);
     }
 }

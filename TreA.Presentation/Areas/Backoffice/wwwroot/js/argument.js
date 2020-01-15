@@ -1,7 +1,7 @@
 "use strict";
 
 var argumentController = (function(){
-    /* GET ALL */
+    /* GET ALL AND CREATE DISPLAY LIST (HOME)*/
     var getAll = function(){
         var event = {};
         event.data = new app.Data(false, null, '?pageSize=15&pageNumber=1', 'Argument/GetAll', true, $('div.content > ul.list'));
@@ -40,6 +40,9 @@ var argumentController = (function(){
 
         element = element + '<input type="text" name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required>';
         element = element + '<textarea name="description" class="name" id="description" placeholder="Descrizione" autocomplete="off"></textarea>';
+        element = element + '<span class="btn cover text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Cover image</span>';
+        element = element + '<input type="hidden" name="coverImage" class="name" id="cover">';
+        element = element + '<div class="text-center skeleton-container"></div>'
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
@@ -98,35 +101,60 @@ var argumentController = (function(){
         var $overlay =app.createOverlay();
 
         var id = parseInt($(event.target).parent().attr('id'));
+        var url = 'Argument/GetById/' + id;
 
-        event.data = new app.Data(false, id, null, 'Argument/GetById/', false, $overlay);
-        app.callback(event, CreateEditList);
+        //event.data = new app.Data(false, id, null, 'Argument/GetById/', false, $overlay);
+        //app.callback(event, CreateEditList);
+
+        fetch(url, {method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        
+                        //CREATE ARGUMENT POST
+                        CreateEditList(data, $overlay);
+
+                        //ADD SKELETON FOR COVER IMAGE
+                        if(data.coverImageId > 0){
+                            album.addSkeletonOfImageForRadio('Photo/GetById/', data.coverImageId, $('.skeleton-container'));
+                        }
+
+                    })
+            })
+
+        
     };
 
-    var CreateEditList = function(obj){
+    var CreateEditList = function(data, elemToAppend){
         var element = '';
 
-        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
+        element = element + '<form id="' + data.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         element = element + '<select name="idCategory">';
         
-        for(var i in obj.categories){
-            if(obj.categories[i].id ===  obj.categoryId){
-                element = element + '<option value="' + obj.categories[i].id + '" selected>' + obj.categories[i].name + '</option>'; 
+        for(var i in data.categories){
+            if(data.categories[i].id ===  data.categoryId){
+                element = element + '<option value="' + data.categories[i].id + '" selected>' + data.categories[i].name + '</option>'; 
             } else {
-                element = element + '<option value="' + obj.categories[i].id + '">' + obj.categories[i].name + '</option>'; 
+                element = element + '<option value="' + data.categories[i].id + '">' + data.categories[i].name + '</option>'; 
             }
         }
 
         element = element + '</select>';
-        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.name +'" required>';
-        element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ obj.description + '</textarea>';
+        element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ data.name +'" required>';
+        element = element + '<textarea name="description" class="name" id="name" autocomplete="off" placeholder="Descrizione" row="4">'+ data.description + '</textarea>';
+        
+        element = element + '<input type="hidden" name="coverImage" class="name" id="cover" value="' + data.coverImageId + '">';
+        element = element + '<span class="btn cover text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Cover image</span>';
+        element = element + '<div class="text-center skeleton-container">'
+        element = element + '</div>'
+        
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
         element = element + '</div>';
         element = element + '</form>'
 
-        return element;
+        elemToAppend.after(element);
     };
 
     var updateArgument = function(event){

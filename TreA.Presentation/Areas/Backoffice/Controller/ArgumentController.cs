@@ -15,6 +15,7 @@ using TreA.Presentation.Areas.Backoffice.Models;
 using TreA.Services.Common;
 using TreA.Services.Category;
 using TreA.Services.Argument;
+using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
 {
@@ -24,11 +25,13 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICommonService _commonService;
         private readonly IArgumentService _argumentService;
         private readonly ICategoryService _categoryService;
+        private readonly ISlugService _slugService;
 
-        public ArgumentController(ICommonService commonService, IArgumentService argumentService, ICategoryService categoryService){
+        public ArgumentController(ICommonService commonService, IArgumentService argumentService, ICategoryService categoryService, ISlugService slugService){
             this._commonService = commonService;
             this._argumentService = argumentService;
             this._categoryService = categoryService;
+            this._slugService = slugService;
         }
 
         [Authorize]
@@ -43,13 +46,13 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new ArgumentModel();
             
             var categoryId = Convert.ToInt32(data["idCategory"]);
-            var categorySlug = _categoryService.GetById(categoryId).slug;
 
             //Get folder name
             model.name = data["name"];   
-            model.slug = string.Concat(categorySlug, _commonService.cleanStringPath(model.name), '/');
             model.description = data["description"];
             model.categoryId = categoryId;
+            model.coverImageId = Convert.ToInt32(data["coverImage"]);
+            model.slugId = InsertSlug(model, categoryId);
 
             _argumentService.Insert(model);
            
@@ -89,6 +92,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.categories = _categoryService.GetAll();
             model.name = argument.name;
             model.description = argument.description;
+            model.coverImageId = argument.coverImageId;
             
             return model;
         }
@@ -99,19 +103,45 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new ArgumentModel();
             
             var categoryId = _argumentService.GetById(id).categoryId;
-            var categorySlug = _categoryService.GetById(categoryId).slug;
-
+            
             model.name = data["name"];
-            model.slug = string.Concat(categorySlug, _commonService.cleanStringPath(model.name), '/');;
             model.categoryId = Convert.ToInt32(data["idCategory"]);
             model.description = data["description"];
+            model.coverImageId = Convert.ToInt32(data["coverImage"]);
+
+            UpdateSlug(model, categoryId);
 
             _argumentService.Update(id, model);
         }
 
         [HttpPost]
         public void Delete(int id){
+            var argument = _argumentService.GetById(id);
+
             _argumentService.Delete(id);
+            _slugService.Delete(argument.slugId);
+        }
+
+        public int InsertSlug(ArgumentModel argument, int categoryId){
+            var categorySlugId = _categoryService.GetById(categoryId).slugId;
+            var categorySlug = _slugService.GetById(categorySlugId).name;
+            var name = string.Concat(categorySlug, _commonService.cleanStringPath(argument.name), '/');
+            
+            var model = new SlugModel();
+            model.name = name;
+
+            _slugService.Insert(model);
+            
+            return _slugService.GetByName(name).id;
+        }
+
+        public void UpdateSlug(ArgumentModel argument, int categoryId){
+            var categorySlugId = _categoryService.GetById(categoryId).slugId;
+            var categorySlug = _slugService.GetById(categorySlugId).name;
+            string  name = string.Concat(categorySlug, _commonService.cleanStringPath(argument.name), '/');
+            
+            _slugService.Update(argument.slugId, name);
+            
         }
     }
 }

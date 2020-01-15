@@ -8,8 +8,9 @@ namespace TreA.Data.Entities
     {
         public int id { get; set; }
         public string name { get; set; }
-        public string slug { get; set; }
+        public int slugId { get; set; }
         public string description { get; set; }
+        public int coverImageId { get; set; }
         public int categoryId { get; set; }
         public Categories category{ get; set; }
 

@@ -39,7 +39,6 @@ namespace TreA.Services.Category
         public void Update(int id, Categories model){
             var category = _ctx.category.Find(id);
             category.name = model.name;
-            category.slug = model.slug;
             category.description = model.description;
             category.displayOrder = model.displayOrder;
             _ctx.SaveChanges();

@@ -37,20 +37,24 @@
     </section>
         
     <header>
-        <ul class="social border-radius-small text-center">
-            <li class="facebook">
-                <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
-            </li>
-            <li class="instagram"><a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a></li>
-        </ul>
+      
+        <div class="nav-container">
+            <ul class="social border-radius-small text-center">
+                <li class="facebook">
+                    <a href="https://it-it.facebook.com/" target="_blank" rel="nofollow"></a>
+                </li>
+                <li class="instagram"><a href="https://www.instagram.com/?hl=it" target="_blank" rel="nofollow"></a></li>
+            </ul>
 
-        <h1 class="text-center color-white title"> TRE A </h1>
+            <h1 class="text-center color-white title"> TRE A </h1>
+            <span class="menu">
+                <span class="border-radius-small color-white background-color-white"></span>
+                <span class="border-radius-small color-white background-color-white"></span>
+                <span class="border-radius-small color-white background-color-white"></span>
+            </span>
+        </div>       
+        
 
-        <span class="menu">
-            <span class="border-radius-small color-white background-color-white"></span>
-            <span class="border-radius-small color-white background-color-white"></span>
-            <span class="border-radius-small color-white background-color-white"></span>
-        </span>
 
         <div class="about-us text-center border-radius-small padding-xsmall">
             <h3 class="color-white text-center font-weight-600"></h3>
@@ -95,9 +99,13 @@
     </footer>
 
     <script src="~/js/index.js" asp-append-version="true"></script>
+    <script src="~/js/newsletter.js" asp-append-version="true"></script>
     
     <script>
-        $(document).ready(app.init)
+        $(document).ready(function(){
+            app.init();
+            newsletter.init();
+        })
     </script>
 
     @RenderSection("Scripts", required: false)

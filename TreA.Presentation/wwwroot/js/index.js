@@ -99,17 +99,61 @@ var appController = (function(){
         }
     }
 
+    var fixNav = function(event){
+        if(event.currentTarget.scrollY >= 50){
+            $('header > div.nav-container').addClass('fixed')
+        } else {
+            $('header > div.nav-container').removeClass('fixed')
+        }
+    }
+
+    //CREATE OVERLAY
+    var createOverlay = function(){
+        
+        var overlay = '';
+        var overlay = '<div id="overlay"><span id="close" class="btn close"></span></div>';
+    
+        //append overlay to DOM
+        $('body').append(overlay);
+        $('body').css('overflow', 'hidden');
+
+        //trigger close click
+        $(document).on('click', '#close', removeOverlay);
+
+        //return selector for append element to overlay
+        var $selector = $('#close');
+
+        return $selector;
+    };
+    
+    var removeOverlay = function(){
+        $('div#overlay').remove();
+        $('body').css('overflow-y', 'scroll');
+    };
+
+    var routing = function(){
+        var url = 'Route/Index?name=' + $(this).attr('data-href');
+        fetch(url, {method: 'POST'});
+    }
+
+
     return{
         getHeader: getHeader,
         toggleMenu: toggleMenu,
-        toggleSubList: toggleSubList
+        toggleSubList: toggleSubList,
+        createOverlay: createOverlay,
+        fixNav: fixNav,
+        removeOverlay: removeOverlay,
+        routing: routing
     }
 })();
 
 var appUI = (function(){
     var DOM = {
         btnHamburger: 'span.menu',
-        btnSubMenu: 'ul.category > li'
+        btnSubMenu: 'ul.category > li',
+        btnReturn: '.btn.return',
+        btnRoute: '*[data-href]'
     }
 
     return {
@@ -125,9 +169,19 @@ var app = (function(appUI, appCtrl){
 
         $(document).on('click', DOMElement.btnHamburger, appCtrl.toggleMenu);
         $(document).on('click', DOMElement.btnSubMenu, appCtrl.toggleSubList);
+
+        //On scroll fix navbar
+        $(window).on('scroll', appCtrl.fixNav)
+        
+        //Add event listerner to btn
+        $(document).on('click', DOMElement.btnReturn, appCtrl.removeOverlay);
+
+        //menu navigation
+        $(document).on('click', DOMElement.btnRoute, appCtrl.routing)
     }
 
     return{
-        init: init
+        init: init,
+        createOverlay: appCtrl.createOverlay
     }
 })(appUI, appController)

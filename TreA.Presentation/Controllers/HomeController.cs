@@ -12,6 +12,7 @@ using TreA.Services.Category;
 using TreA.Services.Argument;
 using TreA.Services.Post;
 using TreA.Services.Home;
+using TreA.Services.Slug;
 
 namespace TreA.Presentation.Controllers
 {
@@ -23,14 +24,15 @@ namespace TreA.Presentation.Controllers
         private readonly IArgumentService _argumentService;
         private readonly IPostService _postService;
         private readonly IHomeService _homeService;
-
-        public HomeController(ILogger<HomeController> logger, IPhotoService photoService, ICategoryService categoryService, IArgumentService argumentService, IPostService postService, IHomeService homeService)
+        private readonly ISlugService _slugService;
+        public HomeController(ILogger<HomeController> logger, IPhotoService photoService, ICategoryService categoryService, IArgumentService argumentService, IPostService postService, ISlugService slugService, IHomeService homeService)
         {
             _logger = logger;
             this._photoService = photoService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._postService = postService;
+            this._slugService = slugService;
             this._homeService = homeService;
         }
 
@@ -50,7 +52,7 @@ namespace TreA.Presentation.Controllers
             foreach(var post in posts){
                 model.PostDisplays.Add(new PostDisplayModel(){
                     id = post.id,
-                    slug = post.slug,
+                    slug = _slugService.GetById(post.slugId).name,
                     coverImage = _photoService.GetById(post.PhotoId).path,
                     title = post.title,
                     testo = post.testo
@@ -76,7 +78,7 @@ namespace TreA.Presentation.Controllers
                 {
                     id = argument.id,
                     categoryId = argument.category.id,
-                    slug = argument.slug,
+                    slug = _slugService.GetById(argument.slugId).name,
                     name = argument.name
                 });
             }

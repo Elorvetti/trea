@@ -50,9 +50,7 @@ namespace TreA.Services.Post
             post.albumId = model.albumId;
             post.title = model.title;
             post.testo = model.testo;
-            post.slug = model.slug;
             post.pubblico = model.pubblico;
-
             
             _ctx.SaveChanges();
         }
