@@ -123,19 +123,23 @@ namespace TreA.Presentation
 
             app.UseCookiePolicy();
 
-            app.UseAuthentication();
-            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "areas",
-                    template: "{area:exists}/{controller=User}/{action=Index}/{id?}"
+                    template: "{area:exists}/{controller=User}/{action=Index}"
+                );
+
+                routes.MapRoute(
+                    name: "rewrite",
+                    template: "{controller=Route}/{action=Index}/{category?}/{argument?}"
                 );
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
+                    template: "{controller=Home}/{action=Index}/{category?}/{argument?}"
                 );
+
             });
             
         }

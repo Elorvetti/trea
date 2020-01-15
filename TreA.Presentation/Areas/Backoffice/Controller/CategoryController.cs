@@ -119,8 +119,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         public void UpdateSlug(CategoryModel category){
             string  name = string.Concat('/', _commonService.cleanStringPath(category.name), '/');
 
-            _slugService.Update(category.slugId, name);
-            
+            _slugService.Update(category.slugId, name);       
         }
     }
 }

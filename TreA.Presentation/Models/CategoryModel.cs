@@ -12,6 +12,6 @@ namespace TreA.Presentation.Models
         public double pageTotal { get; set; }
         public bool displayPagination{ get; set; }
         public string sectionName { get; set; }
-        public IList<Categories> categories{ get; set; }
+        public string slug { get; set; }
     }
 }

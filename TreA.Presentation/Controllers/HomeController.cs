@@ -62,8 +62,19 @@ namespace TreA.Presentation.Controllers
         }
 
         [HttpPost]
-        public IList<Categories> GetAllCategory(){
-            return _categoryService.GetAll();
+        public IList<CategoryModel> GetAllCategory(){
+            var model = new List<CategoryModel>();
+            
+            var categories = _categoryService.GetAll();
+            foreach(var category in categories){
+                model.Add(new CategoryModel(){
+                    id = category.id,
+                    name = category.name,
+                    slug = _slugService.GetById(category.slugId).name
+                });
+            }
+            
+            return model;
         }
 
         [HttpPost]

@@ -36,7 +36,7 @@ var appController = (function(){
         element = element + '<ul class="category text-right">';
 
         for(var i in data){
-            element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" data-href="' + data[i].slug + '">' + data[i].name + '</li>';
+            element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" data-href="Route/Index' + data[i].slug + '">' + data[i].name + '</li>';
         }
         element = element + '</ul>'
 
@@ -49,7 +49,7 @@ var appController = (function(){
         elementToAppend = elementToAppend + '<ul class="border-radius-small">';
                         
         for(var i in data){
-            elementToAppend = elementToAppend + '<li id="' + data[i].id + '" class="padding-left-small color-white" data-href="' + data[i].slug + '">' + data[i].name + '</li>';
+            elementToAppend = elementToAppend + '<li id="' + data[i].id + '" class="padding-left-small color-white" data-href="Route/Index' + data[i].slug + '">' + data[i].name + '</li>';
                             
             var element = $('ul.category > li').filter(function(){
                 return $(this).attr('id') == data[i].categoryId;
@@ -132,7 +132,7 @@ var appController = (function(){
     };
 
     var routing = function(){
-        var url = 'Route/Index?name=' + $(this).attr('data-href');
+        var url = $(this).attr('data-href');
         fetch(url, {method: 'POST'});
     }
 
