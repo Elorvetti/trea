@@ -89,6 +89,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.name = category["name"];
             model.displayOrder = Convert.ToInt32(category["order"]);
             model.description = category["description"];
+            model.slugId = _categoryService.GetById(id).slugId;
             
             UpdateSlug(model);
 
@@ -106,7 +107,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
  
         public int InsertSlug(CategoryModel category){
-            var name = string.Concat('/', _commonService.cleanStringPath(category.name), '/');
+            var name = string.Concat("Blog", '/', _commonService.cleanStringPath(category.name), '/');
             
             var model = new SlugModel();
             model.name = name;

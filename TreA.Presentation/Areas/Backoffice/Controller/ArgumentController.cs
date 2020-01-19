@@ -108,8 +108,9 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.categoryId = Convert.ToInt32(data["idCategory"]);
             model.description = data["description"];
             model.coverImageId = Convert.ToInt32(data["coverImage"]);
-
-            UpdateSlug(model, categoryId);
+            model.slugId = _argumentService.GetById(id).slugId;
+            
+            UpdateSlug(model);
 
             _argumentService.Update(id, model);
         }
@@ -136,10 +137,16 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             return _slugService.GetByName(name).id;
         }
 
-        public void UpdateSlug(ArgumentModel argument, int categoryId){
-            var categorySlugId = _categoryService.GetById(categoryId).slugId;
-            var categorySlug = _slugService.GetById(categorySlugId).name;
-            string  name = string.Concat(categorySlug, _commonService.cleanStringPath(argument.name), '/');
+        public void UpdateSlug(ArgumentModel argument){
+            var postSlug = string.Concat(_commonService.cleanStringPath(argument.name), '/');
+            var categorySlug = _slugService.GetById(argument.slugId).name;
+            
+            var exist = categorySlug.IndexOf(postSlug);
+            if(exist > 0){
+               categorySlug = categorySlug.Remove(exist);
+            }
+            
+            string  name = string.Concat(categorySlug, postSlug);
             
             _slugService.Update(argument.slugId, name);
             

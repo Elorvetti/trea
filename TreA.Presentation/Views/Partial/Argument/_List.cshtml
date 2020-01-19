@@ -1,0 +1,14 @@
+@model ArgumentModel
+
+<h3 class="text-center">@Model.sectionName</h3>
+<div id="list" class="padding-bottom-small">
+
+    @foreach (var argument in Model.argumentsDisplay)
+    {
+        <div id="@argument.id" class="item carousel__photo border-radius-small box-shadow" style="background-image: url('@argument.coverImage')" data-href="@argument.slug">
+            <h3 class="text-center color-white border-radius-small"> 
+                <a class="text-center color-white border-radius-small" href="@argument.slug"> @argument.title  </a>
+            </h3>
+        </div>
+    }
+</div>

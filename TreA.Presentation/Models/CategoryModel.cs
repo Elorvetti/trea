@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 using TreA.Data.Entities;
 
 namespace TreA.Presentation.Models
@@ -13,5 +10,10 @@ namespace TreA.Presentation.Models
         public bool displayPagination{ get; set; }
         public string sectionName { get; set; }
         public string slug { get; set; }
+        public IList<ArgumentChild> Children { get; set; } = new List<ArgumentChild>();
+    }
+
+    public class ArgumentChild : Arguments{
+        public string slug{ get; set; }
     }
 }

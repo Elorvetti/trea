@@ -167,8 +167,9 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             post.title = postTitle;
             post.testo = data["testo"];
             post.PhotoId = Convert.ToInt32(data["coverImage"]);
+            post.slugId = _postService.GetById(id).slugId;
 
-            UpdateSlug(post, categoryId, argumentId);
+            UpdateSlug(post);
 
             if(data["IsPublic"] == "on"){
                 post.pubblico = true;
@@ -268,17 +269,15 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             return _slugService.GetByName(name).id;
         }
 
-        public void UpdateSlug(Posts model, int categoryId, int argumentId){
-            int slugId = 0; 
-
-            if(argumentId == 0){
-                slugId = _categoryService.GetById(categoryId).slugId;
-            } else {
-                slugId = _argumentService.GetById(argumentId).slugId;
+        public void UpdateSlug(Posts model){
+            var postSlug = string.Concat(_commonService.cleanStringPath(model.title), '/');
+            var categoryArgumentSlug = _slugService.GetById(model.slugId).name;
+            
+            var exist = categoryArgumentSlug.IndexOf(postSlug);
+            if(exist > 0){
+               categoryArgumentSlug = categoryArgumentSlug.Remove(exist);
             }
-
-            var categoryArgumentSlug = _slugService.GetById(slugId).name;
-            string  name = string.Concat(categoryArgumentSlug, _commonService.cleanStringPath(model.title), '/');
+            string  name = string.Concat(categoryArgumentSlug,postSlug);
             
             _slugService.Update(model.slugId, name);
             

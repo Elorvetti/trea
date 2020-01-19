@@ -1,11 +1,5 @@
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using TreA.Services.Slug;
 
 namespace TreA.Presentation.Controllers
@@ -19,16 +13,23 @@ namespace TreA.Presentation.Controllers
             this._slugService = slugService;
         }
 
-        [HttpPost]
-        public void Index(string category, string argument){
-            var slug = String.Format("/{0}/", category);
+        public IActionResult Index(string category, string argument, string post){
+            if(category != null){
+                var slug = String.Format("Blog/{0}/", category);
+                if(!String.IsNullOrEmpty(argument)){
+                    slug =  slug + argument + '/';
+                    if(!String.IsNullOrEmpty(post)){
+                        slug =  slug + post + '/';
+                    }
+                }
             
-            if(!String.IsNullOrEmpty(argument)){
-                slug =  slug + argument + '/';
+                var entity = _slugService.GetByName(slug).entityname;
+                var id = _slugService.GetByName(slug).id;
+                return RedirectToActionPermanent("GetById", entity, new {id = id});
             }
-            
-            var slugId = _slugService.GetByName(slug).id;
 
+            return Json("Errore");
+            
         }
     }
 }

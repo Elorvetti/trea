@@ -6,8 +6,10 @@
         <div class="owl-carousel owl-theme">
             @foreach (var post in Model.PostDisplays)
             {   
-                <div id="@post.id" class="item carousel__photo border-radius-small box-shadow" style="background-image: url('@post.coverImage')" data-href="@post.slug">
-                    <h3 class="text-center color-white border-radius-small"> @post.title </h3>
+                <div id="@post.id" class="item carousel__photo border-radius-small box-shadow" style="background-image: url('@post.coverImage')">
+                    <h3 class="text-center color-white border-radius-small"> 
+                        <a class="text-center color-white border-radius-small" href="@post.slug"> @post.title </a>
+                    </h3>
                 </div>
             }
         </div>

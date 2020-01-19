@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using TreA.Data.Entities;
 using TreA.Presentation.Models;
 using TreA.Services.Photo;
 using TreA.Services.Category;
@@ -67,10 +63,23 @@ namespace TreA.Presentation.Controllers
             
             var categories = _categoryService.GetAll();
             foreach(var category in categories){
+                
+                //Get argument of this category
+                var children = new List<ArgumentChild>();
+                var arguments = _argumentService.GetByCategoryId(category.id);
+                foreach(var argument in arguments){
+                    children.Add(new ArgumentChild(){
+                        id = argument.id,
+                        name = argument.name,
+                        slug = _slugService.GetById(argument.slugId).name
+                    });
+                }
+                
                 model.Add(new CategoryModel(){
                     id = category.id,
                     name = category.name,
-                    slug = _slugService.GetById(category.slugId).name
+                    slug = _slugService.GetById(category.slugId).name,
+                    Children = children
                 });
             }
             

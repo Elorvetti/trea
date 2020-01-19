@@ -12,6 +12,7 @@ namespace TreA.Services.Argument
         IList<Arguments> GetAll();
         IList<Arguments> GetAll(int excludeRecord, int pageSize);
         Arguments GetById(int id);
+        Arguments GetBySlugId(int slugId);
         IList<Arguments> GetByCategoryId(int categoryId);
         void Update(int id, Arguments model);
         void Delete(int id);

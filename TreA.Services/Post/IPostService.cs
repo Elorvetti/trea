@@ -16,6 +16,7 @@ namespace TreA.Services.Post
         IList<Posts> GetAll(int excludeRecord, int pageSize);
         IList<Posts> GetLast(int nPost);
         Posts GetById(int id);
+        Posts GetBySlugId(int slugId);
         IList<Posts> GetByCategoryId (int categoryId);
         IList<Posts> GetByArgumentId(int argumentId);
         void Update(int id, Posts name);

@@ -1,22 +1,15 @@
-using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using TreA.Data;
 using TreA.Services.Album;
 using TreA.Services.Argument;
@@ -122,26 +115,29 @@ namespace TreA.Presentation
             });
 
             app.UseCookiePolicy();
+            app.UseAuthentication();
+
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "areas",
-                    template: "{area:exists}/{controller=User}/{action=Index}"
+                    template: "{area:exists}/{controller=User}/{action=Index}/{id?}"
                 );
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{category?}/{argument?}"
+                    template: "{controller=Home}/{action=Index}/{category?}/{argument?}/{post?}"
                 );
                 
-                routes.MapRoute(
-                    name: "rewrite",
-                    template: "{controller=Route}/{action=Index}/{category?}/{argument?}"
-                );
-
-
             });
+
+            var rewrite = new RewriteUrl();
+
+            var options = new RewriteOptions()
+                .AddRedirect("Blog/(.*)", "Route/Index/$1");
+
+            app.UseRewriter(options);
             
         }
     }

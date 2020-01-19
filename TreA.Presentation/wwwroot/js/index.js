@@ -4,25 +4,16 @@ var appController = (function(){
     //Set header image, menu and abous us
     var getHeader = function(){
         //1. Menu 
-        fetch('Home/GetAllCategory', {method: 'POST'})
+        fetch('/Home/GetAllCategory', {method: 'POST'})
             .then(function(res){
                 res.json()
                     .then(function(data){
                         createMenu(data)
                     })
             })
-
-        //2. Sub Menu
-        fetch('Home/GetAllArgument', {method: 'POST'})
-        .then(function(res){
-            res.json()
-                .then(function(data){
-                    createSubMenu(data)
-                })
-        })
         
         //3. Background-image
-        fetch('Home/GetHeader', {method: 'POST'})
+        fetch('/Home/GetHeader', {method: 'POST'})
             .then(function(res){
                 res.json()
                     .then(function(data){
@@ -32,35 +23,33 @@ var appController = (function(){
     };
 
     var createMenu = function(data){
+        console.log(data);
         var element = '';
         element = element + '<ul class="category text-right">';
 
         for(var i in data){
-            element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" data-href="Route/Index' + data[i].slug + '">' + data[i].name + '</li>';
+            if(data[i].children.length > 0){
+                element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" child="close">';
+                element = element + '<a class="color-white">' + data[i].name + '</a>';
+               console.log(data);
+                element = element + '<ul class="border-radius-small">';
+                for(var y in data[i].children){
+                    element = element + '<li id="' + data[i].children[y].id + '" class="padding-left-small color-white">'
+                    element = element + '<a class=" text-center color-white" href="' + data[i].children[y].slug + '">' + data[i].children[y].name + '</a>';
+                    element = element + '</li>';
+                }
+                element = element + '</ul>';
+
+            } else {
+                element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white">'
+                element = element + '<a class="color-white" href="' + data[i].slug + '">' + data[i].name + '</a>'
+            }
+            element = element + '</li>' 
         }
         element = element + '</ul>'
 
         //Display for desktop
         $('h1.title').after(element);
-    };
-
-    var createSubMenu = function(data){
-        var elementToAppend = '';
-        elementToAppend = elementToAppend + '<ul class="border-radius-small">';
-                        
-        for(var i in data){
-            elementToAppend = elementToAppend + '<li id="' + data[i].id + '" class="padding-left-small color-white" data-href="Route/Index' + data[i].slug + '">' + data[i].name + '</li>';
-                            
-            var element = $('ul.category > li').filter(function(){
-                return $(this).attr('id') == data[i].categoryId;
-            });
-
-        }
-
-        elementToAppend = elementToAppend + '</ul>';
-
-        element.attr('child', 'close');
-        element.append(elementToAppend);
     };
 
     var headerData = function(data){
@@ -131,12 +120,6 @@ var appController = (function(){
         $('body').css('overflow-y', 'scroll');
     };
 
-    var routing = function(){
-        var url = $(this).attr('data-href');
-        fetch(url, {method: 'POST'});
-    }
-
-
     return{
         getHeader: getHeader,
         toggleMenu: toggleMenu,
@@ -144,7 +127,6 @@ var appController = (function(){
         createOverlay: createOverlay,
         fixNav: fixNav,
         removeOverlay: removeOverlay,
-        routing: routing
     }
 })();
 
@@ -175,9 +157,6 @@ var app = (function(appUI, appCtrl){
         
         //Add event listerner to btn
         $(document).on('click', DOMElement.btnReturn, appCtrl.removeOverlay);
-
-        //menu navigation
-        $(document).on('click', DOMElement.btnRoute, appCtrl.routing)
     }
 
     return{

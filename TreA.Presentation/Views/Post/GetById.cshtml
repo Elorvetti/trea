@@ -1,0 +1,8 @@
+@model PostModel
+
+<div id="post-display" class="padding-small">
+    @Html.Raw(Model.testo)
+</div>
+<div id="album">
+    <input type="hidden" value="@Model.albumId" />
+</div>
