@@ -36,6 +36,10 @@ namespace TreA.Services.Argument
             return _ctx.argument.First(a => a.id == id);
         }
 
+        public virtual IList<Arguments> GetByCategoryId(int categoryId){
+            return _ctx.argument.Where(a => a.categoryId == categoryId).ToList();
+        }
+
         public void Update(int id, Arguments model){
             var argument = _ctx.argument.Find(id);
             

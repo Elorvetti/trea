@@ -129,6 +129,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
             var model = new SlugModel();
             model.name = name;
+            model.entityname = "Argument";
 
             _slugService.Insert(model);
             

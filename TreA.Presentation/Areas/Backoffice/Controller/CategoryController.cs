@@ -110,6 +110,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
             var model = new SlugModel();
             model.name = name;
+            model.entityname = "Category";
 
             _slugService.Insert(model);
             

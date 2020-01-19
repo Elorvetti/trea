@@ -104,6 +104,7 @@ namespace TreA.Data
             modelBuilder.Entity<Slugs>(entity => {
                 entity.HasKey( s => s.id);
                 entity.Property(s => s.name);
+                entity.Property(s => s.entityname);
             });
 
         }

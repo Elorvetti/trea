@@ -35,9 +35,3 @@ TreA.Presentation/App_Data/*
 TreA.Services/bin/*
 TreA.Services/obj/*
 
-admin/Properties/*
-admin/App_Data/*
-
-
-#image
-admin/wwwroot/img/*

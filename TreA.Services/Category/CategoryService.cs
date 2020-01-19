@@ -36,6 +36,10 @@ namespace TreA.Services.Category
             return _ctx.category.First(a => a.id == id);
         }
 
+        public virtual Categories GetBySlugId(int slugId){
+            return _ctx.category.First(c => c.slugId == slugId);
+        }
+
         public void Update(int id, Categories model){
             var category = _ctx.category.Find(id);
             category.name = model.name;

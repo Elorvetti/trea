@@ -12,6 +12,7 @@ namespace TreA.Services.Category
         IList<Categories> GetAll();
         IList<Categories> GetAll(int excludeRecord, int pageSize);
         Categories GetById(int id);
+        Categories GetBySlugId(int slugId);
         void Update(int id, Categories model);
         void Delete(int id);
     }
