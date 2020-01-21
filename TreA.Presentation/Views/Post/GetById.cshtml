@@ -1,8 +1,39 @@
 @model PostModel
 
-<div id="post-display" class="padding-small">
+<div id="post-display" class="padding-small" post="@Model.id">
     @Html.Raw(Model.testo)
+
+    
+    <div id="album">
+        <input type="hidden" value="@Model.albumId" />
+    </div>
+
+    <div id="review" class="margin-top-xsmall">
+        <form class="border-radius-small box-shadow margin-bottom-xsmall margin-top-small text-center">
+            <input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required />
+            <input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />
+            <textarea name="review" id="review" placeholder="Lascia un commento"></textarea>
+                    
+            <div class="text-right">
+                <input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia">'; 
+            </div>
+        </form>
+    </div>
+
+
 </div>
-<div id="album">
-    <input type="hidden" value="@Model.albumId" />
+
+<div class="related-post margin-top-small border-radius-small box-shadow">
+    <h3 class="text-center text-capitalize font-weight-600">Altri post</h3>
+    <ul class="margin-bottom-small">
+        @foreach(var related in Model.realtedPost)
+        {
+            <li id="@related.id" class="text-center padding-top-xsmall"><a href="@related.slug">@related.title</a></li>
+        }
+    </ul>
 </div>
+
+<script src="~/js/post.js"></script>
+<script>
+    $(document).ready(post.init)
+</script>

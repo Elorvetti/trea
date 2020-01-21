@@ -21,6 +21,7 @@ namespace TreA.Data
         public virtual DbSet<Podcasts> podcast { get; set; }
         public virtual DbSet<Homes> home { get; set; }
         public virtual DbSet<Slugs> slug { get; set; }
+        public virtual DbSet<Reviews> review { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){
             optionsBuilder
                 .ConfigureWarnings(warnings => 
@@ -105,6 +106,15 @@ namespace TreA.Data
                 entity.HasKey( s => s.id);
                 entity.Property(s => s.name);
                 entity.Property(s => s.entityname);
+            });
+
+            modelBuilder.Entity<Reviews>(entity => {
+                entity.HasKey(r => r.id);
+                entity.Property(r => r.postId);
+                entity.Property(r => r.nome);
+                entity.Property(r => r.email);
+                entity.Property(r => r.testo);
+                entity.Property(r => r.insertDate);
             });
 
         }

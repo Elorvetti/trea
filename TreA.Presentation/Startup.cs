@@ -25,6 +25,7 @@ using TreA.Services.Post;
 using TreA.Services.User;
 using TreA.Services.Video;
 using TreA.Services.Slug;
+using TreA.Services.Review;
 
 namespace TreA.Presentation
 {
@@ -78,6 +79,7 @@ namespace TreA.Presentation
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ISlugService, SlugService>();
             services.AddScoped<IHomeService, HomeService>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -127,7 +129,32 @@ namespace TreA.Presentation
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{category?}/{argument?}/{post?}"
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                );
+
+                routes.MapRoute(
+                    name: "Foto",
+                    template: "{controller=Photo}/{action=Index}"
+                );
+
+                routes.MapRoute(
+                    name: "Video",
+                    template: "{controller=Video}/{action=Index}"
+                );
+
+                routes.MapRoute(
+                    name: "Podcast",
+                    template: "{controller=Podcast}/{action=Index}"
+                );
+
+                routes.MapRoute(
+                    name: "Album",
+                    template: "{controller=Post}/{action=GetAlbum}/{id}"
+                );
+
+                routes.MapRoute(
+                    name: "Blog",
+                    template: "{controller=Route}/{action=Index}/{category?}/{argument?}/{post?}"
                 );
                 
             });

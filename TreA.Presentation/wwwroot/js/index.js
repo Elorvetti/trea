@@ -23,7 +23,6 @@ var appController = (function(){
     };
 
     var createMenu = function(data){
-        console.log(data);
         var element = '';
         element = element + '<ul class="category text-right">';
 
@@ -31,7 +30,6 @@ var appController = (function(){
             if(data[i].children.length > 0){
                 element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" child="close">';
                 element = element + '<a class="color-white">' + data[i].name + '</a>';
-               console.log(data);
                 element = element + '<ul class="border-radius-small">';
                 for(var y in data[i].children){
                     element = element + '<li id="' + data[i].children[y].id + '" class="padding-left-small color-white">'

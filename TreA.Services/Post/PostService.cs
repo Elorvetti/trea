@@ -45,7 +45,7 @@ namespace TreA.Services.Post
             return _ctx.post.First(p => p.slugId == slugId);
         }
         public virtual IList<Posts> GetByCategoryId(int categoryId){
-            return _ctx.post.Where(p => p.categoryId == categoryId).ToList();
+            return _ctx.post.Where(p => p.categoryId == categoryId && p.pubblico == true).ToList();
         }
 
         public virtual IList<Posts> GetByArgumentId(int argumentId){

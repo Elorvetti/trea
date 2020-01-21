@@ -59,8 +59,11 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .text-left{ text-align: left; }
 .text-right{ text-align: right; }
 
-.font-weight-600{ font-weight: 600; }
+.text-uppercase{ text-transform: uppercase; }
+.text-capitalize{ text-transform: capitalize; }
+
 .font-weight-500{ font-weight: 500; }
+.font-weight-600{ font-weight: 600; }
 
 .margin-xsmall{ margin: 10px; }
 .margin-top-xsmall{ margin-top: 10px; }
@@ -309,16 +312,40 @@ header ul.category{ display: none;} */
 div#list { text-align: center; }
 div#list > * { position: relative; display: inline-block; width: 44%; margin: 1%; }
 
-@media(min-width: 1024px){
-    div#list > *{ margin: 1%; width: 20%; }
-}
-
 /* DISPLAY POST */
+div#post-display{ display: inline-block; }
 div#post-display > p * { position: relative; max-width: 100%; }
 div#post-display > h1{ text-align: center; }
 div#post-display > p > img{ margin-right: 20px; }
 div#post-display > ol, div#post-display > ul{ margin-left: 20px; }
 
-@media(max-width: 768px){
+div.related-post{ position: relative; display: none; width: 25%; }
+div.related-post > ul::before{ content: ''; position: relative; display:  inline-block; width: 80%; left: 10%; border: 1px solid #FCBDB2; }
+div.related-post > ul > li.active > a { color: #73AFBA; font-weight: 600;  }
+
+@media(min-width: 768px){
+    div#post-display{ width: 60%; margin-left: 50px; }
     div#post-display > p > img{ position: relative; display: inline-block; width: 100%!important; height: auto!important; }
+    div.related-post{ display: inline-block; margin-left: 20px; }
 }
+
+@media(min-width: 1024px){
+    div#list > *{ margin: 1%; width: 20%; }
+    div.related-post{ margin-left: 50px; }
+}
+
+@media(min-width: 1440px){
+    div#post-display{ width: 65%; margin-left: 80px; }
+}
+
+span.skeleton{ position: relative; display: inline-block; margin: 20px 5px 0px 0px; width: 80px; height: 80px; background-repeat: no-repeat; background-size: cover; background-position: center center; cursor: pointer; }
+span.skeleton > p.skeleton{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 80px; font-size: 28px; background-color: rgba(0,0,0,.6); border-radius: 5px; }
+span.skeleton > video{ max-width: 80px; max-height: 80px; }
+
+div#review::before{ content: ''; position: relative; display:  inline-block; width: 100%; border: 1px solid #73AFBA; }
+form{ position: relative; margin: 0 auto; padding: 20px 0px; width: 90%; max-width: 500px; height: auto; overflow: hidden; }
+input, select, textarea{ position: relative; margin: 10px auto; padding: 10px 5px; width: 80%; font-size: 16px; background-color: transparent; border: 1px solid transparent; border-bottom: 1px solid #1C2E3D; }
+input:hover, input:active, textarea:hover, textarea:active{ border-bottom: 2px solid #73AFBA; } 
+span.text-danger{ position: relative; display: inline-block; padding: 5px 10px; width: 80%; height: auto; font-size: 13px; line-height: 21px; }
+input + span.text-danger{ background-color: transparent; }
+input.btn-submit{ position: relative; display: inline-block; right: 10%; width: 160px; height: 40px; font-size: 16px; line-height: 24px; }
