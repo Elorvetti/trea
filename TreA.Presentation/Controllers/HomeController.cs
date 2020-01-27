@@ -38,6 +38,10 @@ namespace TreA.Presentation.Controllers
             model.Newsletter = new NewsletterModel();
             model.PostDisplays = new List<PostDisplayModel>();
 
+            //SEO 
+            var homeSetting = _homeService.GetSetting();
+            ViewBag.description = homeSetting.headerTesto;
+   
             //Get last post
             var posts = _postService.GetLast(4);
             
@@ -56,7 +60,7 @@ namespace TreA.Presentation.Controllers
            }
             return View(model);
         }
-
+        
         [HttpPost]
         public IList<CategoryModel> GetAllCategory(){
             var model = new List<CategoryModel>();
@@ -74,6 +78,17 @@ namespace TreA.Presentation.Controllers
                         slug = _slugService.GetById(argument.slugId).name
                     });
                 }
+
+                if(arguments.Count == 0){
+                    var posts = _postService.GetByCategoryId(category.id);
+                    foreach(var post in posts){
+                        children.Add(new ArgumentChild(){
+                            id = post.id,
+                            name = post.title,
+                            slug = _slugService.GetById(post.slugId).name
+                        });
+                    }
+                }
                 
                 model.Add(new CategoryModel(){
                     id = category.id,
@@ -86,26 +101,6 @@ namespace TreA.Presentation.Controllers
             return model;
         }
 
-        [HttpPost]
-        public IList<ArgumentModel> GetAllArgument(){
-                        
-            var models = new List<ArgumentModel>();
-
-            var arguments = _argumentService.GetAll();
-            foreach(var argument in arguments)
-            {
-                models.Add(new ArgumentModel()
-                {
-                    id = argument.id,
-                    categoryId = argument.category.id,
-                    slug = _slugService.GetById(argument.slugId).name,
-                    name = argument.name
-                });
-            }
-
-            return models;
-        }
-
         public HomeModel GetHeader(){
             var model = new HomeModel();
             var home = _homeService.GetSetting();
@@ -116,6 +111,7 @@ namespace TreA.Presentation.Controllers
             
             return model;
         }
+
         public IActionResult Privacy()
         {
             return View();

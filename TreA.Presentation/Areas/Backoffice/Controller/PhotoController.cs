@@ -75,7 +75,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                             await _fileService.uploadFile("Content\\Images", image);
 
                             model.name = image.FileName;
-                            model.path = "../App_Data/Content/Images/" + image.FileName;
+                            model.path = "/App_Data/Content/Images/" + image.FileName;
 
                             _photoService.Insert(model);
                             
@@ -130,7 +130,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 var newFileName = "Content\\Images\\" + fileNameFromPost;
                 _fileService.update(oldFileName, newFileName);
 
-                model.path = "../App_Data/Content/Images/" + fileNameFromPost;
+                model.path = "/App_Data/Content/Images/" + fileNameFromPost;
                 model.name = fileNameFromPost;
                 _photoService.Update(id, model);
             }

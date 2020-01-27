@@ -180,6 +180,7 @@ var appController = (function(){
 var appUI = (function(){
 
     var toogleSidebar = function(){
+        $(this).toggleClass('active');
         if($(DOMSidebar.element).hasClass(DOMSidebar.showClass)){
             $(DOMSidebar.element).removeClass(DOMSidebar.showClass);
         } else {
@@ -228,13 +229,14 @@ var appUI = (function(){
             podcast: 'li#podcast',
             arguments: 'li#argument',
             post: 'li#post',
-            home: 'li#home'    
+            home: 'li#home',
+            review: 'li#review'    
         }
     };
 
     var DOMElement = {
         Menu: {
-            btn: '.btn-hamburger',
+            btn: '.menu.home',
         },
         Main: {
             btnReturn: '.btn.return',

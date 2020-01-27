@@ -69,7 +69,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                             await _fileService.uploadFile("Content\\Podcast", podcast);
 
                             model.name = podcast.FileName;
-                            model.path = "../App_Data/Content/Podcast/" + podcast.FileName;
+                            model.path = "/App_Data/Content/Podcast/" + podcast.FileName;
 
                             _podcastService.Insert(model);
                             
@@ -124,7 +124,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 var newFileName = "Content\\Podcast\\" + fileNameFromPost;
                 _fileService.update(oldFileName, newFileName);
 
-                model.path = "../App_Data/Content/Podcast/" + fileNameFromPost;
+                model.path = "/App_Data/Content/Podcast/" + fileNameFromPost;
                 model.name = fileNameFromPost;
                 _podcastService.Update(id, model);
             }

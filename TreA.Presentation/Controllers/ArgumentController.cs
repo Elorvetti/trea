@@ -25,9 +25,13 @@ namespace TreA.Presentation.Controllers
             this._photoService = photoService;
         }
 
-        public IActionResult List(int categoryId, int pageSize, int pageNumber){      
+        public IActionResult List(int categoryId, int pageSize, int pageNumber, string slug){      
             var model = new ArgumentModel();
 
+            //SEO 
+            ViewBag.description = _categoryService.GetById(categoryId).description;
+
+            //List
             var excludeRecords = (pageSize * pageNumber) - pageSize;
             var total =_argumentService.GetByCategoryId(categoryId).Count;
 
@@ -35,7 +39,7 @@ namespace TreA.Presentation.Controllers
             model.pageSize = pageSize;
             model.pageTotal =  Math.Ceiling((double)total / pageSize);
             model.arguments = _argumentService.GetByCategoryId(categoryId);
-      
+
             foreach(var argument in model.arguments){
                 model.argumentsDisplay.Add(new ArgumentDisplay(){
                     id = argument.id,
@@ -44,11 +48,11 @@ namespace TreA.Presentation.Controllers
                     title = argument.name
                 });
             }
-            
+
             return View(model);
         }
 
-        public IActionResult GetById(string id){
+        public IActionResult GetBySlugId(string id){
             
             //If in ARGUMENT list are more then one argumet show list else only this argument
             //If there aren't ARGUMENT list search one or more POST of this category 
@@ -63,10 +67,9 @@ namespace TreA.Presentation.Controllers
             
             //If ARGUMENT are a list show list else only data conneted to this argument
             if(posts.Count > 1){
-                return RedirectToActionPermanent("List", "Post", new{argumentId = argumentId, pageSize = 50, pageNumber = 1});
+                return RedirectToAction("List", "Post", new{argumentId = argumentId, pageSize = 50, pageNumber = 1});
             } else if(posts.Count == 1){
-                
-                
+                return RedirectToAction("GetByPostId", "Post", new{id = posts[0].id});
             }
 
             return Json("No Redirect");

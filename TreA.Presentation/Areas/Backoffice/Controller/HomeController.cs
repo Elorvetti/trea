@@ -16,6 +16,7 @@ using TreA.Data.Entities;
 using TreA.Services.Photo;
 using TreA.Services.Category;
 using TreA.Services.Argument;
+using TreA.Services.Post;
 using TreA.Services.Home;
 using TreA.Services.Slug;
 
@@ -27,11 +28,13 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly IPhotoService _photoService;
         private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
+        private readonly IPostService _postService;
         private readonly IHomeService _homeService;
         private readonly ISlugService _slugService;
-        public HomeController(ICategoryService categoryService, IArgumentService argumentService, IHomeService homeService, IPhotoService photoService, ISlugService slugService){
+        public HomeController(ICategoryService categoryService, IArgumentService argumentService, IPostService postService, IHomeService homeService, IPhotoService photoService, ISlugService slugService){
             this._categoryService = categoryService;
             this._argumentService = argumentService;
+            this._postService = postService;
             this._homeService = homeService;
             this._photoService = photoService;
             this._slugService = slugService;
@@ -83,29 +86,40 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         [HttpPost]
-        public IList<Categories> GetAllCategory(){
-            return _categoryService.GetAll();
-        }
+        public IList<CategoryModel> GetMenu(){
+             var model = new List<CategoryModel>();
+            
+            var categories = _categoryService.GetAll();
+            foreach(var category in categories){
+                
+                //Get argument of this category
+                var children = new List<ArgumentChild>();
+                var arguments = _argumentService.GetByCategoryId(category.id);
+                foreach(var argument in arguments){
+                    children.Add(new ArgumentChild(){
+                        id = argument.id,
+                        name = argument.name,
+                    });
+                }
 
-        [HttpPost]
-        public IList<ArgumentModel> GetAllArgument(){
-                        
-            var models = new List<ArgumentModel>();
-
-            var arguments = _argumentService.GetAll();
-            foreach(var argument in arguments)
-            {
-                models.Add(new ArgumentModel()
-                {
-                    id = argument.id,
-                    categoryId = argument.category.id,
-                    slug = _slugService.GetById(argument.slugId).name,
-                    name = argument.name
+                if(arguments.Count == 0){
+                    var posts = _postService.GetByCategoryId(category.id);
+                    foreach(var post in posts){
+                        children.Add(new ArgumentChild(){
+                            id = post.id,
+                            name = post.title,
+                        });
+                    }
+                }
+                
+                model.Add(new CategoryModel(){
+                    id = category.id,
+                    name = category.name,
+                    Children = children
                 });
-
             }
             
-            return models;
+            return model;
         }
     }
 }

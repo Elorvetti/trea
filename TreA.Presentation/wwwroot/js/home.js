@@ -31,7 +31,6 @@ var homeController = (function(){
         })
     }
 
-
     /* INSTAGRAM */
     var instagram = function(elem){
         var element = ''

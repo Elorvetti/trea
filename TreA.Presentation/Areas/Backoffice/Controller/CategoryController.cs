@@ -107,7 +107,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
  
         public int InsertSlug(CategoryModel category){
-            var name = string.Concat("Blog", '/', _commonService.cleanStringPath(category.name), '/');
+            var name = string.Concat("/Blog", '/', _commonService.cleanStringPath(category.name), '/');
             
             var model = new SlugModel();
             model.name = name;

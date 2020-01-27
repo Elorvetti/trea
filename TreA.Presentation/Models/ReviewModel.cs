@@ -3,7 +3,7 @@ using TreA.Data.Entities;
 
 namespace TreA.Presentation.Models
 {
-    public partial class ReviewModel
+    public partial class ReviewModel : Reviews
     {
         public int pageSize { get; set; }
         public double pageTotal { get; set; }

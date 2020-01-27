@@ -1,6 +1,7 @@
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,7 @@ namespace TreA.Presentation
             });
 
             //Custom services
+            services.AddScoped<TreAContext>();
             services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserService, UserService>();
@@ -80,7 +82,7 @@ namespace TreA.Presentation
             services.AddScoped<ISlugService, SlugService>();
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<IReviewService, ReviewService>();
-
+        
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<FormOptions>(options => {
@@ -89,7 +91,7 @@ namespace TreA.Presentation
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IArgumentService argumentService, IPostService postService, ISlugService slugService, TreAContext ctx)
         {
             if (env.IsDevelopment())
             {
@@ -118,8 +120,7 @@ namespace TreA.Presentation
 
             app.UseCookiePolicy();
             app.UseAuthentication();
-
-
+        
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -151,21 +152,21 @@ namespace TreA.Presentation
                     name: "Album",
                     template: "{controller=Post}/{action=GetAlbum}/{id}"
                 );
+                
+                routes.MapRoute(
+                    name: "search",
+                    template: "{controller=Post}/{action=Search}/{value?}"
+                );
 
                 routes.MapRoute(
-                    name: "Blog",
-                    template: "{controller=Route}/{action=Index}/{category?}/{argument?}/{post?}"
+                    name: "blog",
+                    template: "Blog/{category}/{argument?}/{post?}",
+                    defaults: new {controller = "Blog", action = "Index"}
                 );
                 
+                app.UseRewriter(new RewriteOptions().Add(new RewriteUrl(argumentService, postService, slugService, ctx)));
             });
-
-            var rewrite = new RewriteUrl();
-
-            var options = new RewriteOptions()
-                .AddRedirect("Blog/(.*)", "Route/Index/$1");
-
-            app.UseRewriter(options);
-            
+                
         }
     }
 }

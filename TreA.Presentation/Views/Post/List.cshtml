@@ -1,4 +1,5 @@
 @model PostModel
 
+<h4 class="breadcrumb padding-left-small font-weight-400"> @Model.breadcrumb </h4>
+
 @Html.Partial("/Views/Partial/Post/_List.cshtml", Model)
-@Html.Partial("/Views/Partial/Share/_Paginator.cshtml", Model)

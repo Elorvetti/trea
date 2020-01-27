@@ -14,8 +14,8 @@ namespace TreA.Presentation.Models
         public IList<PostDisplayModel> postsDisplay { get; set; } = new List<PostDisplayModel>();
         public string categoryName { get; set; }
         public string argumentName{ get; set; }
+        public string breadcrumb { get; set; }
         public IList<ArgumentDisplay> realtedPost { get; set; } = new List<ArgumentDisplay>();
-
         public Album album { get; set; } = new Album();
         public IList<string> PhotoPath{ get; set; } = new List<string>();
     }

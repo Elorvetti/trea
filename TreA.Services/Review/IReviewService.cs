@@ -14,8 +14,11 @@ namespace TreA.Services.Review
         void Insert(Reviews model);
         IList<Reviews> GetAll();
         IList<Reviews> GetAll(int excludeRecord, int pageSize);
+        IList<Reviews> GetAcepted(int excludeRecord, int pageSize);
+        Reviews GetById(int id);
         IList<Reviews> GetByPostId(int postId);
         IList<Reviews> GetByPostId(int postId, int excludeRecord, int pageSize);
-
+        void Update(int id, Reviews model);
+        void Delete(int id);
     }
 }

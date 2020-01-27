@@ -30,7 +30,7 @@ namespace TreA.Services.Album
         }
 
         public virtual Albums GetById(int id){
-            return _ctx.album.First(a => a.id == id);
+            return _ctx.album.FirstOrDefault(a => a.id == id);
         }
 
         public int GetLast(){

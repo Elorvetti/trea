@@ -34,12 +34,33 @@ namespace TreA.Services.Review
             return _ctx.review.OrderBy(r => r.insertDate).Skip(excludeRecord).Take(pageSize).ToList();
         }
 
+        public IList<Reviews> GetAcepted(int excludeRecord, int pageSize){
+            return _ctx.review.Where(r => r.acepted == true).OrderBy(r => r.insertDate).Skip(excludeRecord).Take(pageSize).ToList();
+        }
+        
+        public Reviews GetById(int id){
+            return _ctx.review.Find(id);
+        }
+
+
         public IList<Reviews> GetByPostId(int postId){
-            return _ctx.review.Where(r => r.postId == postId).ToList();
+            return _ctx.review.Where(r => r.postId == postId && r.acepted == true).ToList();
         }
 
         public IList<Reviews> GetByPostId(int postId, int excludeRecord, int pageSize){
-            return _ctx.review.Where(r => r.postId == postId).OrderBy(r => r.insertDate).Skip(excludeRecord).Take(pageSize).ToList();
+            return _ctx.review.Where(r => r.postId == postId && r.acepted == true).OrderBy(r => r.insertDate).Skip(excludeRecord).Take(pageSize).ToList();
+        }
+
+        public void Update(int id, Reviews model){
+            var review = _ctx.review.FirstOrDefault(r => r.id == id);
+            review.acepted = model.acepted;
+            _ctx.SaveChanges();
+        }
+
+        public void Delete(int id){
+            var review = _ctx.review.First(r => r.id == id);
+            _ctx.review.Remove(review);
+            _ctx.SaveChanges();
         }
     }
 }

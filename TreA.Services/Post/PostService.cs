@@ -49,7 +49,12 @@ namespace TreA.Services.Post
         }
 
         public virtual IList<Posts> GetByArgumentId(int argumentId){
-            return _ctx.post.Where(p => p.argumentId == argumentId).ToList();
+            return _ctx.post.Where(p => p.argumentId == argumentId && p.pubblico == true).ToList();
+        }
+
+        public virtual IList<Posts> Search(string value){
+            var posts = from p in _ctx.post where EF.Functions.Like(p.title, string.Concat("%", value, "%")) select p;
+            return posts.ToList();
         }
 
         public void Update(int id, Posts model){

@@ -9,8 +9,10 @@ namespace TreA.Data.Entities
         public int id { get; set; }
         public int postId { get; set; }
         public string nome { get; set; }
+        [EmailAddress]
         public string email{ get; set; }
         public string testo{ get; set; }
+        public bool acepted { get; set; }
         public DateTime insertDate { get; set; }
     }
 }

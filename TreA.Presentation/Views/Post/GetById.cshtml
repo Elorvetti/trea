@@ -1,5 +1,7 @@
 @model PostModel
 
+<h4 class="breadcrumb padding-left-small font-weight-400"> @Model.breadcrumb </h4>
+
 <div id="post-display" class="padding-small" post="@Model.id">
     @Html.Raw(Model.testo)
 
@@ -10,12 +12,14 @@
 
     <div id="review" class="margin-top-xsmall">
         <form class="border-radius-small box-shadow margin-bottom-xsmall margin-top-small text-center">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="postId" value="@Model.id">
             <input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required />
             <input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />
             <textarea name="review" id="review" placeholder="Lascia un commento"></textarea>
                     
             <div class="text-right">
-                <input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia">'; 
+                <input type="submit" id="send" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia">'; 
             </div>
         </form>
     </div>
@@ -33,6 +37,8 @@
     </ul>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 <script src="~/js/post.js"></script>
 <script>
     $(document).ready(post.init)

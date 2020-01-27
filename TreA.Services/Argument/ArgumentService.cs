@@ -33,7 +33,7 @@ namespace TreA.Services.Argument
             return _ctx.argument.Skip(excludeRecord).Take(pageSize).ToList();
         }
         public virtual Arguments GetById(int id){
-            return _ctx.argument.First(a => a.id == id);
+            return _ctx.argument.FirstOrDefault(a => a.id == id);
         }
 
         public virtual Arguments GetBySlugId(int slugId){

@@ -65,46 +65,35 @@ var hpController = (function(){
     /* MENU */
     var getMenu = function(){
         var event = {};
-        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Home/GetAllCategory', false, null);
-        app.callback(event, createMenuList);
-
-        getSubMenu();
+        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Home/GetMenu', false, null);
+        app.callback(event, createMenu);
     }
 
-    var createMenuList = function(data){
+    var createMenu = function(data){
         var element = '';
         element = element + '<ul class="category text-right">';
         for(var i in data){
-            element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white">' + data[i].name + '</li>';
+            if(data[i].children.length > 1){
+                element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" child="close">' + data[i].name;
+                element = element + '<ul class="border-radius-small">';
+                for(var y in data[i].children){
+                    element = element + '<li id="' + data[i].children[y].id + '" class="padding-left-small color-white">' + data[i].children[y].name + '</li>';
+                }
+                element = element + '</ul>';
+
+            } else if(data[i].children.length === 1) {
+                element = element + '<li id="' + data[i].children[0].id + '" class="margin-right-xsmall color-white">' + data[i].name;
+                
+            } else {
+                element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white">'
+                element = element + '<a class="color-white">' + data[i].name + '</a>'
+            }
+            element = element + '</li>' 
         }
         element = element + '</ul>'
 
         //Display for desktop
         $('form#container h1').after(element);
-    }
-
-    var getSubMenu = function(){
-        var url = 'Home/GetAllArgument';
-        fetch(url,{method: 'POST'})
-            .then(function(res){
-                res.json()
-                    .then(function(data){
-                        var elementToAppend = '';
-                        elementToAppend = elementToAppend + '<ul class="border-radius-small">';
-                        for(var i in data){
-                            elementToAppend = elementToAppend + '<li id="' + data[i].id + '" class="padding-left-small color-white">' + data[i].name + '</li>';
-                            
-                            var element = $('ul.category > li').filter(function(){
-                                return $(this).attr('id') == data[i].categoryId;
-                            });
-                            
-                        }
-                        elementToAppend = elementToAppend + '</ul>';
-
-                        element.attr('child', 'close');
-                        element.append(elementToAppend);
-                    })
-            })
     }
 
     /* MENU EVENT */

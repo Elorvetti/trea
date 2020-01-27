@@ -10,7 +10,7 @@ namespace TreA.Data
 {
     public class TreAContext: IdentityDbContext<IdentityUser, IdentityRole, string>
     {
-        public TreAContext(DbContextOptions<TreAContext> o ) : base(o) {}
+        public TreAContext(DbContextOptions<TreAContext> o ) : base(o) { }
         public virtual DbSet<Administrators> administrator { get; set; }
         public virtual DbSet<Categories> category { get; set; }
         public virtual DbSet<Arguments> argument { get; set; }

@@ -27,7 +27,7 @@ var appController = (function(){
         element = element + '<ul class="category text-right">';
 
         for(var i in data){
-            if(data[i].children.length > 0){
+            if(data[i].children.length > 1){
                 element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" child="close">';
                 element = element + '<a class="color-white">' + data[i].name + '</a>';
                 element = element + '<ul class="border-radius-small">';
@@ -38,12 +38,17 @@ var appController = (function(){
                 }
                 element = element + '</ul>';
 
+            } else if(data[i].children.length === 1){
+                element = element + '<li id="' + data[i].children[0].id + '" class="margin-right-xsmall color-white">';
+                element = element + '<a class="color-white" href="' + data[i].children[0].slug + '">' + data[i].name + '</a>';
+
             } else {
                 element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white">'
                 element = element + '<a class="color-white" href="' + data[i].slug + '">' + data[i].name + '</a>'
             }
             element = element + '</li>' 
         }
+        
         element = element + '</ul>'
 
         //Display for desktop
@@ -94,7 +99,54 @@ var appController = (function(){
         }
     }
 
-    //CREATE OVERLAY
+    /* SEARCH */
+    var search = function(){
+        var value = $(this).val();
+        var self = $(this);
+        if(value .length >= 3){
+            var url = '/Post/Search/' + value;
+            fetch(url, {method: 'POST'})
+                .then(function(res){
+                    res.json()
+                        .then(function(data){
+
+                            if($('section#search-result').length > 0){
+                                $('section#search-result').remove();
+                            }
+
+                            var element = '';
+                            element = element + '<section id="search-result" class="border-radius-small box-shadow background-color-white">';
+                            element = element + '<ul class="text-center">'
+                            
+                            for(var i in data){
+                                element = element + '<li class="border-radius-small">' 
+                                element = element + '<p>' +  data[i].testo + '</p>'
+                                element = element + '<a href="' +  data[i].slug  + '"></a>'
+                                element = element + '</li>'
+                            }
+                            
+                            element = element + '</ul>';
+                            element = element + '</section>';
+
+                            self.after(element);
+                            console.log(data);
+                        })
+                })
+        } else {
+            if($('section#search-result').length > 0){
+                $('section#search-result').remove();
+            }
+        }
+    }
+
+    var searchRemove = function(){
+        if($('section#search-result').length > 0){
+            $('section#search-result').remove();
+            $('input.search-bar').val("");
+        }
+    }
+    
+    /* CREATE OVERLAY */
     var createOverlay = function(){
         
         var overlay = '';
@@ -124,7 +176,9 @@ var appController = (function(){
         toggleSubList: toggleSubList,
         createOverlay: createOverlay,
         fixNav: fixNav,
-        removeOverlay: removeOverlay,
+        search: search,
+        searchRemove: searchRemove,
+        removeOverlay: removeOverlay
     }
 })();
 
@@ -133,7 +187,7 @@ var appUI = (function(){
         btnHamburger: 'span.menu',
         btnSubMenu: 'ul.category > li',
         btnReturn: '.btn.return',
-        btnRoute: '*[data-href]'
+        searchBox: 'input.search-bar'
     }
 
     return {
@@ -155,6 +209,10 @@ var app = (function(appUI, appCtrl){
         
         //Add event listerner to btn
         $(document).on('click', DOMElement.btnReturn, appCtrl.removeOverlay);
+
+        //Search post
+        $(document).on('keyup', DOMElement.searchBox, appCtrl.search);
+        $(document).on('focusout', DOMElement.searchBox, appCtrl.searchRemove);
     }
 
     return{
