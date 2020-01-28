@@ -39,6 +39,32 @@ namespace TreA.Presentation.Controllers
             this._reviewService = reviewService;
         }
 
+        public IActionResult All(int pageSize, int pageNumber){      
+            var model = new PostModel();
+
+            //SEO 
+            ViewBag.description = "Tutti i Post disponibili";
+
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total =_postService.GetAll().Count;
+
+            model.sectionName = "Lista Post";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.posts = _postService.GetAll();
+
+            foreach(var post in model.posts){
+                model.postsDisplay.Add(new PostDisplayModel(){
+                    id = post.id,
+                    slug = _slugService.GetById(post.slugId).name,
+                    coverImage = _photoService.GetById(post.PhotoId).path,
+                    title = post.title
+                });
+            }
+
+            return View(model);
+        }
+
         public IActionResult List(int argumentId, int pageSize, int pageNumber){      
             var model = new PostModel();
 
@@ -90,9 +116,12 @@ namespace TreA.Presentation.Controllers
 
             //Post data
             model.id = post.id;
+            model.coverImage = _photoService.GetById(post.PhotoId).path;
             model.title = post.title;
+            model.subtitle = post.subtitle;
             model.testo = post.testo;
             model.albumId = post.albumId;
+            model.argumentId = post.argumentId;
 
             //Related Post
             var realtedPosts = _postService.GetByCategoryId(post.categoryId);
@@ -100,10 +129,37 @@ namespace TreA.Presentation.Controllers
                 model.realtedPost.Add(new ArgumentDisplay(){
                     id = relatedPost.id,
                     title = relatedPost.title,
+                    subtitle = relatedPost.subtitle,
                     slug = _slugService.GetById(relatedPost.slugId).name
                 });
             }
 
+            //Related argument
+            var relatedArguments = _argumentService.GetByCategoryId(post.categoryId);
+            foreach(var relatedArgument in relatedArguments){
+                model.realtedArgument.Add(new ArgumentDisplay(){
+                    id = relatedArgument.id,
+                    title = relatedArgument.name,
+                    nOfElement = _postService.GetByArgumentId(relatedArgument.id).Count,
+                    slug = _slugService.GetById(relatedArgument.slugId).name
+                });
+            }
+
+            //Album
+            var album = _albumService.GetById(post.albumId);
+            var imageIds = album.idImmagini.Split('|');
+            foreach(var imageId in imageIds){
+                if(!string.IsNullOrEmpty(imageId)){
+                    model.album.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
+                }
+            }
+
+            var videoIds = album.idVideo.Split('|');
+            foreach(var videoId in videoIds){
+                if(!string.IsNullOrEmpty(videoId)){
+                     model.album.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
+                }
+            }
 
             return View("GetById", model);
         }
@@ -126,6 +182,7 @@ namespace TreA.Presentation.Controllers
             //Post data
             model.id = post.id;
             model.title = post.title;
+            model.subtitle = post.subtitle;
             model.testo = post.testo;
             model.albumId = post.albumId;
 
@@ -135,7 +192,18 @@ namespace TreA.Presentation.Controllers
                 model.realtedPost.Add(new ArgumentDisplay(){
                     id = relatedPost.id,
                     title = relatedPost.title,
+                    subtitle = relatedPost.subtitle,
                     slug = _slugService.GetById(relatedPost.slugId).name
+                });
+            }
+
+            var relatedArguments = _argumentService.GetByCategoryId(post.categoryId);
+            foreach(var relatedArgument in relatedArguments){
+                model.realtedArgument.Add(new ArgumentDisplay(){
+                    id = relatedArgument.id,
+                    title = relatedArgument.name,
+                    nOfElement = _postService.GetByArgumentId(relatedArgument.id).Count,
+                    slug = _slugService.GetById(relatedArgument.slugId).name,
                 });
             }
 

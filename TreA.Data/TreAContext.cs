@@ -61,6 +61,7 @@ namespace TreA.Data
             modelBuilder.Entity<Posts>(entity => { 
                 entity.HasKey(p => p.id);
                 entity.Property(p => p.title);
+                entity.Property(p => p.subtitle);
                 entity.Property(p => p.slugId);
                 entity.Property(p => p.testo);
                 entity.Property(p => p.pubblico);

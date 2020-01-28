@@ -85,13 +85,18 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new Reviews();
             
             var acepted = review["acepted"];
-            if(acepted == "pubblico"){
+            if(acepted == "on"){
                 model.acepted = true;
             } else{
                 model.acepted = false;
             }
 
             _reviewService.Update(id, model);
+        }
+
+        [HttpPost]
+        public void Delete(int id){
+            _reviewService.Delete(id);
         }
     }
 }

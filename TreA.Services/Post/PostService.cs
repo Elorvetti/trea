@@ -65,6 +65,7 @@ namespace TreA.Services.Post
             post.PhotoId = model.PhotoId;
             post.albumId = model.albumId;
             post.title = model.title;
+            post.subtitle = model.subtitle;
             post.testo = model.testo;
             post.pubblico = model.pubblico;
             

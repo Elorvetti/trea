@@ -60,9 +60,15 @@ var appController = (function(){
         var aboutUsTitle = data.headerTitolo;
         var aboutUsText = data.headerTesto;
 
-        $('header').css('background-image', url)
-        $('div.about-us > h3').text(aboutUsTitle);
-        $('div.about-us > p').html(aboutUsText);
+        if($('div#post-display').length == 0){
+            $('header').css('background-image', url)
+            $('div.about-us > h3').text(aboutUsTitle);
+            $('div.about-us > p').html(aboutUsText);
+        } else {
+            $('div.about-us').remove();
+            $('input.search-bar').addClass('post-view')
+        }
+        
     }
 
     /* TOGGLE MENU AND SUB MENU*/
@@ -103,7 +109,7 @@ var appController = (function(){
     var search = function(){
         var value = $(this).val();
         var self = $(this);
-        if(value .length >= 3){
+       // if(value .length >= 3){
             var url = '/Post/Search/' + value;
             fetch(url, {method: 'POST'})
                 .then(function(res){
@@ -113,9 +119,15 @@ var appController = (function(){
                             if($('section#search-result').length > 0){
                                 $('section#search-result').remove();
                             }
-
+                            
                             var element = '';
-                            element = element + '<section id="search-result" class="border-radius-small box-shadow background-color-white">';
+                            
+                            if($('div#post-display').length == 0){
+                                element = element + '<section id="search-result" class="border-radius-small box-shadow background-color-white">';
+                            } else {
+                                element = element + '<section id="search-result" class="post-view border-radius-small box-shadow background-color-white">';
+                            }
+
                             element = element + '<ul class="text-center">'
                             
                             for(var i in data){
@@ -132,18 +144,18 @@ var appController = (function(){
                             console.log(data);
                         })
                 })
-        } else {
+        //} else {
             if($('section#search-result').length > 0){
                 $('section#search-result').remove();
             }
-        }
+        //}
     }
 
     var searchRemove = function(){
-        if($('section#search-result').length > 0){
-            $('section#search-result').remove();
-            $('input.search-bar').val("");
-        }
+      //  if($('section#search-result').length > 0){
+      //      $('section#search-result').remove();
+      //      $('input.search-bar').val("");
+      //  }
     }
     
     /* CREATE OVERLAY */

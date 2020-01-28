@@ -9,7 +9,7 @@ namespace TreA.Data.Entities
         public int id { get; set; }
         public int albumId { get; set; }
         public string title { get; set; }
-
+        public string subtitle{ get; set; }
         public int slugId { get; set; }
         public string testo { get; set; }
         public bool pubblico { get; set; }

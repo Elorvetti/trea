@@ -63,6 +63,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             int argumentId = Convert.ToInt32(data["argumentId"]);
 
             model.title = title;
+            model.subtitle = data["subtitle"];
             model.categoryId = categoryId;
             model.argumentId = argumentId;
             model.albumId = albumId;
@@ -137,6 +138,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.albumId = post.albumId;
             model.PhotoId = post.PhotoId;
             model.title = post.title;
+            model.subtitle = post.subtitle;
             model.testo = post.testo;
             model.PostsPath = GetAllPath();
             model.categoryId = post.categoryId;
@@ -165,6 +167,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             post.categoryId = categoryId;
             post.argumentId = argumentId;
             post.title = postTitle;
+            post.subtitle = data["subtitle"];
             post.testo = data["testo"];
             post.PhotoId = Convert.ToInt32(data["coverImage"]);
             post.slugId = _postService.GetById(id).slugId;

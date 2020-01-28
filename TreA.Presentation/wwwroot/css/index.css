@@ -153,7 +153,7 @@ div#overlay > span.error{ height: 80px; font-size: 18px; background-color: #E859
 div#overlay > span.success{ padding: 10px; height: 70px; font-size: 18px; font-weight: 600; background-color: #4caf50; }
 /* END overlay */
 
-main{ position: relative; display: inline-block; margin-top: 0; width: 100%; height: 100%; overflow-x: hidden; }
+main{ position: relative; display: inline-block; margin-top: 0; width: 100%; height: 100%; }
 
 /* SKELETON */
 span.skeleton{ position: relative; display: inline-block; margin: 20px 5px 0px 0px; width: 80px; height: 80px; background-repeat: no-repeat; background-size: cover; background-position: center center; }
@@ -280,12 +280,15 @@ section.interactions span.comments{ background-image: url('../img/comment.png');
 footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
 footer > div{ display: inline-block; width: 49%; }
 footer > div  a{ position: relative; display: inline-block; width: 100%; font-size: 16px; line-height: 24px; cursor: pointer; }
+header input.search-bar.post-view{ margin-left: unset; left: 10px; }
 
 @media(min-width: 768px){
     header ul.social{ display: inline-block; }
     header div.about-us{ width: 40%; }
     header input.search-bar{ width: 40%; }
+    header input.search-bar.post-view{ margin-left: 85px; left: 60%; bottom: 90px; width: 24.5%;  }
     section#search-result{ width: 40%; max-height: 400px;}
+    section#search-result.post-view{ top: 88%; left: unset; right: 90px; width: 25%; max-height: 400px;}
     main > div.newsletter > form{ top: 30px; left: 30px; right: unset; }
     /*header ul.category{ display: none;}*/
 }
@@ -302,20 +305,8 @@ footer > div  a{ position: relative; display: inline-block; width: 100%; font-si
 @media(min-width: 1440px){
     header{ height: 750px; } 
     header::before{ background: linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 100%); }
+    header input.search-bar.post-view{ margin-left: 34px; left: 70%;}
 }
-
-/*@media(min-width: 769px){
-    
-    header div.about-us{ width: 40%; }
-    header span.search-bar{ width: 40%; }
-    
-
-} */
-
-/* MEDIA QUERY */
-/*form#container[device="mobile"]{ max-height: 568px; overflow-y: scroll; overflow-x: hidden; }
-header ul.social{ display: none;}
-header ul.category{ display: none;} */
 
 
 /* LIST OF ELEMENT */
@@ -329,36 +320,48 @@ div#post-display > h1{ text-align: center; }
 div#post-display > p > img{ margin-right: 20px; }
 div#post-display > ol, div#post-display > ul{ margin-left: 20px; }
 
-div.related-post{ position: relative; display: none; width: 25%; }
-div.related-post > ul::before{ content: ''; position: relative; display:  inline-block; width: 80%; left: 10%; border: 1px solid #FCBDB2; }
-div.related-post > ul > li.active > a { color: #73AFBA; font-weight: 600;  }
+div.related-container{ position: relative; display: inline-block; top: -130px; width: 29%; }
+div.related-post, div.related-argument, div.gallery{  position: relative;  display: none; width: 85%;  z-index: 9996; border-top-right-radius: 10px; border-top-left-radius: 10px; }
+
+div.related-container > div > ul::before{ content: ''; position: relative; display:  inline-block; width: 80%; border: 1px solid #FCBDB2; }
+div.related-container > div > ul > li{ position: relative; display: inline-block; width: 80%; }
+div.related-container > div > ul > li > a:hover{ color: #FCBDB2; }
+div.related-container > div > ul > li.active > a { color: #EA614A; font-weight: 600; font-size: 16px; }
+
+div.related-container li.gallery{ margin: 0 auto; width: 60%; height: 200px; background-size: cover; background-position: top center; background-repeat: no-repeat; cursor: pointer; }
+div.related-container li.gallery > video{ max-width: 100%; max-height: 100%; }
 
 @media(min-width: 768px){
-    div#post-display{ width: 60%; margin-left: 50px; }
+    h4.breadcrumb, div#post-display{ margin-left: 50px; width: 60%;  }
     div#post-display > p > img{ position: relative; display: inline-block; width: 100%!important; height: auto!important; }
-    div.related-post{ display: inline-block; margin-left: 20px; }
+    div.related-post, div.related-argument, div.gallery{ display: inline-block; }
 }
 
 @media(min-width: 1024px){
     div#list > *{ margin: 1%; width: 20%; }
-    div.related-post{ margin-left: 50px; }
 }
 
 @media(min-width: 1440px){
-    div#post-display{ width: 65%; margin-left: 80px; }
+    h4.breadcrumb, div#post-display{ width: 65%; margin-left: 80px; }
 }
 
-span.skeleton{ position: relative; display: inline-block; margin: 20px 5px 0px 0px; width: 120px; height: 120px; background-repeat: no-repeat; background-size: cover; background-position: center center; cursor: pointer; }
-span.skeleton > p.skeleton{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; line-height: 120px; font-size: 28px; background-color: rgba(0,0,0,.6); border-radius: 5px; }
-span.skeleton > video{ max-width: 120px; max-height: 120px; }
-
+div#review{ position: relative; margin: 0 auto 80px; width: 90%; }
 div#review::before{ content: ''; position: relative; display:  inline-block; width: 100%; border: 1px solid #73AFBA; }
-form{ position: relative; margin: 0 auto; padding: 20px 0px; width: 90%; max-width: 500px; height: auto; overflow: hidden; }
-input, select, textarea{ position: relative; margin: 10px auto; padding: 10px 5px; width: 80%; font-size: 16px; background-color: transparent; border: 1px solid transparent; border-bottom: 1px solid #1C2E3D; }
+form{ position: relative; width: 100%; height: auto; overflow: hidden; }
+input{  position: relative; margin: 10px 0; padding: 10px 5px; width: 100%; font-size: 16px; background-color: transparent; border: 1px solid transparent; border-bottom: 1px solid #1C2E3D; }
 input:hover, input:active, textarea:hover, textarea:active{ border-bottom: 2px solid #73AFBA; } 
+textarea{ position: relative; padding: 10px 5px; width: 100%; font-size: 16px; background-color: transparent; border: 1px solid transparent; border-bottom: 1px solid #1C2E3D; }
+input.btn-submit{ position: relative; float: right; width: 160px; height: 40px; font-size: 16px; line-height: 24px; }
+
+@media(min-width: 768px){
+    input{ margin-right: 2.5%; width: 40%; }
+    textarea{ width: 83%; margin-right: 10px; }
+    input.btn-submit{ position: absolute; right: 0; bottom: 0; width: 160px; height: 40px; font-size: 16px; line-height: 24px; }
+}
+
+
 span.text-danger{ position: relative; display: inline-block; padding: 5px 10px; width: 80%; height: auto; font-size: 13px; line-height: 21px; }
 input + span.text-danger{ background-color: transparent; }
-input.btn-submit{ position: relative; display: inline-block; right: 10%; width: 160px; height: 40px; font-size: 16px; line-height: 24px; }
 
 /* ALBUM */
 div.album-display{ position: relative; display: inline-block; width: 90%; height: 450px; }
@@ -401,3 +404,9 @@ span.field-validation-error{
     text-align: center;
 }
 form input + label{ position: relative; display: block; margin: 0 auto; max-width: 80%; color: #E8594E; }
+
+
+/* OWL CAROUSEL NAVIGATION */
+.owl-nav > button{ position: absolute; top: 20px; bottom: 20px; width: 40px; font-size: 80px!important; color: #EA614A!important; }
+.owl-nav > button.owl-prev{ left: 20px; }
+.owl-nav > button.owl-next{ right: 20px; }

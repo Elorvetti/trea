@@ -25,6 +25,32 @@ namespace TreA.Presentation.Controllers
             this._photoService = photoService;
         }
 
+        public IActionResult All(int pageSize, int pageNumber){
+            var model = new ArgumentModel();
+
+            //SEO 
+            ViewBag.description = "Categorie disponibili";
+
+            //List
+            var excludeRecords = (pageSize * pageNumber) - pageSize;
+            var total =_argumentService.GetAll().Count;
+
+            model.sectionName = "Lista Categorie";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+            model.arguments = _argumentService.GetAll();
+
+            foreach(var argument in model.arguments){
+                model.argumentsDisplay.Add(new ArgumentDisplay(){
+                    id = argument.id,
+                    slug = _slugService.GetById(argument.slugId).name,
+                    coverImage = _photoService.GetById(argument.coverImageId).path,
+                    title = argument.name
+                });
+            }
+
+            return View(model);
+        }
         public IActionResult List(int categoryId, int pageSize, int pageNumber, string slug){      
             var model = new ArgumentModel();
 
@@ -51,7 +77,6 @@ namespace TreA.Presentation.Controllers
 
             return View(model);
         }
-
         public IActionResult GetBySlugId(string id){
             
             //If in ARGUMENT list are more then one argumet show list else only this argument
@@ -74,7 +99,5 @@ namespace TreA.Presentation.Controllers
 
             return Json("No Redirect");
         }
-
-
     }
 }

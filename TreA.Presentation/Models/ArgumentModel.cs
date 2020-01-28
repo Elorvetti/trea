@@ -20,5 +20,7 @@ namespace TreA.Presentation.Models
         public string slug { get; set; }
         public string coverImage{ get; set; }
         public string title { get; set; }
+        public string subtitle { get; set; }
+        public int nOfElement { get; set; }
     }
 }

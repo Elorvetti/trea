@@ -59,10 +59,11 @@ var reviewController = (function(){
     }
 
     var updateReview = function(event){
+        event.preventDefault();
         var id = $('form').attr('id');
 
         event.data = new app.Data(true, id, null, 'Review/Update/', false, null);
-        app.callback(event, updateREviewList);
+        app.callback(event, updateReviewList);
     }
 
     var updateReviewList = function(event){

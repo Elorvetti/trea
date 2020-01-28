@@ -40,6 +40,7 @@ var postController = (function(){
 
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add post" autocomplete="off">';
         element = element + '<input name="title" class="name" id="name" placeholder="Nome post" autocolplete="off" required />'
+        element = element + '<input name="subtitle" class="name" id="subtitle" placeholder="Sottotitolo" autocolplete="off" required />'
         element = element + '<select id="path" name="path">'
         
         for(var i in obj){
@@ -157,6 +158,7 @@ var postController = (function(){
         var element = '';
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit post" autocomplete="off">';
         element = element + '<input name="title" class="name" id="name" autocolplete="off" value="' + obj.title + '" required />'
+        element = element + '<input name="subtitle" class="name" id="subtitle" autocolplete="off" value="' + obj.subtitle + '" required />'
         element = element + '<select id="path" name="path">'
 
         //Add post path 

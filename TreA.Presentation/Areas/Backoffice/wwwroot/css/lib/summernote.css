@@ -1009,7 +1009,9 @@ input[disabled]:hover .note-link-btn{
     overflow: auto;
     color: #000;
     word-wrap: break-word;
-    background-color: #fff
+    background-color: #fff;
+    height: 397px;
+    overflow-y: scroll;
 }
 
 .note-editor.note-frame .note-editing-area .note-editable[contenteditable="false"] {

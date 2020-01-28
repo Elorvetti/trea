@@ -15,9 +15,10 @@ namespace TreA.Presentation.Models
         public string categoryName { get; set; }
         public string argumentName{ get; set; }
         public string breadcrumb { get; set; }
+        public string coverImage{ get; set; }
         public IList<ArgumentDisplay> realtedPost { get; set; } = new List<ArgumentDisplay>();
-        public Album album { get; set; } = new Album();
-        public IList<string> PhotoPath{ get; set; } = new List<string>();
+        public IList<ArgumentDisplay> realtedArgument{ get; set; } = new List<ArgumentDisplay>();
+        public IList<string> album { get; set; } = new List<string>();
     }
 
     public class Album
