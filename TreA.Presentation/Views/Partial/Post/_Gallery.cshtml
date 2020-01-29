@@ -1,0 +1,17 @@
+@model PostModel
+
+<div class="gallery background-color-white box-shadow margin-bottom-small">
+    <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Album</h4>
+    <ul id="gallery" class="owl-carousel margin-bottom-small text-center">
+        @foreach(var path in Model.album)
+        {
+            @if(path.Contains("Images")){
+                <li class="gallery" style="background-image:url('@path')"></li>
+            } else {
+                    <li class="gallery">
+                        <video><source src="@path"></video>
+                    </li>
+            }
+        }
+    </ul>
+</div>

@@ -1,7 +1,7 @@
 @model ArgumentModel
 
 <h3 class="text-center text-uppercase">@Model.sectionName</h3>
-<div id="list" class="padding-bottom-small">
+<div id="list" class="padding-bottom-small margin-bottom-medium">
 
     @foreach (var argument in Model.argumentsDisplay)
     {
@@ -12,3 +12,23 @@
         </div>
     }
 </div>
+
+<ul class="paginator text-center">
+    @for(int i = 1; i <= Model.pageTotal; i++)
+    {
+
+        @if(i == 1){
+            <li class="btn paginator active box-shadow text-center">
+                <a href="@string.Concat(Model.sectionName, "?pageSize=20&pageNumber=", i )" class="color-white">
+                    @i
+                </a>
+            </li>
+        } else {
+            <li class="btn paginator box-shadow text-center">
+                <a href="@string.Concat(Model.sectionName, "?pageSize=20&pageNumber=", i )" class="color-black">
+                    @i
+                </a>
+            </li>
+        }
+    }
+</ul>

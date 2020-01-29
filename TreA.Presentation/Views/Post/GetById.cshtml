@@ -12,61 +12,19 @@
 </div>
 
 <div class="related-container text-center">
-    <div class="related-post background-color-white box-shadow margin-bottom-small">
-        <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Altri post</h4>
-        <ul class="margin-bottom-small text-center">
-            @foreach(var related in Model.realtedPost)
-            {
-                <li id="@related.id"><a href="@related.slug">@related.title, @related.subtitle</a></li>
-            }
-            <li id="ViewAll" class="text-center text-uppercase padding-top-xsmall padding-bottom-xsmall">
-                <a asp-area="" asp-controller="Post" asp-action="All" asp-route-pageSize="30" asp-route-pageNumber="1" class="text-center">Vedi tutti</a>
-            </li>
-        </ul>
-    </div>
 
-    <div class="related-argument background-color-white box-shadow margin-bottom-small">
-        <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Categorie</h4>
-        <ul class="margin-bottom-small text-center">
-            @foreach(var related in Model.realtedArgument)
-            {
-                <li id="@related.id"><a href="@related.slug">@related.title (@related.nOfElement)</a></li>
-            }
-            <li id="ViewAll" class="text-center text-uppercase padding-top-xsmall padding-bottom-xsmall">
-                <a asp-area="" asp-controller="Argument" asp-action="All" asp-route-pageSize="30" asp-route-pageNumber="1" class="text-center">Vedi tutti</a>
-            </li>
-        </ul>
-    </div>
+    @Html.Partial("/Views/Partial/Post/_RelatedPost.cshtml", Model)
 
-    <div class="gallery background-color-white box-shadow margin-bottom-small">
-        <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Album</h4>
-        <ul id="gallery" class="owl-carousel margin-bottom-small text-center">
-            @foreach(var path in Model.album)
-            {
-                @if(path.Contains("Images")){
-                    <li class="gallery" style="background-image:url('@path')"></li>
-                } else {
-                     <li class="gallery">
-                         <video><source src="@path"></video>
-                     </li>
-                }
-            }
-        </ul>
-    </div>
+    @Html.Partial("/Views/Partial/Post/_RelatedArgument.cshtml", Model)
+    
+    @Html.Partial("/Views/Partial/Post/_Gallery.cshtml", Model)
+
 </div>
 
-<div id="review" class="margin-top-xsmall margin-bottom-medium">
-    <h3 class="text-left text-capitalize font-weight-600">Commenti</h3>
-    <form class="margin-bottom-xsmall margin-top-small">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="postId" value="@Model.id">
-        <input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required />
-        <input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />
-        <textarea name="review" id="review" class="margin-top-small" placeholder="Lascia un commento"></textarea>
-        
-        <input type="submit" id="send" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia">    
-    </form>
-</div>
+@Html.Partial("/Views/Partial/Post/_Reviews.cshtml", Model)
+
+
+
 
 <input type="hidden" id="coverImage" value="@Model.coverImage" />
 

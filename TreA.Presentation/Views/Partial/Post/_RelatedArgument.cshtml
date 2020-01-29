@@ -1,0 +1,14 @@
+@model PostModel
+
+<div class="related-argument background-color-white box-shadow margin-bottom-small">
+    <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Categorie</h4>
+    <ul class="margin-bottom-small text-center">
+        @foreach(var related in Model.realtedArgument)
+        {
+            <li id="@related.id"><a href="@related.slug">@related.title (@related.nOfElement)</a></li>
+        }
+        <li id="ViewAll" class="text-center text-uppercase padding-top-xsmall padding-bottom-xsmall">
+            <a asp-area="" asp-controller="Argument" asp-action="All" asp-route-pageSize="30" asp-route-pageNumber="1" class="text-center">Vedi tutti</a>
+        </li>
+    </ul>
+</div>

@@ -38,6 +38,7 @@ var reviewController = (function(){
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ obj.postTitle +'" disabled>';
         element = element + '<input type="text" name="email" class="name" id="email" autocomplete="off" value="'+ obj.email +'" disabled>';
+        element = element + '<input type="text" name="title" class="name" id="title" autocomplete="off" value="'+ obj.titolo +'" disabled>';
         element = element + '<textarea name="review" class="name" id="review" autocomplete="off" disabled>'+ obj.testo + '</textarea>';
         if(obj.acepted === true){
             element =  element + '<input name="acepted" id="IsActive" type="checkbox" class="is-active btn-switch" checked>';

@@ -10,7 +10,7 @@ namespace TreA.Presentation.Models
         public bool displayPagination{ get; set; }
         public string sectionName { get; set; }
         public string slug { get; set; } 
-        public IList<Posts> posts{ get; set; }
+        public IList<Posts> posts{ get; set; } = new List<Posts>();
         public IList<PostDisplayModel> postsDisplay { get; set; } = new List<PostDisplayModel>();
         public string categoryName { get; set; }
         public string argumentName{ get; set; }
@@ -18,6 +18,7 @@ namespace TreA.Presentation.Models
         public string coverImage{ get; set; }
         public IList<ArgumentDisplay> realtedPost { get; set; } = new List<ArgumentDisplay>();
         public IList<ArgumentDisplay> realtedArgument{ get; set; } = new List<ArgumentDisplay>();
+        public ReviewModel reviewData{ get; set; } = new ReviewModel();
         public IList<string> album { get; set; } = new List<string>();
     }
 

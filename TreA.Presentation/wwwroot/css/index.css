@@ -167,6 +167,7 @@ div.paginator > span.btn{ position: relative; display: inline-block; border-radi
 div.paginator > span.btn.active{ background-color: #73AFBA; color: #fff; }
 /* END PAGINATORE */
 
+video{ max-width: 100%; }
 
 /* HEADER */
 header{ position: relative; margin: 0; background-color: #757575; height: 570px; background-size: cover; background-position: center center; background-repeat: no-repeat; } 
@@ -178,11 +179,15 @@ header:before {
     right: 0;
     bottom: 0;
     background: rgb(0,0,0);
-    background: linear-gradient(180deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 100%);
 }
+header > h1{ position: absolute; left: 0; right: 0; top: 40%;font-size: 3em; }
+header > h2{ position: absolute; left: 0; right: 0; top: 47%; }
+
 header > div.nav-container{ position: relative; display: inline-block; width: 100%; z-index: 9999; }
 header > div.nav-container.fixed{ position: fixed; padding: 4px; height: 50px; background-color: #1C2E3D; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
 header ul.social{ position: absolute; display: none; width: 35%; z-index: 9996;}
+
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
 ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
 ul.social li.instagram{ background-image: url('../img/social/instagram.png') }
@@ -229,7 +234,7 @@ header input.search-bar{
     cursor: text;
     font-size: 16px;
 }
-section#search-result{ position: absolute; display: inline-block; top: 98%; left: 10px; width: 70%; max-height: 250px; overflow-y: scroll; z-index: 9999; }
+section#search-result{ position: absolute; display: inline-block; top: 98%; left: 10px; width: 70%; min-height: 360px; max-height: 360px; overflow-y: scroll; z-index: 9999; }
 section#search-result > ul > li{ position: relative; display: inline-block; margin: 5px; padding: 5px; max-width: 95%; max-height: 80px; overflow: hidden; border-bottom: 1px solid #FCBDB2; cursor: pointer; }
 section#search-result > ul > li:hover{ background-color: #FCBDB2; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);}
 section#search-result > ul > li > a{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; height: 100%; }
@@ -250,11 +255,11 @@ section#sidebar ul > li[child="open"]{ background-image: url('../img/chevron-dow
 /* MAIN */
 main{ position: relative; display: inline-block; margin: 0; width: 100%; height: auto; }
 main div.newsletter{ position: relative; display: inline-block; width: 100%; height: 570px; background-color: #757575; background-size: cover; background-repeat: no-repeat; background-position: center center; }
-main > div.newsletter > form{ position: absolute; display: inline-block; margin: 0; padding: 0 0 15px; top: 10px; left: 10px; right: 10px; background-color: rgba(0,0,0,.9); }
+main > div.newsletter > form{ position: relative; display: block; margin: 0 auto; padding: 0 0 15px; top: 10px; background-color: rgba(0,0,0,.9); }
 main > div.newsletter > form input[type="text"]{ color: #fff; border-bottom: 1px solid #fff; }
-main > div.newsletter > form > div{ margin: 0 auto; width: 80%; }
-main > div.newsletter > form input[type="text"]{ color: #fff; border-bottom: 1px solid #fff; cursor: text; }
-main > div.newsletter > form input[type="submit"]{ width: 140px; line-height: 30px; cursor: pointer; }
+main > div.newsletter > form > div{ display: block; margin: 0 auto; width: 80%; }
+main > div.newsletter > form input[type="text"]{ display: block; margin: 20px auto; width: 75%; color: #fff; border-bottom: 1px solid #fff; cursor: text; }
+main > div.newsletter > form input[type="submit"]{ position: relative; width: 140px; line-height: 30px; cursor: pointer; }
 
 /* LAST POST */
 main > div#lastPost{ width: 100%; }
@@ -286,10 +291,10 @@ header input.search-bar.post-view{ margin-left: unset; left: 10px; }
     header ul.social{ display: inline-block; }
     header div.about-us{ width: 40%; }
     header input.search-bar{ width: 40%; }
-    header input.search-bar.post-view{ margin-left: 85px; left: 60%; bottom: 90px; width: 24.5%;  }
+    header input.search-bar.post-view{ margin-left: 70px; left: 60%; bottom: 90px; width: 24.5%;  }
     section#search-result{ width: 40%; max-height: 400px;}
-    section#search-result.post-view{ top: 88%; left: unset; right: 90px; width: 25%; max-height: 400px;}
-    main > div.newsletter > form{ top: 30px; left: 30px; right: unset; }
+    section#search-result.post-view{ top: 84%; left: unset; right: 46px; width: 25%; max-height: 400px;}
+    main > div.newsletter > form{ position: relative; display: block; margin: 0 auto; top: 20px; left: unset;  right: unset; max-width: 480px; }
     /*header ul.category{ display: none;}*/
 }
 
@@ -300,12 +305,15 @@ header input.search-bar.post-view{ margin-left: unset; left: 10px; }
     header ul.category{ display: inline-block; right: 0; width: auto; }
     header ul.social{ width: 10%; }
     h1.title{ left: 10%; width: 20%; }
+    header input.search-bar.post-view{ width: 25%; }
 }
 
 @media(min-width: 1440px){
     header{ height: 750px; } 
-    header::before{ background: linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 100%); }
+    header::before{ background: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 100%); }
     header input.search-bar.post-view{ margin-left: 34px; left: 70%;}
+    header input.search-bar.post-view{ width: 24.5%; margin-left: 33px; }
+    section#search-result.post-view{ top: 88%; right: 64px; }
 }
 
 
@@ -320,8 +328,9 @@ div#post-display > h1{ text-align: center; }
 div#post-display > p > img{ margin-right: 20px; }
 div#post-display > ol, div#post-display > ul{ margin-left: 20px; }
 
-div.related-container{ position: relative; display: inline-block; top: -130px; width: 29%; }
+div.related-container{ position: relative; display: inline-block; width: 100%;  }
 div.related-post, div.related-argument, div.gallery{  position: relative;  display: none; width: 85%;  z-index: 9996; border-top-right-radius: 10px; border-top-left-radius: 10px; }
+div.gallery{ display: inline-block; }
 
 div.related-container > div > ul::before{ content: ''; position: relative; display:  inline-block; width: 80%; border: 1px solid #FCBDB2; }
 div.related-container > div > ul > li{ position: relative; display: inline-block; width: 80%; }
@@ -334,7 +343,8 @@ div.related-container li.gallery > video{ max-width: 100%; max-height: 100%; }
 @media(min-width: 768px){
     h4.breadcrumb, div#post-display{ margin-left: 50px; width: 60%;  }
     div#post-display > p > img{ position: relative; display: inline-block; width: 100%!important; height: auto!important; }
-    div.related-post, div.related-argument, div.gallery{ display: inline-block; }
+    div.related-container{ top: -130px; width: 29%;  }
+    div.related-post, div.related-argument{ display: inline-block;  }
 }
 
 @media(min-width: 1024px){
@@ -354,12 +364,16 @@ textarea{ position: relative; padding: 10px 5px; width: 100%; font-size: 16px; b
 input.btn-submit{ position: relative; float: right; width: 160px; height: 40px; font-size: 16px; line-height: 24px; }
 
 @media(min-width: 768px){
-    input{ margin-right: 2.5%; width: 40%; }
-    textarea{ width: 83%; margin-right: 10px; }
+    span.input-container{ position: relative; display: inline-block; margin-right: 2.5%; width: 33%;}
+    span > input{ position: relative; display: inline-block; width: 100%; }
+    input, textarea{ width: 70%; margin-right: 10px; }
     input.btn-submit{ position: absolute; right: 0; bottom: 0; width: 160px; height: 40px; font-size: 16px; line-height: 24px; }
 }
 
-
+@media(min-width: 1440px){
+    span.input-container{ width: 43%; }
+    input, textarea{ width: 89%; }
+}
 span.text-danger{ position: relative; display: inline-block; padding: 5px 10px; width: 80%; height: auto; font-size: 13px; line-height: 21px; }
 input + span.text-danger{ background-color: transparent; }
 
@@ -373,17 +387,6 @@ div.album-display > ul li{ position: relative; display: inline-block; margin: 0 
 div.album-display > ul li.active::after{ content: ''; position: absolute; display: inline-block; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,.6); border-radius: 5px; }
 div.album-display > video{ margin: 10px; max-height: 70%; max-width: 90%;}
 div.album-display > ul li > video{ max-width: 100%; max-height: 100%; }
-
-@media(min-width: 768px){
-    div.album-display{ height: 650px; }
-    div#overlay.album > span#close{ max-width: none; }
-}
-
-@media(min-width: 1440px){
-    div.album-display{ height: 800px; }
-    div.album-display > span.image.active{ height: 80%; }
-    div.album-display > ul{ height: 13%; }
-}
 
 /* PAGINATORE */
 ul.paginator{ position: absolute; display: inline-block; left: 0; right: 0; bottom: 10px; }
@@ -403,10 +406,40 @@ span.field-validation-error{
     border-radius: 5px;
     text-align: center;
 }
-form input + label{ position: relative; display: block; margin: 0 auto; max-width: 80%; color: #E8594E; }
+form input + label{ position: relative; display: block; margin: 0 auto; color: #E8594E; }
 
 
 /* OWL CAROUSEL NAVIGATION */
 .owl-nav > button{ position: absolute; top: 20px; bottom: 20px; width: 40px; font-size: 80px!important; color: #EA614A!important; }
-.owl-nav > button.owl-prev{ left: 20px; }
-.owl-nav > button.owl-next{ right: 20px; }
+.owl-nav > button.owl-prev{ left: 10px; }
+.owl-nav > button.owl-next{ right: 0; }
+
+@media(min-width: 768px){
+    div.album-display{ height: 650px; }
+    div#overlay.album > span#close{ max-width: none; }
+}
+
+@media(min-width: 1440px){
+    div.album-display{ height: 800px; }
+    div.album-display > span.image.active{ height: 80%; }
+    div.album-display > ul{ height: 13%; }
+    .owl-nav > button.owl-prev{ left: 20px; }
+    .owl-nav > button.owl-next{ right: 20px; }
+}
+
+div#overlay > div.album-display div.owl-stage{ margin:0 auto }
+div#overlay > div.album-display div.owl-nav > button{ top: 0; }
+div#overlay > div.album-display div.owl-nav  > button.owl-prev{ left: 0px; }
+div#overlay > div.album-display div.owl-nav  > button.owl-next{ right: 0px; }
+
+@media(min-width: 768px){
+    div#overlay > div.album-display > ul div.owl-item > li{ width: 95%; }
+}
+
+
+/* DISPLAY REVIEW */
+div#user-review > section{ border-bottom: 1px solid #1C2E3D; }
+div#user-review > section > span.head{ position: relative; display: inline-block; width: 100%; }
+div#user-review > section > span.head > p{ font-size: 16px; line-height: 24px; }
+div#user-review > section > span.head > p.date{ font-size: 14px; line-height: 21px; }
+div#user-review > section > p{ font-size: 14px; line-height: 21px; }

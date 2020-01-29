@@ -38,27 +38,27 @@ var postController = (function(){
         var element = '';
         element = element + '<div class="album-display background-color-white margin-top-medium text-center">'
         $('li.gallery').each(function(i, e){
-            console.log($(this).css('background-image'))
+
             if(i === 0){
                 if($(this).css('background-image').indexOf('Images') > 0){
-                    element = element + '<span id="' + i +'" class="image active border-radius-small" style="background-image:'+ $(this).css('background-image') +'></span>'
+                    element = element + '<span id="' + i +'" class="image active border-radius-small" style="background-image:'+ $(this).css('background-image').replace(/"/g, "") +'"></span>'
                 } else {
-                    element = element + '<span id="' + i +'" class="image active border-radius-small"><video><source src="' +  $(this).find('source').attr('src') +'"></video></span>'
+                    element = element + '<span id="' + i +'" class="image active border-radius-small"><video><source src=' +  $(this).find('source').attr('src').replace(/"/g, "") +'"></video></span>'
                 }
 
                 element = element + '<ul class="list text-center owl-carousel border-radius-small">'
                 if($(this).css('background-image').indexOf('Images') > 0){
-                    element = element + '<span id="' + i +'" class="image active border-radius-small" style="background-image:'+ $(this).css('background-image') +'"></span>'
+                    element = element + '<li id="' + i +'" class="image active border-radius-small" style="background-image:'+ $(this).css('background-image').replace(/"/g, "") +'"></li>'
                 } else {
-                    element = element + '<span id="' + i +'" class="image active border-radius-small"><video><source src="' +  $(this).find('source').attr('src') +'"></video></span>'
+                    element = element + '<li id="' + i +'" class="image active border-radius-small"><video><source src="' +  $(this).find('source').attr('src').replace(/"/g, "") +'"></video></li>'
                 }
-                element 
+            
             } else {
 
                 if($(this).css('background-image').indexOf('Images') > 0){
-                    element = element + '<span id="' + i +'" class="image active border-radius-small" style="background-image:'+ $(this).css('background-image') +')"></span>'
+                    element = element + '<li id="' + i +'" class="image border-radius-small" style="background-image:'+ $(this).css('background-image').replace(/"/g, "") +'"></li>'
                 } else {
-                    element = element + '<span id="' + i +'" class="image active border-radius-small"><video><source src="' +  $(this).find('source').attr('src') +'"></video></span>'
+                    element = element + '<li id="' + i +'" class="image border-radius-small"><video><source src="' +  $(this).find('source').attr('src').replace(/"/g, "") +'"></video></li>'
                 }
             }
         })
@@ -66,61 +66,35 @@ var postController = (function(){
 
             $('div#overlay').addClass('album')
             $overlay.after(element);
-            carouselInit('.owl-carousel')
+            carouselGalleryInit('.owl-carousel')
     }
 
-    //var displayAlbumVideos = function(id){
-    //    fetch('/Post/DisplayAlbumVideo/' + id, {method: 'POST'})
-    //    .then(function(res){
-    //        res.json()
-    //            .then(function(data){
-    //                  //display overlay 
-    //                  var $overlay = app.createOverlay();
-    //                    
-    //                  //element to append
-    //                  var element = '';
-    //                  element = element + '<div class="album-display background-color-white margin-top-medium text-center">'
-    //                  
-    //                  for(var video in data.videoPath){
-    //                      if(video == 0){
-    //                        element = element + '<video class="border-radius-small" controls><source src="' +  data.videoPath[video] + '"></video>';
-    //                        element = element + '<ul class="list owl-carousel text-center border-radius-small">'
-    //                        element = element + '<li id="' + video +'" class="active border-radius-small">'
-    //                        element = element + '<video><source src="' + data.videoPath[video]  + '"></video>'
-    //                        element = element + '</li>'
-    //                      } else {
-    //                          element = element + '<li id="' + video +'" class="border-radius-small">'
-    //                          element = element + '<video><source src="' + data.videoPath[video]  + '"></video>'
-    //                          element = element + '</li>'
-    //                      }
-    //                      if(video == data.videoPath.length){
-    //                          element = element + '</ul>'
-    //                      }
-    //                  }
-    //                  
-    //                  $('div#overlay').addClass('album');
-    //                  $overlay.after(element);
-    //                  carouselInit('.owl-carousel')
-    //            })
-    //    })
-    //}
-
     //navigation in album
-    //var changeDisplayAlbum = function(){
-    //    var backgroundImage =  $(this).attr('style');
-    //    var id = $(this).attr('id');
-//
-    //    //remove active class
-    //    $('ul.list li').each(function(){
-    //        $(this).removeClass('active');
-    //    })
-//
-    //    //change display image and id
-    //    $('span.image.active').attr('style', backgroundImage);
-    //    $('span.image.active').attr('id', id);
-//
-    //    $(this).addClass('active');
-    //}
+    var changeDisplayAlbum = function(){
+        var id = $(this).attr('id');
+
+        //remove active class
+        $('ul.list li').each(function(){
+            $(this).removeClass('active');
+        })
+
+        if($(this).css('background-image').indexOf('Images') > 0){
+            var backroundImage =  $(this).css('background-image').replace(/"/g, "");
+            $('span > video').remove();
+            $('span.image.active').css('background-image', backroundImage)
+        } else {
+            var videoSrc = $(this).find('source').attr('src').replace(/"/g, "");
+            var element = '';
+            $('span.image.active').css('background-image', element);
+            element = element + '<video controls><source src=' + videoSrc +'></video>'
+            $('span.image.active').append(element);
+        }
+
+        //change display image and id
+        $('span.image.active').attr('id', id);
+
+        $(this).addClass('active');
+    }
 
     //post review
     var validateReview = function(){
@@ -139,6 +113,9 @@ var postController = (function(){
                         required: true,
                         email: true
                     },
+                    title: {
+                        required: true
+                    },
                     review: {
                         required: true
                     }
@@ -150,6 +127,9 @@ var postController = (function(){
                     email: {
                         required: 'Il campo Email è obbligatorio',
                         email: 'Formato Email non valido'
+                    },
+                    title: {
+                        required: 'Il campo titolo è obbligatorio'
                     },
                     review: {
                         required: 'Il campo Commento è obbligatorio'
@@ -226,12 +206,55 @@ var postController = (function(){
         })
     }
 
+    var carouselGalleryInit = function(element){
+        $(element).owlCarousel({
+            responsiveClass:true,    
+            responsive:{
+                0:{
+                    loop: false,
+                    margin: 10,
+                    items: 3,
+                    nav: false,
+                    dots: false,
+                    dotsEach: 1, 
+                    stagePadding: 20
+                },
+                768:{
+                    loop: false,
+                    margin: 10,
+                    items: 3,
+                    nav: false,
+                    dots: false,
+                    dotsEach: 1, 
+                    stagePadding: 50
+                },
+                1024:{
+                    loop: false,
+                    margin: 15,
+                    items: 5,
+                    nav: true,
+                    dots: false,
+                    stagePadding: 40
+                },
+                1440:{
+                    loop: false,
+                    margin: 5,
+                    items: 12,
+                    nav: true,
+                    dots: false,
+                    stagePadding: 40
+                }
+            }
+        })
+    }
+
     return {
         changeHeaderImage: changeHeaderImage,
         relatedPost: relatedPost,
         relatedArgument: relatedArgument,
         carouselInit: carouselInit,
         showGallery: showGallery,
+        changeDisplayAlbum: changeDisplayAlbum,
         sendReview: sendReview,
         validateReview: validateReview
     }
@@ -242,6 +265,7 @@ var postUI = (function(){
     var DOM = {
         gallery: 'ul#gallery.owl-carousel',
         galleryImages: 'li.gallery',
+        imageOfGallery: 'li.image',
         btnSubmitReview: 'div#review > form input[type="submit"]'
     }
     
@@ -264,6 +288,7 @@ var post = (function(postUI, postCtrl){
         
         //SHOW GALLERY
         $(document).on('click', DOMElement.galleryImages, postCtrl.showGallery)
+        $(document).on('click', DOMElement.imageOfGallery, postCtrl.changeDisplayAlbum)
 
         //SEND REVIEW
         $(document).on('click', DOMElement.btnSubmitReview, postCtrl.sendReview);

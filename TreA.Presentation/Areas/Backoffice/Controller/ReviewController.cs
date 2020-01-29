@@ -75,6 +75,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.postTitle = _postService.GetById(review.postId).title;
             model.acepted = review.acepted;
             model.email = review.email;
+            model.titolo = review.titolo;
             model.testo = review.testo;
 
             return model;

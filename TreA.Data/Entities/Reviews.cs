@@ -11,6 +11,7 @@ namespace TreA.Data.Entities
         public string nome { get; set; }
         [EmailAddress]
         public string email{ get; set; }
+        public string titolo{ get; set; }
         public string testo{ get; set; }
         public bool acepted { get; set; }
         public DateTime insertDate { get; set; }

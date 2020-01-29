@@ -16,6 +16,7 @@ namespace TreA.Presentation.Areas.Backoffice.Models
         public bool acepted { get; set; }
         public string email { get; set; }
         public string postTitle { get; set; }
+        public string titolo { get; set; }
         public string testo { get; set; }
     }
 }

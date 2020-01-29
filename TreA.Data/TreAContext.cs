@@ -113,6 +113,7 @@ namespace TreA.Data
                 entity.HasKey(r => r.id);
                 entity.Property(r => r.postId);
                 entity.Property(r => r.nome);
+                entity.Property(r => r.titolo);
                 entity.Property(r => r.email);
                 entity.Property(r => r.testo);
                 entity.Property(r => r.insertDate);

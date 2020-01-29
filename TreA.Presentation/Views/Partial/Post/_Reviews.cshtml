@@ -1,0 +1,52 @@
+@model PostModel
+
+<div id="review" class="margin-top-xsmall margin-bottom-medium">
+    <h3 class="text-left text-capitalize font-weight-600">Commenti</h3>
+    <form class="margin-bottom-xsmall margin-top-small">
+        @Html.AntiForgeryToken()
+        
+        <input type="hidden" name="postId" value="@Model.id">
+
+        <span class="input-container">
+            <input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" required />
+        </span>
+
+        <span class="input-container">
+            <input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />  
+        </span>
+            
+        <input name="title" class="name" id="title" placeholder="Titolo" autocomplete="off" required />
+        <textarea name="review" id="review" class="margin-top-small" placeholder="Lascia un commento"></textarea>
+        
+        <input type="submit" id="send" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Invia">    
+    </form>
+    
+    <div id="user-review" class="margin-top-medium margin-bottom-medium">
+        @foreach(var review in Model.reviewData.reviews){
+            <section class="review padding-xsmall">
+                <span class="head margin-bottom-xsmall">
+                    <p class="text-left font-weight-600">@review.titolo</p>
+                    <p class="text-left date">@review.insertDate.ToString("dd/MM/yyyy")</p>
+                </span>
+                <p class="text-left">@review.testo</p>
+            </section>
+        }
+    </div>
+
+</div>
+<ul class="paginator text-center">
+    @for(int i = 1; i <= Model.reviewData.pageTotal; i++)
+    {
+
+        @if(i == 1){
+            <li class="btn paginator active box-shadow text-center color-white" data-src="@string.Concat(Model.sectionName, "?pageSize=20&pageNumber=", i )"> 
+                @i
+            </li>
+        } else {
+            <li class="btn paginator box-shadow text-center color-black" data-src="@string.Concat(Model.sectionName, "?pageSize=20&pageNumber=", i )">
+                    @i
+            </li>
+        }
+    }
+</ul>
+

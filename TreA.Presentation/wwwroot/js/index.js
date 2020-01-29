@@ -109,7 +109,7 @@ var appController = (function(){
     var search = function(){
         var value = $(this).val();
         var self = $(this);
-       // if(value .length >= 3){
+        if(value .length >= 3){
             var url = '/Post/Search/' + value;
             fetch(url, {method: 'POST'})
                 .then(function(res){
@@ -131,7 +131,8 @@ var appController = (function(){
                             element = element + '<ul class="text-center">'
                             
                             for(var i in data){
-                                element = element + '<li class="border-radius-small">' 
+                                element = element + '<li>' 
+                                element = element + '<p class="font-weight-600 text-uppercase">' + data[i].title + '</p>'
                                 element = element + '<p>' +  data[i].testo + '</p>'
                                 element = element + '<a href="' +  data[i].slug  + '"></a>'
                                 element = element + '</li>'
@@ -141,21 +142,13 @@ var appController = (function(){
                             element = element + '</section>';
 
                             self.after(element);
-                            console.log(data);
                         })
                 })
-        //} else {
+        } else {
             if($('section#search-result').length > 0){
                 $('section#search-result').remove();
             }
-        //}
-    }
-
-    var searchRemove = function(){
-      //  if($('section#search-result').length > 0){
-      //      $('section#search-result').remove();
-      //      $('input.search-bar').val("");
-      //  }
+        }
     }
     
     /* CREATE OVERLAY */
@@ -189,7 +182,6 @@ var appController = (function(){
         createOverlay: createOverlay,
         fixNav: fixNav,
         search: search,
-        searchRemove: searchRemove,
         removeOverlay: removeOverlay
     }
 })();
@@ -199,7 +191,7 @@ var appUI = (function(){
         btnHamburger: 'span.menu',
         btnSubMenu: 'ul.category > li',
         btnReturn: '.btn.return',
-        searchBox: 'input.search-bar'
+        searchBox: 'input.search-bar',
     }
 
     return {
@@ -224,7 +216,6 @@ var app = (function(appUI, appCtrl){
 
         //Search post
         $(document).on('keyup', DOMElement.searchBox, appCtrl.search);
-        $(document).on('focusout', DOMElement.searchBox, appCtrl.searchRemove);
     }
 
     return{

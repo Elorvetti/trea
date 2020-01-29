@@ -123,6 +123,9 @@ namespace TreA.Presentation.Controllers
             model.albumId = post.albumId;
             model.argumentId = post.argumentId;
 
+            ViewBag.title = post.title;
+            ViewBag.subtitle = post.subtitle;
+
             //Related Post
             var realtedPosts = _postService.GetByCategoryId(post.categoryId);
             foreach(var relatedPost in realtedPosts){
@@ -160,7 +163,13 @@ namespace TreA.Presentation.Controllers
                      model.album.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
                 }
             }
-
+            
+            var totalReview = _reviewService.GetByPostId(post.id).Count;
+            model.sectionName= "Reviews/";
+            model.reviewData.pageSize = 10;
+            model.reviewData.pageTotal =  Math.Ceiling((double)totalReview / 10);
+            model.reviewData.reviews = _reviewService.GetByPostId(post.id);
+            
             return View("GetById", model);
         }
         
@@ -185,6 +194,9 @@ namespace TreA.Presentation.Controllers
             model.subtitle = post.subtitle;
             model.testo = post.testo;
             model.albumId = post.albumId;
+            
+            ViewBag.title = post.title;
+            ViewBag.subtitle = post.subtitle;
 
             //Related Post
             var realtedPosts = _postService.GetByCategoryId(post.categoryId);
@@ -227,61 +239,6 @@ namespace TreA.Presentation.Controllers
             return model;
         }
 
-        [HttpPost]
-        public Album GetAlbum(int id){
-            var model = new Album();
-
-            var album = _albumService.GetById(id);
-            
-            //Get images path
-            var imageIds = album.idImmagini.Split('|');
-            foreach(var imageId in imageIds){
-                if(!string.IsNullOrEmpty(imageId)){
-                    model.imagePath.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
-                }
-            }
-            
-            //Get video path
-            var videoIds = album.idVideo.Split('|');
-            foreach(var videoId in videoIds){
-                if(!string.IsNullOrEmpty(videoId)){
-                    model.videoPath.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
-                }
-            }
-            
-            return model;
-        }
-
-        [HttpPost]
-        public Album DisplayAlbumImage(int id){
-            var model = new Album();
-
-            var album = _albumService.GetById(id);
-            var imageIds = album.idImmagini.Split('|');
-            foreach(var imageId in imageIds){
-                if(!string.IsNullOrEmpty(imageId)){
-                    model.imagePath.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
-                }
-            }
-
-            return model;
-        }
-
-        [HttpPost]
-        public Album DisplayAlbumVideo(int id){
-            var model = new Album();
-
-            var album = _albumService.GetById(id);
-            var videoIds = album.idVideo.Split('|');
-            foreach(var videoId in videoIds){
-                if(!string.IsNullOrEmpty(videoId)){
-                    model.videoPath.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
-                }
-            }
-
-            return model;
-        }
-
        [HttpPost]
        [ValidateAntiForgeryToken]
         public IActionResult AddReview(int Id, IFormCollection data){
@@ -290,6 +247,7 @@ namespace TreA.Presentation.Controllers
             model.postId = Convert.ToInt32(data["postId"]);
             model.nome = data["name"];
             model.email = data["email"];
+            model.titolo = data["title"];
             model.testo = data["review"];
             model.acepted = false;
             model.insertDate = DateTime.Now;
@@ -300,20 +258,6 @@ namespace TreA.Presentation.Controllers
             }
 
             return Json("Error");
-        }
-
-        [HttpPost]
-        public ReviewModel GetReview(int id, int pageSize, int pageNumber){
-            var model = new ReviewModel();
-
-            var excludeRecords = (pageSize * pageNumber) - pageSize;
-            var total = _reviewService.GetByPostId(id).Count;
-
-            model.pageSize = pageSize;
-            model.pageTotal =  Math.Ceiling((double)total / pageSize);
-            model.reviews = _reviewService.GetByPostId(id, excludeRecords, pageSize);
-
-            return model;
         }
 
     }
