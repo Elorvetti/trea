@@ -53,6 +53,11 @@ namespace TreA.Services.Category
             _ctx.category.Remove(category);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Categories> Find(string name, int excludeRecord, int pageSize){         
+            var categories = from c in _ctx.category where EF.Functions.Like(c.name, string.Concat("%", name, "%")) select c;
+            return categories.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 
 }

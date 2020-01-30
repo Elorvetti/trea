@@ -143,5 +143,20 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             _videoService.Delete(id);
             
         }
+
+        [HttpPost]
+        public VideoModel Find(string name, int pageSize, int pageNumber){
+            var model = new VideoModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;          
+            model.videoList = _videoService.Find(name, excludeRecords, pageSize);  
+                        
+            var total = model.videoList.Count;
+            model.sectionName = "Video";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
     }
 }

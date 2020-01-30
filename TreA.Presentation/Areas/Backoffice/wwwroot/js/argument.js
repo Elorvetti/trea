@@ -1,6 +1,94 @@
 "use strict";
 
 var argumentController = (function(){
+    /* FILTER */
+    var createFilterForm = function(){
+        var $overlay = app.createOverlay();
+
+        var element = '';
+        element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
+        
+        fetch('Category/GetAll?pageSize=200&pageNumber=1', {method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        element = element + '<select id="idCategory" name="idCategory">';
+                        for(var i in data.categories){
+                            if($('input#idCategory').length > 0 && data.categories[i].id ===  $('input#idCategory').attr('cat-id')){
+                                element = element + '<option value="' + data.categories[i].id + '" selected>' + data.categories[i].name + '</option>'; 
+                            } else {
+                                element = element + '<option value="' + data.categories[i].id + '">' + data.categories[i].name + '</option>'; 
+                            }
+                        }
+                        element = element + '</select>';
+
+                        if($('input#name').length > 0){
+                            element = element + '<input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" value="' + $('input#name').val() + '"/>';
+                        } else {
+                            element = element + '<input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" />';
+                        }
+                    
+                        element = element + '<div class="text-right">';
+                        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+                        element = element + '<input type="submit" id="find" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Cerca">';   
+                        element = element + '</div>';
+
+                        $overlay.after(element);
+                    })
+            })
+        
+    };
+
+    var displayFilter = function(event){
+        event.preventDefault();
+        
+        filterArgument();
+
+        $('section.display-filter').remove();
+
+        var name = $('input#name').val();
+        var category = $('select#idCategory > option:selected').text();
+        var categoryId = $('select#idCategory').val()
+
+        var element = '';
+        element = element + '<form class="display-filter">';
+        
+        element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">' + category;
+        element = element + '<input type="text" id="idCategory" name="idCategory" class="color-white" value="' + categoryId + '" />';
+        element = element + '</span>'
+
+        if(name !== ''){
+            element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">';
+            element = element + '<input type="text" id="name" name="name" class="color-black" value="' + name + '" />';
+            element = element + '</span>'
+        }
+        element = element + '</form>';
+
+        $('div#sidebar').after(element);
+
+        
+    }
+
+    var filterArgument = function(){
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/Argument/Find', true, $('div.content > ul.list'));
+
+        return app.callback(event, createArgumentList)
+    };
+
+    var removeFilter = function(){
+        $(this).remove();
+
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/Argument/Find', true, $('div.content > ul.list'));
+
+        if($('form.display-filter > *').length == 0){
+            $('form.display-filter').remove();
+        }
+
+        return app.callback(event, createArgumentList)
+    };
+
     /* GET ALL AND CREATE DISPLAY LIST (HOME)*/
     var getAll = function(){
         var event = {};
@@ -9,6 +97,7 @@ var argumentController = (function(){
     };
 
     var createArgumentList = function(obj){
+        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 
@@ -102,9 +191,6 @@ var argumentController = (function(){
 
         var id = parseInt($(event.target).parent().attr('id'));
         var url = 'Argument/GetById/' + id;
-
-        //event.data = new app.Data(false, id, null, 'Argument/GetById/', false, $overlay);
-        //app.callback(event, CreateEditList);
 
         fetch(url, {method: 'POST'})
             .then(function(res){
@@ -259,6 +345,9 @@ var argumentController = (function(){
     }
 
     return {
+        createFilterForm: createFilterForm,
+        displayFilter: displayFilter,
+        removeFilter: removeFilter,
         createRemoveArgument: createRemoveArgument,
         getAllArgument: getAllArgument,
         addNewArgument: addNewArgument,
@@ -276,6 +365,9 @@ var argumentController = (function(){
 var argumentUI = (function(){
 
     var DOM = {
+        btnFilter: '.btn#filter',
+        btnFind: '.btn#find',
+        btnRemoveFilter: 'form.display-filter > span.close-filter',
         btnAdd: '.btn#add',
         btnAddArgument: '.btn#save',
         btnUpdate: '.btn#update',
@@ -303,6 +395,10 @@ var argument = (function(argumentCtrl, argumentUI){
         argumentCtrl.getAll();
 
         //Add event handler on button
+        $(document).on('click', DOMElement.btnFilter, argumentCtrl.createFilterForm);
+        $(document).on('click', DOMElement.btnFind, argumentCtrl.displayFilter);
+        $(document).on('click', DOMElement.btnRemoveFilter, argumentCtrl.removeFilter);
+
         $(document).on('click', DOMElement.btnAdd, argumentCtrl.getAllArgument);
         $(document).on('click', DOMElement.btnAddArgument, argumentCtrl.addNewArgument);
 

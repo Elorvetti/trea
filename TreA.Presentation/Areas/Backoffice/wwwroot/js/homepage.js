@@ -376,6 +376,7 @@ var hp = (function(hpUI, hpCtrl){
         console.log('hp init');
 
         $('span#add').remove();
+        $('span#filter').remove();
         hpCtrl.setContainerWidth('mobile');
 
         //Get all category and argument for manage menu

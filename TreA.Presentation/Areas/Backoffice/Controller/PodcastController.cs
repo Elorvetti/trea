@@ -140,5 +140,20 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             _podcastService.Delete(id);
             
         }
+        
+        [HttpPost]
+        public PodcastModel Find(string name, int pageSize, int pageNumber){
+            var model = new PodcastModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;          
+            model.podcastList = _podcastService.Find(name, excludeRecords, pageSize);  
+                        
+            var total = model.podcastList.Count;
+            model.sectionName = "Podcast";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
     }
 }

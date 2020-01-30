@@ -15,5 +15,6 @@ namespace TreA.Services.Category
         Categories GetBySlugId(int slugId);
         void Update(int id, Categories model);
         void Delete(int id);
+        IList<Categories> Find(string name, int excludeRecord, int pageSize);
     }
 }

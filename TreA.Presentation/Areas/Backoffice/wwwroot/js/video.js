@@ -1,6 +1,68 @@
 "use strict";
 
 var videoController = (function(){
+    /* FILTER */
+    var createFilterForm = function(){
+        var $overlay = app.createOverlay();
+
+        var element = '';
+        element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
+        if($('input#name').length > 0){
+            element = element + '<input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" value="' + $('input#name').val() + '"/>';
+        } else {
+            element = element + '<input name="name" class="name" id="name" placeholder="Nome" autocomplete="off" />';
+        }
+    
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="find" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Cerca">';   
+        element = element + '</div>';
+
+        $overlay.after(element);
+    };
+
+    var displayFilter = function(event){
+        event.preventDefault();
+
+        $('section.display-filter').remove();
+
+        var name = $('input#name').val();
+            
+        var element = '';
+        element = element + '<form class="display-filter">';
+        if(name !== ''){
+            element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">';
+            element = element + '<input type="text" id="name" name="name" class="color-black" value="' + name + '" />';
+            element = element + '</span>'
+        }
+        element = element + '</form>';
+
+        $('div#sidebar').after(element);
+
+        filterVideo();
+    }
+
+    var filterVideo = function(){
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/Video/Find', true, $('div.content > ul.list'));
+
+        return app.callback(event, createVideoList)
+    };
+
+    var removeFilter = function(){
+        $(this).remove();
+
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/Video/Find', true, $('div.content > ul.list'));
+
+        if($('form.display-filter > *').length == 0){
+            $('form.display-filter').remove();
+        }
+
+        return app.callback(event, createVideoList)
+    };
+
+
     /* GET ALL */
     var getAll = function(){
         var event = {};
@@ -9,6 +71,7 @@ var videoController = (function(){
     };
 
     var createVideoList = function(obj){
+        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 
@@ -221,6 +284,9 @@ var videoController = (function(){
     };
 
     return {
+        createFilterForm: createFilterForm,
+        displayFilter: displayFilter,
+        removeFilter: removeFilter,
         createNewVideoForm: createNewVideoForm,
         createRemoveVideo: createRemoveVideo,
         cropVideo: cropVideo,
@@ -237,6 +303,9 @@ var videoController = (function(){
 var videoUI = (function(){
 
     var DOM = {
+        btnFilter: '.btn#filter',
+        btnFind: '.btn#find',
+        btnRemoveFilter: 'form.display-filter > span.close-filter',
         btnAdd: '.btn#add',
         btnAddVideo: '.btn#save',
         btnEdit: '.btn.edit',
@@ -265,6 +334,10 @@ var video = (function(videoCtrl, videoUI){
         videoCtrl.getAll();
 
         //Add event handler on button
+        $(document).on('click', DOMElement.btnFilter, videoCtrl.createFilterForm);
+        $(document).on('click', DOMElement.btnFind, videoCtrl.displayFilter);
+        $(document).on('click', DOMElement.btnRemoveFilter, videoCtrl.removeFilter);
+
         $(document).on('click', DOMElement.btnAdd, videoCtrl.createNewVideoForm);
         $(document).on('click', DOMElement.btnAddVideo, videoCtrl.addNewVideo);
 

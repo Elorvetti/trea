@@ -154,5 +154,21 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
         }
 
+        [HttpPost]
+        public PhotoModel Find(string name, int pageSize, int pageNumber){
+            var model = new PhotoModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;          
+            model.photos = _photoService.Find(name, excludeRecords, pageSize);  
+                        
+            var total = model.photos.Count;
+            model.sectionName = "Photo";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
+
+
     }
 }

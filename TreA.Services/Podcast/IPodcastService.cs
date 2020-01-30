@@ -14,5 +14,6 @@ namespace TreA.Services.Podcast
         Podcasts GetById(int id);
         void Update(int id, Podcasts model);
         void Delete(int id);   
+        IList<Podcasts> Find(string name, int excludeRecord, int pageSize);
     }
 }

@@ -50,5 +50,10 @@ namespace TreA.Services.Video
             _ctx.video.Remove(video);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Videos> Find(string name, int excludeRecord, int pageSize){         
+            var videos = from v in _ctx.video where EF.Functions.Like(v.name, string.Concat("%", name, "%")) select v;
+            return videos.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 }

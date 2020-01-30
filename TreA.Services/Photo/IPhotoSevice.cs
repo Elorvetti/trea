@@ -14,5 +14,6 @@ namespace TreA.Services.Photo
         Photos GetById(int id);
         void Update(int id, Photos model);
         void Delete(int id);
+        IList<Photos> Find(string name, int excludeRecord, int pageSize);
     }
 }

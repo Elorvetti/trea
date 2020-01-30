@@ -123,6 +123,22 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             _slugService.Delete(argument.slugId);
         }
 
+        [HttpPost]
+        public ArgumentModel Find(int idCategory, int pageSize, int pageNumber, string name = ""){
+            var model = new ArgumentModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;            
+            
+            model.arguments = _argumentService.Find(idCategory, name, excludeRecords, pageSize);
+
+            var total = model.arguments.Count;
+            
+            model.sectionName = "Argument";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
         public int InsertSlug(ArgumentModel argument, int categoryId){
             var categorySlugId = _categoryService.GetById(categoryId).slugId;
             var categorySlug = _slugService.GetById(categorySlugId).name;

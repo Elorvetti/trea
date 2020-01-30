@@ -105,7 +105,22 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             _slugService.Delete(category.slugId);
 
         }
- 
+
+        [HttpPost]
+        public CategoryModel Find(string name, int pageSize, int pageNumber){
+            var model = new CategoryModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;          
+            model.categories = _categoryService.Find(name, excludeRecords, pageSize);  
+                        
+            var total = model.categories.Count;
+            model.sectionName = "Category";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
+
         public int InsertSlug(CategoryModel category){
             var name = string.Concat("/Blog", '/', _commonService.cleanStringPath(category.name), '/');
             

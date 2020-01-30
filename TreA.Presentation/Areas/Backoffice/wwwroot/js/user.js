@@ -1,6 +1,78 @@
 "use strict";
 
 var userController = (function(){
+    /* FILTER */
+    var createFilterForm = function(){
+        var $overlay = app.createOverlay();
+
+        var element = '';
+        element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
+        if($('input#email').length > 0){
+            element = element + '<input name="email" class="name" id="email" placeholder="Email" autocomplete="off" value="' + $('input#email').val() + '"/>';
+        } else {
+            element = element + '<input name="email" class="name" id="email" placeholder="Email" autocomplete="off" />';
+        }
+        
+        if($('input#active').length > 0){
+            element = element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch" checked><label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
+        } else {
+            element = element + '<input name="active" id="IsActive" type="checkbox" class="is-active btn-switch"><label for="IsActive" data-off="non attivo" data-on="attivo"></label>';
+        }
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="find" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Cerca">';   
+        element = element + '</div>';
+
+        $overlay.after(element);
+    };
+
+    var displayFilter = function(event){
+        event.preventDefault();
+
+        $('section.display-filter').remove();
+
+        var email = $('input#email').val();
+        var active = $('#IsActive').is(':checked');
+            
+        var element = '';
+        element = element + '<form class="display-filter">';
+        if(email !== ''){
+            element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">';
+            element = element + '<input type="text" id="email" name="email" class="color-black" value="' + email + '" />';
+            element = element + '</span>'
+        }
+        if(active){
+            element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">';
+            element = element + '<input type="text" id="active" name="active" class="color-black" value="Attivo" />';
+            element = element + '</span>'
+        }
+        element = element + '</form>';
+
+        $('div#sidebar').after(element);
+
+        filterUser();
+    }
+
+    var filterUser = function(){
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/User/Find', true, $('div.content > ul.list'));
+
+        return app.callback(event, createUserList)
+    };
+
+    var removeFilter = function(){
+        $(this).remove();
+
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/User/Find', true, $('div.content > ul.list'));
+
+        if($('form.display-filter > *').length == 0){
+            $('form.display-filter').remove();
+        }
+
+        return app.callback(event, createUserList)
+    };
+
     /* GET ALL */
     var getAll = function(){
         var event = {};
@@ -10,9 +82,10 @@ var userController = (function(){
     };
 
     var createUserList = function(obj){
+        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
-        
+
         for(var i in obj.administrators){
             element = element + '<li class="list" id="' + obj.administrators[i].id +'">';
             element = element + '<p active="' + obj.administrators[i].isActive + '">' + obj.administrators[i].user + '</p>';
@@ -132,7 +205,7 @@ var userController = (function(){
 
     var CreateEditList = function(obj){
         var element = '';
-
+        console.log(obj)
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         if(obj.photoId > 0){
             element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');"></span>'
@@ -284,6 +357,9 @@ var userController = (function(){
     }
 
     return {
+        createFilterForm: createFilterForm,
+        displayFilter: displayFilter,
+        removeFilter: removeFilter,
         createNewUserForm: createNewUserForm,
         createRemoveUser: createRemoveUser,
         addNewUser: addNewUser,
@@ -300,6 +376,9 @@ var userController = (function(){
 var userUI = (function(){
 
     var DOM = {
+        btnFilter: '.btn#filter',
+        btnFind: '.btn#find',
+        btnRemoveFilter: 'form.display-filter > span.close-filter',
         btnAdd: '.btn#add',
         btnAddUser: '.btn#save',
         btnUpdate: '.btn#update',
@@ -328,6 +407,10 @@ var user = (function(userCtrl, userUI){
         userCtrl.getAll(event);
 
         //Add event handler on button
+        $(document).on('click', DOMElement.btnFilter, userCtrl.createFilterForm);
+        $(document).on('click', DOMElement.btnFind, userCtrl.displayFilter);
+        $(document).on('click', DOMElement.btnRemoveFilter, userCtrl.removeFilter);
+
         $(document).on('click', DOMElement.btnAdd, userCtrl.createNewUserForm);
         $(document).on('click', DOMElement.btnAddUser, userCtrl.addNewUser);
       

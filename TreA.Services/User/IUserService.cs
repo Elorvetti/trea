@@ -16,5 +16,6 @@ namespace TreA.Services.User
         Administrators GetByEmail(string email);
         void Update(int id, Administrators model);
         void Delete(int id);
+        IList<Administrators> Find(string email, string active, int excludeRecord, int pageSize);
     }
 }

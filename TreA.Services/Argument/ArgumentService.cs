@@ -60,5 +60,19 @@ namespace TreA.Services.Argument
             _ctx.argument.Remove(argument);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Arguments> Find(int idCategory, string name, int excludeRecord, int pageSize){         
+            IQueryable<Arguments> arguments;
+            
+            if(!string.IsNullOrEmpty(name)){
+                arguments = from a in _ctx.argument where a.categoryId == idCategory where EF.Functions.Like(a.name, string.Concat("%", name, "%")) select a;
+            } else if(idCategory > 0) {
+                arguments = _ctx.argument.Where(a => a.categoryId == idCategory);
+            } else {
+                arguments = _ctx.argument;
+            }
+            
+            return arguments.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 }

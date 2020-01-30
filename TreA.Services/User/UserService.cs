@@ -17,20 +17,20 @@ using TreA.Data.Entities;
          private readonly TreAContext _ctx;
 
          public UserService(TreAContext ctx){
-             this._ctx = ctx;
-         }
+            this._ctx = ctx;
+        }
 
          public void Insert(Administrators admin){
             _ctx.administrator.Add(admin);
             _ctx.SaveChanges(); 
-         }
+        }
 
         public virtual IList<Administrators> GetAll(){
             return _ctx.administrator.ToList();
-         }
-         public virtual IList<Administrators> GetAll(int excludeRecord, int pageSize){
+        }
+        public virtual IList<Administrators> GetAll(int excludeRecord, int pageSize){
             return _ctx.administrator.Skip(excludeRecord).Take(pageSize).ToList();
-         }
+        }
 
         public virtual IList<Administrators> GetByPhotoId(int photoId)
         {
@@ -46,16 +46,31 @@ using TreA.Data.Entities;
         }
 
         public void Update(int id, Administrators model){
-             var user = _ctx.administrator.Find(id);
-             user.IsActive = model.IsActive;
-             user.photoId = model.photoId;
-             _ctx.SaveChanges();
-         }
-
-         public void Delete(int id){
-            var user = _ctx.administrator.First(u => u.id == id);
-             _ctx.administrator.Remove(user);
+            var user = _ctx.administrator.Find(id);
+            user.IsActive = model.IsActive;
+            user.photoId = model.photoId;
             _ctx.SaveChanges();
-         }
+        }
+
+        public void Delete(int id){
+            var user = _ctx.administrator.First(u => u.id == id);
+            _ctx.administrator.Remove(user);
+            _ctx.SaveChanges();
+        }
+
+        public virtual IList<Administrators> Find(string email, string active, int excludeRecord, int pageSize){         
+            IQueryable<Administrators> admins;
+            
+            if(!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(active)){
+                admins = from a in _ctx.administrator where a.IsActive == true where EF.Functions.Like(a.user, string.Concat("%", email, "%")) select a;
+            } else if(!string.IsNullOrEmpty(email) && string.IsNullOrEmpty(active)) {
+                admins = from a in _ctx.administrator where EF.Functions.Like(a.user, string.Concat("%", email, "%")) select a;
+            } else {
+                admins = _ctx.administrator.Where(a => a.IsActive == true);
+            }
+            
+            return admins.Skip(excludeRecord).Take(pageSize).ToList();
+        }
+
      }
  }

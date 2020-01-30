@@ -16,5 +16,6 @@ namespace TreA.Services.Argument
         IList<Arguments> GetByCategoryId(int categoryId);
         void Update(int id, Arguments model);
         void Delete(int id);
+        IList<Arguments> Find(int idCategory, string name, int excludeRecord, int pageSize);
     }
 }

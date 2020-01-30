@@ -207,6 +207,27 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             return model;
         }
 
+        [HttpPost]
+        public AdministratorModel Find(string email, int pageSize, int pageNumber, string active = ""){
+            var model = new AdministratorModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;            
+            
+            if(!string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(active) ){
+                model.administrators = _userService.Find(email, active, excludeRecords, pageSize);
+            } else {
+                model.administrators = _userService.GetAll(excludeRecords, pageSize);
+            }
+
+            var total = model.administrators.Count;
+            
+            model.sectionName = "User";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

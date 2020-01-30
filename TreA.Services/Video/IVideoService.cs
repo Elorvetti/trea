@@ -14,5 +14,6 @@ namespace TreA.Services.Video
         Videos GetById(int id);
         void Update(int id, Videos model);
         void Delete(int id);   
+        IList<Videos> Find(string name, int excludeRecord, int pageSize);
     }
 }

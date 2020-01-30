@@ -48,5 +48,10 @@ namespace TreA.Services.Podcast
             _ctx.podcast.Remove(podcast);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Podcasts> Find(string name, int excludeRecord, int pageSize){         
+            var podcasts = from p in _ctx.podcast where EF.Functions.Like(p.name, string.Concat("%", name, "%")) select p;
+            return podcasts.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 }

@@ -49,5 +49,10 @@ namespace TreA.Services.Photo
             _ctx.photo.Remove(photo);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Photos> Find(string name, int excludeRecord, int pageSize){         
+            var photos = from p in _ctx.photo where EF.Functions.Like(p.name, string.Concat("%", name, "%")) select p;
+            return photos.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 }
