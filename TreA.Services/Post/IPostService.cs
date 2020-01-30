@@ -22,5 +22,6 @@ namespace TreA.Services.Post
         IList<Posts> Search(string value);
         void Update(int id, Posts name);
         void Delete(int id);
+        IList<Posts> Find(int categoryId, int argumentId, string title, string IsPublic, int excludeRecord, int pageSize);
     }
 }

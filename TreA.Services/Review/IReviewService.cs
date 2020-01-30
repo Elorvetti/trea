@@ -20,5 +20,6 @@ namespace TreA.Services.Review
         IList<Reviews> GetByPostId(int postId, int excludeRecord, int pageSize);
         void Update(int id, Reviews model);
         void Delete(int id);
+        IList<Reviews> Find(string email, string acepted, int excludeRecord, int pageSize);
     }
 }

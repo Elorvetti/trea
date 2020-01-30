@@ -295,7 +295,6 @@ header input.search-bar.post-view{ margin-left: unset; left: 10px; }
     section#search-result{ width: 40%; max-height: 400px;}
     section#search-result.post-view{ top: 84%; left: unset; right: 46px; width: 25%; max-height: 400px;}
     main > div.newsletter > form{ position: relative; display: block; margin: 0 auto; top: 20px; left: unset;  right: unset; max-width: 480px; }
-    /*header ul.category{ display: none;}*/
 }
 
 @media(min-width: 1024px){

@@ -77,5 +77,23 @@ namespace TreA.Services.Post
             _ctx.post.Remove(post);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Posts> Find(int categoryId, int argumentId, string title, string IsPublic, int excludeRecord, int pageSize){         
+            IQueryable<Posts> posts;
+            
+            if(!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(IsPublic)){
+                posts = from p in _ctx.post where p.categoryId == categoryId where p.argumentId == argumentId where p.pubblico == true where EF.Functions.Like(p.title, string.Concat("%", title, "%")) select p;
+            } else if(!string.IsNullOrEmpty(title) && string.IsNullOrEmpty(IsPublic)){
+                posts = from p in _ctx.post where p.categoryId == categoryId where p.argumentId == argumentId where EF.Functions.Like(p.title, string.Concat("%", title, "%")) select p;
+            } else if(string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(IsPublic)){
+                posts = _ctx.post.Where(p => p.categoryId == categoryId && p.argumentId == argumentId && p.pubblico == true);
+            } else if(categoryId > 0) {
+                posts = _ctx.post.Where(p => p.categoryId == categoryId && p.argumentId == argumentId);
+            } else {
+                posts = _ctx.post;
+            }
+            
+            return posts.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 }

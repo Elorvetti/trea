@@ -1,0 +1,79 @@
+@model PostModel
+
+<div id="preview">
+    <section class="header">
+        
+        <h1 class="text-center color-white font-weight-600 text-uppercase"> @Model.title </h1>
+        <h2 class="text-center color-white"> @Model.subtitle </h2>
+
+    </section>
+
+    <h4 class="breadcrumb padding-left-small font-weight-400"> @Model.breadcrumb </h4>
+
+    <div id="post-display" class="padding-small" post="@Model.id" argument="@Model.argumentId">
+        @Html.Raw(Model.testo)
+
+        <div id="album">
+            <input type="hidden" value="@Model.albumId" />
+        </div>
+
+    </div>
+
+    <div class="related-container text-center">
+
+        <div class="related-post background-color-white box-shadow margin-bottom-small">
+            <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Altri post</h4>
+            <ul class="margin-bottom-small text-center">
+                @foreach(var related in Model.realtedPost)
+                {
+                    <li id="@related.id"><p>@related.title, @related.subtitle</p></li>
+                }
+                <li id="ViewAll" class="text-center text-uppercase padding-top-xsmall padding-bottom-xsmall">
+                    <p class="text-center">Vedi tutti</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="related-argument background-color-white box-shadow margin-bottom-small">
+            <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Categorie</h4>
+            <ul class="margin-bottom-small text-center">
+                @foreach(var related in Model.realtedArgument)
+                {
+                    <li id="@related.id"><p>@related.title (@related.nOfElement)</p></li>
+                }
+                <li id="ViewAll" class="text-center text-uppercase padding-top-xsmall padding-bottom-xsmall">
+                    <p class="text-center">Vedi tutti</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="gallery background-color-white box-shadow margin-bottom-small">
+            <h4 class=" padding-top-xsmall text-center text-capitalize font-weight-600">Album</h4>
+            <ul id="gallery" class="owl-carousel margin-bottom-small text-center">
+                @foreach(var path in Model.albumDisplay)
+                {
+                    @if(path.Contains("Images")){
+                        <li class="gallery" style="background-image:url('@path')"></li>
+                    } else {
+                            <li class="gallery">
+                                <video><source src="@path"></video>
+                            </li>
+                    }
+                }
+            </ul>
+        </div>
+
+    </div>
+
+    <div id="review" class="margin-top-xsmall margin-bottom-medium">
+        <h3 class="text-left text-capitalize font-weight-600">Commenti</h3>
+    </div>
+
+    <input type="hidden" id="coverImage" value="@Model.coverImage" />
+</div>
+
+
+<script src="/adminroot/js/preview.js"></script>
+<script>
+    $(document).ready(preview.init);
+</script>

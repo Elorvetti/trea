@@ -44,7 +44,7 @@ var argumentController = (function(){
         
         filterArgument();
 
-        $('section.display-filter').remove();
+        $('form.display-filter').remove();
 
         var name = $('input#name').val();
         var category = $('select#idCategory > option:selected').text();

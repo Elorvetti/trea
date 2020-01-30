@@ -62,5 +62,19 @@ namespace TreA.Services.Review
             _ctx.review.Remove(review);
             _ctx.SaveChanges();
         }
+
+        public virtual IList<Reviews> Find(string email, string acepted, int excludeRecord, int pageSize){         
+            IQueryable<Reviews> reviews;
+            
+            if(!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(acepted)){
+                reviews = from r in _ctx.review where r.acepted == true where EF.Functions.Like(r.email, string.Concat("%", email, "%")) select r;
+            } else if(!string.IsNullOrEmpty(email) && string.IsNullOrEmpty(acepted)) {
+                reviews = from r in _ctx.review where EF.Functions.Like(r.email, string.Concat("%", email, "%")) select r;
+            } else {
+                reviews = _ctx.review.Where(r => r.acepted == true);
+            }
+            
+            return reviews.Skip(excludeRecord).Take(pageSize).ToList();
+        }
     }
 }

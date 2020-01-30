@@ -1,6 +1,116 @@
 "use strict"
 
 var postController = (function(){
+    /* FILTER */
+    var createFilterForm = function(){
+        var $overlay = app.createOverlay();
+
+        var element = '';
+        element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
+        
+        fetch('Post/GetAllPath', {method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(obj){
+                        element = element + '<select id="path" name="path">'
+                        for(var i in obj){
+                            if($('input#path').length > 0){
+                                element = element + '<option categoryId="' + obj[i].categoryId + '" argumentId="' + obj[i].argumentId + '" value="' + obj[i].name + '" selected>' + obj[i].name + '</option>';
+                            } else {
+                                element = element + '<option categoryId="' + obj[i].categoryId + '" argumentId="' + obj[i].argumentId + '" value="' + obj[i].name + '">' + obj[i].name + '</option>';
+                            }
+                        }
+                        element = element + '</select>'
+
+                        if($('input#categoryId').length > 0){
+                            element = element + '<input type="hidden" name="categoryId" id="categoryId" value="' + $('input#categoryId').val() + '">'
+                            element = element + '<input type="hidden" name="argumentId" id="argumentId" value="' + $('input#argumentId').val()+ '">'
+                        } else{
+                            element = element + '<input type="hidden" name="categoryId" id="categoryId" value="' + obj[0].categoryId  + '">'
+                            element = element + '<input type="hidden" name="argumentId" id="argumentId" value="' + obj[0].argumentId  + '">'
+                        }
+
+                        if($('input#name').length > 0){
+                            element = element + '<input name="title" class="name" id="title" placeholder="Nome post" autocolplete="off"  value="' + $('input#name').val() + '"/>';
+                        } else {
+                            element = element + '<input name="title" class="name" id="title" placeholder="Nome post" autocolplete="off" />'
+                        }
+                        
+                        if($('input#IsPublic').length > 0){
+                            element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch" checked><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+                        } else {
+                            element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+                        }
+                    
+                        element = element + '<div class="text-right">';
+                        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+                        element = element + '<input type="submit" id="find" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Cerca">';   
+                        element = element + '</div>';
+
+                        $overlay.after(element);
+                    })
+            })
+        
+    };
+
+    var displayFilter = function(event){
+        event.preventDefault();
+
+        $('form.display-filter').remove();
+        
+        filterPost();
+
+        var title = $('input#title').val();
+        var category = $('select#path > option:selected').text();
+        var categoryId = $('input#categoryId').val();
+        var argumentId = $('input#argumentId').val();
+        var IsPubblic = $('#IsPublic').is(':checked');
+
+        var element = '';
+        element = element + '<form class="display-filter">';
+        
+        element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white" style="width: 134px">' + category;
+        element = element + '<input type="hidden" id="categoryId" name="categoryId" class="color-white" value="' + categoryId + '" />';
+        element = element + '<input type="hidden" id="argumentId" name="argumentId" class="color-white" value="' + argumentId + '" />';
+        element = element + '</span>'
+
+        if(title !== ''){
+            element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">';
+            element = element + '<input type="text" id="title" name="title" class="color-black" value="' + title + '" />';
+            element = element + '</span>'
+        }
+
+        if(IsPubblic){
+            element = element + '<span class="close-filter border-radius-medium box-shadow margin-bottom-xsmall margin-right-xsmall padding-xsmall background-color-white">';
+            element = element + '<input type="text" id="IsPublic" name="IsPublic" class="color-black" value="Pubblic" />';
+            element = element + '</span>'
+        }
+
+        element = element + '</form>';
+
+        $('div#sidebar').after(element);
+
+    }
+    
+    var filterPost = function(){
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/Post/Find', true, $('div.content > ul.list'));
+
+        return app.callback(event, createPostList)
+    };
+
+    var removeFilter = function(){
+        $(this).remove();
+
+        var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
+        event.data = new app.Data(false, null, param, '/backoffice/Post/Find', true, $('div.content > ul.list'));
+
+        if($('form.display-filter > *').length == 0){
+            $('form.display-filter').remove();
+        }
+
+        return app.callback(event, createPostList)
+    };
 
     /* GET ALL */
     var getAll = function(){
@@ -10,6 +120,7 @@ var postController = (function(){
     };
 
     var createPostList = function(obj){
+        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
         
@@ -18,6 +129,7 @@ var postController = (function(){
             element = element + '<p public="' + obj.posts[i].pubblico + '">' +  obj.posts[i].title + '</p>';
             element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
             element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<span class="btn btn-circle preview background-color-pink-light box-shadow"></span>';
             element = element + '<span class="btn btn-circle info background-color-white box-shadow"></span>';
             element = element + '</li>';
         }
@@ -243,6 +355,14 @@ var postController = (function(){
         $overlay.after(feedback);
     };
 
+    /* PREVIEW POST */
+    var previewPost = function(){
+        var id = parseInt($(event.target).parent().attr('id'));
+        var url = 'Post/Preview/'+ id;
+        window.open(url);
+    }
+
+
     /* DELETE */
     var deletePost = function(event){
         var id = $('div.delete').attr('id');
@@ -339,11 +459,15 @@ var postController = (function(){
     }
     
     return {
+        createFilterForm: createFilterForm,
+        displayFilter: displayFilter,
+        removeFilter: removeFilter,
         createRemovePost: createRemovePost,
         addNewPost: addNewPost,
         getAll: getAll,
         editPost: editPost,
         updatePost: updatePost,
+        previewPost: previewPost,
         deletePost: deletePost,
         summernoteDestroy: summernoteDestroy,
         getAllPath: getAllPath,
@@ -357,6 +481,9 @@ var postController = (function(){
 var postUI = (function(){
 
     var DOM = {
+        btnFilter: '.btn#filter',
+        btnFind: '.btn#find',
+        btnRemoveFilter: 'form.display-filter > span.close-filter',
         btnCloseOverlay: '.btn#close',
         btnAdd: '.btn#add',
         btnAddPost: 'form.add.post .btn#save',
@@ -364,6 +491,7 @@ var postUI = (function(){
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
+        btnPreview: '.btn.preview',
         btnRemove: '.btn.remove',
         btnInfo: '.btn.info',
         selectCategory: 'select#path',
@@ -386,6 +514,10 @@ var post = (function(postCtrl, postUI){
         postCtrl.getAll();
 
         //Add event handler on button
+        $(document).on('click', DOMElement.btnFilter, postCtrl.createFilterForm);
+        $(document).on('click', DOMElement.btnFind, postCtrl.displayFilter);
+        $(document).on('click', DOMElement.btnRemoveFilter, postCtrl.removeFilter);
+
         $(document).on('click', DOMElement.btnAdd, postCtrl.getAllPath);
 
         $(document).on('click', DOMElement.btnAddPost, postCtrl.addNewPost);
@@ -395,6 +527,7 @@ var post = (function(postCtrl, postUI){
         
         $(document).on('click', DOMElement.btnInfo, postCtrl.createFatherInfo);
         $(document).on('click', DOMElement.btnUpdate, postCtrl.updatePost);
+        $(document).on('click', DOMElement.btnPreview, postCtrl.previewPost);
         $(document).on('click', DOMElement.btnDelete, postCtrl.deletePost);
 
         $(document).on('click', DOMElement.btnCloseOverlay, postCtrl.summernoteDestroy);

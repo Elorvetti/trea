@@ -150,20 +150,23 @@ namespace TreA.Presentation.Controllers
 
             //Album
             var album = _albumService.GetById(post.albumId);
-            var imageIds = album.idImmagini.Split('|');
-            foreach(var imageId in imageIds){
-                if(!string.IsNullOrEmpty(imageId)){
-                    model.album.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
+            
+            if(album != null){
+                var imageIds = album.idImmagini.Split('|');
+                foreach(var imageId in imageIds){
+                    if(!string.IsNullOrEmpty(imageId)){
+                        model.album.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
+                    }
+                }
+
+                var videoIds = album.idVideo.Split('|');
+                foreach(var videoId in videoIds){
+                    if(!string.IsNullOrEmpty(videoId)){
+                        model.album.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
+                    }
                 }
             }
 
-            var videoIds = album.idVideo.Split('|');
-            foreach(var videoId in videoIds){
-                if(!string.IsNullOrEmpty(videoId)){
-                     model.album.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
-                }
-            }
-            
             var totalReview = _reviewService.GetByPostId(post.id).Count;
             model.sectionName= "Reviews/";
             model.reviewData.pageSize = 10;

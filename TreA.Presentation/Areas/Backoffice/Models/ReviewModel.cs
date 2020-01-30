@@ -9,6 +9,8 @@ namespace TreA.Presentation.Areas.Backoffice.Models
         public double pageTotal { get; set; }
         public bool displayPagination{ get; set; }
         public IList<DisplayReviews> displayReviews { get; set; } = new List<DisplayReviews>();
+
+        public IList<Reviews> reviews { get; set; } = new List<Reviews>();
     }
 
     public class DisplayReviews{

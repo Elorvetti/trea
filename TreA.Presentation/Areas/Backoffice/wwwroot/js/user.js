@@ -29,7 +29,7 @@ var userController = (function(){
     var displayFilter = function(event){
         event.preventDefault();
 
-        $('section.display-filter').remove();
+        $('form.display-filter').remove();
 
         var email = $('input#email').val();
         var active = $('#IsActive').is(':checked');

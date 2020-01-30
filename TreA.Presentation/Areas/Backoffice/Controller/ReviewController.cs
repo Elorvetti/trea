@@ -99,5 +99,35 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         public void Delete(int id){
             _reviewService.Delete(id);
         }
+
+        [HttpPost]
+        public ReviewModel Find(string email, int pageSize, int pageNumber, string acepted = ""){
+            var model = new ReviewModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;            
+            
+            if(!string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(acepted) ){
+                model.reviews = _reviewService.Find(email, acepted, excludeRecords, pageSize);
+            } else {
+                model.reviews = _reviewService.GetAll(excludeRecords, pageSize);
+            }
+
+            foreach(var review in model.reviews){
+                model.displayReviews.Add(new DisplayReviews(){
+                    id = review.id,
+                    acepted = review.acepted,
+                    email = review.email,
+                    postTitle = _postService.GetById(review.postId).title,
+                    testo = review.testo
+                });
+            }
+            
+            var total = model.reviews.Count;
+            
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
     }
 }

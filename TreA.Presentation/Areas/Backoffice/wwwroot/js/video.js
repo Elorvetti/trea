@@ -24,7 +24,7 @@ var videoController = (function(){
     var displayFilter = function(event){
         event.preventDefault();
 
-        $('section.display-filter').remove();
+        $('form.display-filter').remove();
 
         var name = $('input#name').val();
             

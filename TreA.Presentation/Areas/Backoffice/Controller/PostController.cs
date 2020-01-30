@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using System.Text.RegularExpressions;
 using TreA.Presentation.Areas.Backoffice.Models;
 using TreA.Data.Entities;
 using TreA.Services.Common;
@@ -19,6 +20,7 @@ using TreA.Services.Argument;
 using TreA.Services.Category;
 using TreA.Services.Album;
 using TreA.Services.Photo;
+using TreA.Services.Video;
 using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
@@ -32,15 +34,17 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IAlbumService _albumService;
         private readonly IPhotoService _photoService;
+        private readonly IVideoService _videoService;
         private readonly ISlugService _slugService;
 
-        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService, IPhotoService photoService, ISlugService slugService){
+        public PostController(ICommonService commonService, IPostService postService, ICategoryService categoryService ,IArgumentService argumentService, IAlbumService albumService, IPhotoService photoService, IVideoService videoService, ISlugService slugService){
             this._commonService = commonService;
             this._postService = postService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._albumService = albumService;
             this._photoService = photoService;
+            this._videoService = videoService;
             this._slugService = slugService;
         }
 
@@ -194,6 +198,99 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 _albumService.Delete(post.albumId);
             }
         }
+       
+        [HttpPost]
+        public PostModel Find(int categoryId, int argumentId, int pageSize, int pageNumber, string title = "", string IsPublic = ""){
+            var model = new PostModel();
+            
+            var excludeRecords = (pageSize * pageNumber) - pageSize;            
+            
+            model.posts = _postService.Find(categoryId, argumentId, title, IsPublic, excludeRecords, pageSize);
+
+            var total = model.posts.Count;
+            
+            model.sectionName = "Post";
+            model.pageSize = pageSize;
+            model.pageTotal =  Math.Ceiling((double)total / pageSize);
+
+            return model;
+        }
+
+        public IActionResult Preview(int id){
+            var model = new PostModel();
+
+            //Convert slugId to Int and Find Post
+            var post = _postService.GetById(id);
+            
+            //BreadCrumb
+            model.categoryName = _categoryService.GetById(post.categoryId).name;
+            var argument = _argumentService.GetById(post.argumentId);
+            if(argument != null){
+                model.argumentName = argument.name;
+            }
+            model.breadcrumb = string.Concat(model.categoryName, " > ", model.argumentName, " > ", post.title);
+
+            //Post data
+            model.id = post.id;
+            model.coverImage = _photoService.GetById(post.PhotoId).path;
+            model.title = post.title;
+            model.subtitle = post.subtitle;
+            model.testo = post.testo;
+            model.albumId = post.albumId;
+            model.argumentId = post.argumentId;
+
+            ViewBag.title = post.title;
+            ViewBag.subtitle = post.subtitle;
+
+            //Related Post
+            var realtedPosts = _postService.GetByCategoryId(post.categoryId);
+            foreach(var relatedPost in realtedPosts){
+                model.realtedPost.Add(new ArgumentDisplay(){
+                    id = relatedPost.id,
+                    title = relatedPost.title,
+                    subtitle = relatedPost.subtitle,
+                    slug = _slugService.GetById(relatedPost.slugId).name
+                });
+            }
+
+            //Related argument
+            var relatedArguments = _argumentService.GetByCategoryId(post.categoryId);
+            foreach(var relatedArgument in relatedArguments){
+                model.realtedArgument.Add(new ArgumentDisplay(){
+                    id = relatedArgument.id,
+                    title = relatedArgument.name,
+                    nOfElement = _postService.GetByArgumentId(relatedArgument.id).Count,
+                    slug = _slugService.GetById(relatedArgument.slugId).name
+                });
+            }
+
+            //Album
+            var album = _albumService.GetById(post.albumId);
+            
+            if(album != null){
+                var imageIds = album.idImmagini.Split('|');
+                foreach(var imageId in imageIds){
+                    if(!string.IsNullOrEmpty(imageId)){
+                        model.albumDisplay.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
+                    }
+                }
+
+                var videoIds = album.idVideo.Split('|');
+                foreach(var videoId in videoIds){
+                    if(!string.IsNullOrEmpty(videoId)){
+                        model.albumDisplay.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
+                    }
+                }
+            
+            }
+
+
+
+  
+            return View(model);
+            
+        }
+
         public int AddAlbumToPost(IFormCollection data){
             var album = new AlbumModel();
             var albumId = 0;
