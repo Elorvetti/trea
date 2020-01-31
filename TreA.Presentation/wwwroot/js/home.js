@@ -7,15 +7,15 @@ var homeController = (function(){
             responsive:{
                 0:{
                     loop: false,
-                    margin: 10,
-                    items: 2,
+                    margin: 40,
+                    items: 1,
                     nav: false,
                     dots: true,
-                    dotsEach: 2, 
+                    dotsEach: 1, 
                 },
                 768:{
                     loop: false,
-                    margin: 10,
+                    margin: 20,
                     items: 2,
                     nav: false,
                     dots: true,

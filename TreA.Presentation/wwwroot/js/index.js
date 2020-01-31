@@ -62,7 +62,7 @@ var appController = (function(){
 
         if($('div#post-display').length == 0){
             $('header').css('background-image', url)
-            $('div.about-us > h3').text(aboutUsTitle);
+            $('div.about-us > h2').text(aboutUsTitle);
             $('div.about-us > p').html(aboutUsText);
         } else {
             $('div.about-us').remove();

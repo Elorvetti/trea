@@ -48,8 +48,9 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .color-blue-light{ color: #73AFBA; }
 .color-blue{ color: #1C2E3D; }
 
-.background-color-black{ background-color:  #212121; }
 .background-color-white{ background-color: #fff; }
+.background-color-grey{ background-color: #ECECEC; }
+.background-color-black{ background-color:  #212121; }
 .background-color-red{ background-color: #E8594E; }
 .background-color-pink-light{ background-color: #FCBDB2; }
 .background-color-blue-light{ background-color: #73AFBA; }
@@ -215,15 +216,14 @@ header > div.nav-container > span.menu.active > span:nth-child(1){transform: rot
 header > div.nav-container > span.menu.active > span:nth-child(2){ display: none; }
 header > div.nav-container > span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out;}
 
-header div.about-us{ position: absolute; display: inline-block; left: 10px; bottom: 80px; height: 300px; width: 70%; background-color: rgba(0,0,0,.9); overflow: hidden; }
-header div.about-us > h3{ margin: .3em 0; font-size: 22px; line-height: 33px; }
+header div.about-us{ position: absolute; display: inline-block; left: 20px; bottom: 175px; max-height: 250px; width: 70%; overflow: hidden; }
 header div.about-us > p{ font-size: 16px; line-height: 24px; }
 
 /* SEARCH */
 header input.search-bar{ 
     position: absolute; 
-    left: 10px; 
-    bottom: 10px; 
+    left: 20px; 
+    bottom: 110px; 
     line-height: 20px; 
     width: 70%; 
     background-image: url('../img/search.png'); 
@@ -264,13 +264,15 @@ main > div.newsletter > form input[type="submit"]{ position: relative; width: 14
 /* LAST POST */
 main > div#lastPost{ width: 100%; }
 .carousel-wrapper{ width: 90%; margin: 0 auto; }
-.carousel__photo{ background-size: cover; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
-.carousel__photo > h3{ display: inline-block; margin: 0; width: 100%; height: 100%; line-height: 250px; opacity: 0; z-index: 9996;}
-.carousel__photo:hover > h3{ opacity: 1;  background-color:rgba(115, 175, 186, .8); }
-.carousel__photo > h3 > a{ display: inline-block; margin: 0; width: 100%; height: 100%; line-height: 250px; font-size: 1.2em; font-weight: lighter; z-index: 9996;}
+section.card-head{ position: relative; display: inline-block; width: 100%; height: 200px; background-size: cover; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
+section.card-body{ position: relative; display: inline-block; width: 95%; max-height: 250px; overflow: hidden; }
+section.card-body > h3{ line-height: .3em; }
+section.card-body > p{ font-size: 14px; line-height: 21px; }
+section.card-body + a.btn{ position: absolute; display: inline-block; left: 35px; right: 35px; bottom: 25px; line-height: 50px; }
+
 .owl-dots{ text-align: center; }
 .owl-dots > .owl-dot{ margin: 5px 3px; width: 15px; height: 15px; border-radius: 50%; background-color: #fff!important; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
-.owl-dots > .owl-dot.active{ background-color: #73AFBA!important; }
+.owl-dots > .owl-dot.active{ background-color: #ECECEC!important; }
 
 /* INSTAGRAM */
 div#instafeed  .carousel__photo{ height: 250px; }
@@ -289,8 +291,8 @@ header input.search-bar.post-view{ margin-left: unset; left: 10px; }
 
 @media(min-width: 768px){
     header ul.social{ display: inline-block; }
-    header div.about-us{ width: 40%; }
-    header input.search-bar{ width: 40%; }
+    header div.about-us{ max-width: 50%; left: 50px; bottom: 180px; }
+    header input.search-bar{ max-width: 50%; left: 50px; bottom: 110px; }
     header input.search-bar.post-view{ margin-left: 70px; left: 60%; bottom: 90px; width: 24.5%;  }
     section#search-result{ width: 40%; max-height: 400px;}
     section#search-result.post-view{ top: 84%; left: unset; right: 46px; width: 25%; max-height: 400px;}
@@ -303,6 +305,8 @@ header input.search-bar.post-view{ margin-left: unset; left: 10px; }
     main > div.newsletter > form{ position: relative; margin: 0 auto; top: 30%; right: unset; }
     header ul.category{ display: inline-block; right: 0; width: auto; }
     header ul.social{ width: 10%; }
+    header div.about-us{ max-width: 40%; left: 50px; bottom: 200px; }
+    header input.search-bar{ max-width: 40%; left: 50px; bottom: 130px; }
     h1.title{ left: 10%; width: 20%; }
     header input.search-bar.post-view{ width: 25%; }
 }
@@ -310,9 +314,13 @@ header input.search-bar.post-view{ margin-left: unset; left: 10px; }
 @media(min-width: 1440px){
     header{ height: 750px; } 
     header::before{ background: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 100%); }
+    header div.about-us{ max-width: 30%; left: 50px; bottom: 280px; }
+    header input.search-bar{ max-width: 30%; left: 50px; bottom: 200px; }
     header input.search-bar.post-view{ margin-left: 34px; left: 70%;}
     header input.search-bar.post-view{ width: 24.5%; margin-left: 33px; }
     section#search-result.post-view{ top: 88%; right: 64px; }
+    section.card-head{ height: 250px; }
+    section.card-body{ max-height: 400px; }
 }
 
 
