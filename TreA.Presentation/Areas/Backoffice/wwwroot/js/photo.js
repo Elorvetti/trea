@@ -46,7 +46,8 @@ var photoController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Photo/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createPhotoList)
+        app.callback(event, createPhotoList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -59,7 +60,7 @@ var photoController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createPhotoList)
+        return app.callback(event, createPhotoList);
     };
 
     /* GET ALL */
@@ -70,7 +71,6 @@ var photoController = (function(){
     };
 
     var createPhotoList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 

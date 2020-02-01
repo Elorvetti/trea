@@ -4,10 +4,13 @@
 <div id="list" class="padding-bottom-small margin-bottom-medium">
     @foreach (var post in Model.postsDisplay)
     {
-        <div id="@post.id" class="item carousel__photo border-radius-small box-shadow" style="background-image: url('@post.coverImage')" data-href="@post.slug">
-            <h3 class="text-center color-white border-radius-small"> 
-                <a class="text-center color-white border-radius-small" href="@post.slug"> @post.title </a>
-            </h3>
+        <div id="@post.id" class="item carousel__photo text-center">
+            <section class="card-head border-radius-small box-shadow" style="background-image: url('@post.coverImage')"></section>
+            <section class="card-body padding-xsmall box-shadow margin-bottom-medium background-color-white">
+                <h3 class="font-weight-600">@post.title</h3>
+                <p>@Html.Raw(post.testo)</p>
+            </section>
+            <a class="text-center background-color-blue color-white border-radius-small text-uppercase btn readmore" href="@post.slug"> Leggi di più </a>
         </div>
     }
 </div>

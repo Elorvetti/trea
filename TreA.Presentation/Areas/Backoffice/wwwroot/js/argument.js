@@ -73,7 +73,8 @@ var argumentController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Argument/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createArgumentList)
+        app.callback(event, createArgumentList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -86,7 +87,7 @@ var argumentController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createArgumentList)
+        app.callback(event, createArgumentList)
     };
 
     /* GET ALL AND CREATE DISPLAY LIST (HOME)*/
@@ -97,7 +98,6 @@ var argumentController = (function(){
     };
 
     var createArgumentList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 

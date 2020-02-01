@@ -55,7 +55,8 @@ var reviewController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Review/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createReviewList)
+        app.callback(event, createReviewList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -68,7 +69,7 @@ var reviewController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createReviewList)
+        return app.callback(event, createReviewList);
     };
     
     //Get all review

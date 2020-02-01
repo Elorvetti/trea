@@ -24,9 +24,51 @@ var homeController = (function(){
                 1024:{
                     loop: false,
                     margin: 20,
-                    items: 4,
+                    items: 3,
                     nav: false,
-                }
+                },
+                1440:{
+                    loop: false,
+                    margin: 20,
+                    items: 5,
+                    nav: false,
+                },
+            }
+        })
+    }
+
+    var carouselFiftyInit = function(element){
+        $(element).owlCarousel({
+            responsiveClass:true,    
+            responsive:{
+                0:{
+                    loop: false,
+                    margin: 40,
+                    items: 1,
+                    nav: false,
+                    dots: true,
+                    dotsEach: 1, 
+                },
+                768:{
+                    loop: false,
+                    margin: 20,
+                    items: 2,
+                    nav: false,
+                    dots: true,
+                    dotsEach: 2, 
+                },
+                1024:{
+                    loop: false,
+                    margin: 20,
+                    items: 1,
+                    nav: false,
+                },
+                1440:{
+                    loop: false,
+                    margin: 20,
+                    items: 2,
+                    nav: false,
+                },
             }
         })
     }
@@ -50,16 +92,19 @@ var homeController = (function(){
                     .then(function(insta){
                         element = element + '<div class="carousel-wrapper">';
                         element = element + '<div class="owl-carousel owl-theme">';
-
+                        console.log(insta)
                         var images = insta.data;
-
                         for(var i in images){
-                            element = element + '<div id="' + images[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + images[i].images.standard_resolution.url + '\')">';
-                            element = element + '<section class="interactions border-radius-small text-center">'
-                            element = element + '<h3 class="text-center color-white border-radius-small padding-top-large">' + images[i].caption.text + '</h3>';
-                            element = element + '<span class="text-center margin-right-small color-white border-radius-small likes">' + images[i].likes.count + '</span>';
-                            element = element + '<span class="text-center color-white border-radius-small comments">' + images[i].comments.count + '</span>';
+                            element = element + '<div id="' + images[i].id + '" class="item carousel__photo box-shadow margin-xsmall">';
+                            element = element + '<section class="image text-center" style="background-image: url(\'' + images[i].images.standard_resolution.url + '\')"></section>'
+                            element = element + '<section class="user-data">'
+                            element = element + '<span class="btn-circle avatar" style="background-image: url(\'' + images[i].user.profile_picture + '\')"></span>'
+                            element = element + '<span class="user-name padding-left-small">'
+                            element = element + '<p class="color-black">' + images[i].user.full_name + '</p>'
+                            element = element + '<p class="color-black">@' + images[i].user.username + '</p>'
+                            element = element + '</span>'
                             element = element + '</section>'
+                            element = element + '<a class="link" target="_blank" href="' + images[i].link  + '"></a>' 
                             element = element + '</div>';
                         }
 
@@ -69,7 +114,7 @@ var homeController = (function(){
                         $(elem).append(element);
 
                         //Init carousel
-                        carouselInit('.owl-carousel');
+                        carouselFiftyInit('.owl-carousel');
 
                     })
             })
@@ -78,14 +123,16 @@ var homeController = (function(){
 
     return {
         carouselInit: carouselInit,
-        instagram: instagram
+        carouselFiftyInit: carouselFiftyInit,
+        instagram: instagram,
     }
 })();
 
 var homeUI = (function(){
     var DOM = {
         carousel: '.owl-carousel',
-        instagramContainer: 'div#instafeed'
+        carouselPodcast: '.owl-carousel-podcast',
+        instagramContainer: 'div#instafeed',
     }
 
     return {
@@ -98,8 +145,8 @@ var home = (function(homeUI, homeCtrl){
 
     var init = function(){
         homeCtrl.carouselInit(DOMElement.carousel);
+        homeCtrl.carouselFiftyInit(DOMElement.carouselPodcast);
         homeCtrl.instagram(DOMElement.instagramContainer);
-
     }
 
     return {

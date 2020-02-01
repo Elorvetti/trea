@@ -96,7 +96,8 @@ var postController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Post/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createPostList)
+        app.callback(event, createPostList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -109,7 +110,7 @@ var postController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createPostList)
+        app.callback(event, createPostList)
     };
 
     /* GET ALL */
@@ -120,7 +121,6 @@ var postController = (function(){
     };
 
     var createPostList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
         

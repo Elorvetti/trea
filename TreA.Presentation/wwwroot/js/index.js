@@ -89,12 +89,16 @@ var appController = (function(){
             switch (subchildAttr){
                 case "close":
                     $(this).attr('child', 'open');
+                    $('div.nav-container').addClass('open-child')
                     break;
                 case "open":
                     $(this).attr('child', 'close');
+                    $('div.nav-container').removeClass('open-child')
                     break;
             }
         }
+
+
     }
 
     var fixNav = function(event){

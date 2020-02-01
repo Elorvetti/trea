@@ -1,0 +1,18 @@
+    @model HomeModel
+
+    <section id="podcast">
+        <h2 class="text-center font-weight-500"><a class="goto" href="/Podcast/Index"></a>Podcast</h2>
+          <div class="carousel-wrapper">
+            <div class="owl-carousel-podcast owl-theme">
+                @foreach (var podcast in Model.podcasts)
+                {
+                    <div class="item carousel__photo text-center border-radius-small box-shadow background-color-white padding-small">
+                        <h3>@podcast.name.Replace(".mp3", "")</h3>
+                        <p class="margin-bottom-xsmall">@podcast.description</p>
+                        
+                        <audio class="border-radius-small" controls><source src="@podcast.path"></audio>                    
+                    </div>
+                }
+            </div>
+        </div>
+    </section>

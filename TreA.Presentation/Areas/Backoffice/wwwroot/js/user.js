@@ -57,7 +57,8 @@ var userController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/User/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createUserList)
+        app.callback(event, createUserList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -70,7 +71,7 @@ var userController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createUserList)
+        app.callback(event, createUserList)
     };
 
     /* GET ALL */
@@ -82,7 +83,6 @@ var userController = (function(){
     };
 
     var createUserList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 
@@ -205,7 +205,6 @@ var userController = (function(){
 
     var CreateEditList = function(obj){
         var element = '';
-        console.log(obj)
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         if(obj.photoId > 0){
             element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');"></span>'

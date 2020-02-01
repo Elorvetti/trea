@@ -51,7 +51,7 @@ namespace TreA.Presentation.Controllers
 
             return View(model);
         }
-        public IActionResult List(int categoryId, int pageSize, int pageNumber, string slug){      
+        public IActionResult List(int categoryId, int pageSize, int pageNumber){      
             var model = new ArgumentModel();
 
             //SEO 
@@ -76,28 +76,6 @@ namespace TreA.Presentation.Controllers
             }
 
             return View(model);
-        }
-        public IActionResult GetBySlugId(string id){
-            
-            //If in ARGUMENT list are more then one argumet show list else only this argument
-            //If there aren't ARGUMENT list search one or more POST of this category 
-            //If there are a list of POST show list else only this post
-            
-            //Convert slugId to Int and Find CategoryId
-            var slugId = Convert.ToInt32(id);
-            var argumentId = _argumentService.GetBySlugId(slugId).id;
-
-            //Get POST of category
-            var posts = _postService.GetByArgumentId(argumentId);
-            
-            //If ARGUMENT are a list show list else only data conneted to this argument
-            if(posts.Count > 1){
-                return RedirectToAction("List", "Post", new{argumentId = argumentId, pageSize = 50, pageNumber = 1});
-            } else if(posts.Count == 1){
-                return RedirectToAction("GetByPostId", "Post", new{id = posts[0].id});
-            }
-
-            return Json("No Redirect");
         }
     }
 }

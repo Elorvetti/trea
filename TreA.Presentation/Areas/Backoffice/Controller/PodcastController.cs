@@ -116,9 +116,10 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
             var ext = Path.GetExtension(path);
             var fileNameFromPost = _commonService.cleanStringPath(form["name"]) + ext;
+            var desctiption = form["description"];
 
             var exist = _fileService.exist("Content\\Podcast\\", fileNameFromPost);
-            if (!exist)
+            if (exist)
             {
                 var oldFileName = "Content\\Podcast\\" + podcast.name;
                 var newFileName = "Content\\Podcast\\" + fileNameFromPost;
@@ -126,6 +127,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
                 model.path = "/App_Data/Content/Podcast/" + fileNameFromPost;
                 model.name = fileNameFromPost;
+                model.description = desctiption;
                 _podcastService.Update(id, model);
             }
 

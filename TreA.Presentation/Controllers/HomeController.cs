@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TreA.Presentation.Models;
 using TreA.Services.Photo;
+using TreA.Services.Podcast;
 using TreA.Services.Category;
 using TreA.Services.Argument;
 using TreA.Services.Post;
@@ -17,15 +18,17 @@ namespace TreA.Presentation.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IPhotoService _photoService;
+        private readonly IPodcastService _podcastService;
         private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
         private readonly IPostService _postService;
         private readonly IHomeService _homeService;
         private readonly ISlugService _slugService;
-        public HomeController(ILogger<HomeController> logger, IPhotoService photoService, ICategoryService categoryService, IArgumentService argumentService, IPostService postService, ISlugService slugService, IHomeService homeService)
+        public HomeController(ILogger<HomeController> logger, IPhotoService photoService, IPodcastService podcastService ,ICategoryService categoryService, IArgumentService argumentService, IPostService postService, ISlugService slugService, IHomeService homeService)
         {
             _logger = logger;
             this._photoService = photoService;
+            this._podcastService = podcastService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._postService = postService;
@@ -36,15 +39,13 @@ namespace TreA.Presentation.Controllers
         public IActionResult Index()
         {
             var model = new HomeModel();
-            model.Newsletter = new NewsletterModel();
-            model.PostDisplays = new List<PostDisplayModel>();
 
             //SEO 
             var homeSetting = _homeService.GetSetting();
             ViewBag.description = homeSetting.headerTesto;
    
             //Get last post
-            var posts = _postService.GetLast(4);
+            var posts = _postService.GetLast(5);
             
             var newsletterImageId = _homeService.GetSetting().newsletterImageId;
             var newsletterBackgroundImage = _photoService.GetById(newsletterImageId).path;
@@ -59,6 +60,17 @@ namespace TreA.Presentation.Controllers
                     testo = Regex.Replace(post.testo, "<.*?>", string.Empty).Substring(0, 200)
                 });
            }
+
+            var podcasts = _podcastService.GetAll();
+            foreach(var podcast in podcasts){
+                model.podcasts.Add(new PodcastModel(){
+                    id = podcast.id,
+                    name = podcast.name,
+                    description = podcast.description,
+                    path = podcast.path
+                });
+            }
+
             return View(model);
         }
         

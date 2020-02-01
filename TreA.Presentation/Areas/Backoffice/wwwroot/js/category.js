@@ -46,7 +46,8 @@ var categoryController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Category/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createCategoryList)
+        app.callback(event, createCategoryList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -59,7 +60,7 @@ var categoryController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createCategoryList)
+        app.callback(event, createCategoryList)
     };
 
     /* GET ALL */
@@ -70,7 +71,6 @@ var categoryController = (function(){
     }
 
     var createCategoryList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
         

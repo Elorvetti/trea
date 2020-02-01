@@ -19,28 +19,5 @@ namespace TreA.Presentation.Controllers
             this._argumentService = argumentService;
             this._postService = postService;
         }
-
-        public IActionResult GetBySlugId(string id, string slug){
-            
-            //If in ARGUMENT list are more then one argumet show list else only this argument
-            //If there aren't ARGUMENT list search one or more POST of this category 
-            //If there are a list of POST show list else only this post
-            
-            //Convert slugId to Int and Find CategoryId
-            var slugId = Convert.ToInt32(id);
-            var categoryId = _categoryService.GetBySlugId(slugId).id;
-
-            //Get ARGUMENT of category
-            var arguments = _argumentService.GetByCategoryId(categoryId);
-            
-            //If ARGUMENT are a list show list else only data conneted to this argument
-            if(arguments.Count > 1){
-                return RedirectToAction("List", "Argument", new{categoryId = categoryId, pageSize = 50, pageNumber = 1, slug = slug});
-            } else if(arguments.Count == 0){
-                return RedirectToAction("GetBySlugId", "Argument", new { id = slugId, slug = slug });
-            }
-
-            return Json("No Redirect");
-        }
     }
 }

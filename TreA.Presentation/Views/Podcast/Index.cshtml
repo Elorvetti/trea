@@ -1,1 +1,19 @@
+@model PodcastModel 
+
 <h1 class="text-center padding-top-xsmall"> Podcast </h1>
+<div class="carousel-wrapper">
+    <div class="owl-carousel owl-theme">
+        @foreach (var podcast in Model.podcasts)
+        {
+            <div class="item carousel__photo text-center border-radius-small box-shadow background-color-white padding-small">
+                <h3>@podcast.name.Replace(".mp3", "")</h3>
+                <p>@podcast.description</p>
+                
+                <div class="text-right">
+                    <span id="@podcast.id" class="text-center background-color-blue color-white border-radius-small text-uppercase padding-xsmall btn-listen">Ascolta</span>
+                </div>
+                
+            </div>
+        }
+    </div>
+</div>

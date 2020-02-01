@@ -185,7 +185,7 @@ header:before {
 header > h1{ position: absolute; left: 0; right: 0; top: 40%;font-size: 3em; }
 header > h2{ position: absolute; left: 0; right: 0; top: 47%; }
 
-header > div.nav-container{ position: relative; display: inline-block; width: 100%; z-index: 9999; }
+header > div.nav-container{ position: relative; display: inline-block; width: 100%; z-index: 9999; transition: 0.4s; }
 header > div.nav-container.fixed{ position: fixed; padding: 4px; height: 50px; background-color: #1C2E3D; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
 header ul.social{ position: absolute; display: none; width: 35%; z-index: 9996;}
 
@@ -202,7 +202,6 @@ header ul.category{ position: absolute; display: none; right: 10px; width: 60%; 
 header ul.category > li{ display: inline-block; padding: 0 25px; line-height: 40px; cursor: pointer; background-size: 26px; background-position: 100% 5px; background-repeat: no-repeat; }
 header ul.category > li[child="close"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
 header ul.category > li[child="open"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
-header ul.category > li[child="open"] > ul{ background-color:rgba(0,0,0,.9); }
 header ul.category > li > a{ line-height: 40px; }
 
 ul.category > li[child="open"] > ul > li a:hover, ul.category > li[child="open"] > ul > li a:active{ color: #73AFBA!important; }
@@ -263,25 +262,53 @@ main > div.newsletter > form input[type="submit"]{ position: relative; width: 14
 
 /* LAST POST */
 main > div#lastPost{ width: 100%; }
+div#lastPost div.item.carousel__photo{ max-width: 335px; margin: 0 auto; }
 .carousel-wrapper{ width: 90%; margin: 0 auto; }
-section.card-head{ position: relative; display: inline-block; width: 100%; height: 200px; background-size: cover; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
-section.card-body{ position: relative; display: inline-block; width: 95%; max-height: 250px; overflow: hidden; }
+section.card-head{ position: relative; display: inline-block; width: 100%; height: 200px; background-size: cover; background-position: center center; background-repeat: no-repeat; z-index: 9994; }
+section.card-body{ position: relative; display: inline-block; width: 95%; min-height: 200px; max-height: 280px; overflow: hidden; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
 section.card-body > h3{ line-height: .3em; }
 section.card-body > p{ font-size: 14px; line-height: 21px; }
 section.card-body + a.btn{ position: absolute; display: inline-block; left: 35px; right: 35px; bottom: 25px; line-height: 50px; }
 
 .owl-dots{ text-align: center; }
 .owl-dots > .owl-dot{ margin: 5px 3px; width: 15px; height: 15px; border-radius: 50%; background-color: #fff!important; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
-.owl-dots > .owl-dot.active{ background-color: #ECECEC!important; }
+.owl-dots > .owl-dot.active{ background-color: #C3C9C7!important; border: 1px solid transparent; }
 
 /* INSTAGRAM */
-div#instafeed  .carousel__photo{ height: 250px; }
-section.interactions { position: relative; display: inline-block; margin: 0; width: 100%; height: 100%; opacity: 0; }
-section.interactions > h3{ line-height: 1.3em; }
-section.interactions > span{ position: relative; display: inline-block; padding-left: 40px; width: 40px; height: 40px; line-height: 40px; background-position: center center; background-size: 24px; background-repeat: no-repeat; }
-section.interactions span.likes{ background-image: url('../img/heart.png'); }
-section.interactions span.comments{ background-image: url('../img/comment.png'); }
-.carousel__photo:hover > section.interactions{ opacity: 1; background-color: rgba(115, 175, 186, .8); }
+div.instagram > h2{ background-image: url('../img/social/instagram-black.png'); background-size: 48px; background-position: 15%; background-repeat: no-repeat; }
+div.instagram div.item.carousel__photo{ border-top-left-radius: 5px; border-top-right-radius: 5px; }
+div.instagram section.image{ position: relative; display: inline-block; width: 100%; height: 250px; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+div.instagram section.user-data{ position: relative; display: inline-block; width: 100%; padding: 15px 10px; }
+div.instagram section.user-data > span{ position: relative; display: inline-block; max-width: 200px; }
+div.instagram section.user-data > span.avatar{  width: 50px; height: 50px; background-size: cover; background-position: center center; background-repeat: no-repeat; }
+div.instagram a.link{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; bottom: 0; }
+
+/* YOUTUBE VIDEO AND PODCAST */
+div.video-podcast{ position: relative; display: inline-block; width: 100%; }
+
+/*PODCAST*/
+section#podcast h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/podcast-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
+section#podcast h2 > a.goto{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; bottom: 0; } 
+div.item.carousel__photo > h3{ margin: .3em 0; }
+div.item.carousel__photo > p{ font-size: 16px; line-height: 24px; }
+div.item.carousel__photo > span.btn-list{ cursor: pointer; }
+div.item.carousel__photo > audio{ max-width: 100%; } 
+section#podcast .owl-stage-outer{ margin-bottom: 10px; }
+section#podcast .owl-nav{ display: none; }
+
+/* YOUTUBE */
+section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
+
+@media(min-width: 1024px){
+    header > div.nav-container.open-child{ height: 100px; background-color: #1C2E3D; }
+    div.instagram{ width: 50%; float: left; }
+    main div.newsletter{ width: 50%; float: right; }
+    div.instagram section.image{ height: 350px; }
+    section#podcast{ width: 50%; float: left; }
+    section#youtube{ width: 50%; float: right; }
+}
+
+
 
 /* FOOTER */
 footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
@@ -339,7 +366,7 @@ div.related-container{ position: relative; display: inline-block; width: 100%;  
 div.related-post, div.related-argument, div.gallery{  position: relative;  display: none; width: 85%;  z-index: 9996; border-top-right-radius: 10px; border-top-left-radius: 10px; }
 div.gallery{ display: inline-block; }
 
-div.related-container > div > ul::before{ content: ''; position: relative; display:  inline-block; width: 80%; border: 1px solid #FCBDB2; }
+div.related-container > div > ul::before{ content: ''; position: relative; display:  inline-block; top: -10px; width: 80%; border: 1px solid #FCBDB2; }
 div.related-container > div > ul > li{ position: relative; display: inline-block; width: 80%; }
 div.related-container > div > ul > li > a:hover{ color: #FCBDB2; }
 div.related-container > div > ul > li.active > a { color: #EA614A; font-weight: 600; font-size: 16px; }

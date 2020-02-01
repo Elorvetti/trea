@@ -2,19 +2,27 @@
 
 @Html.Partial("/Views/Partial/Home/_LastPost.cshtml", Model)
 
-@Html.Partial("/Views/Partial/Home/_Newsletter.cshtml", Model)
-
-<div class="instagram padding-top-xsmall">
-    <h2 class="text-center">Instagram</h2>
+<div class="instagram background-color-white">
+    <h2 class="text-center font-weight-500 padding-top-small padding-bottom-small padding-left-medium margin-remove">Instagram</h2>
     <div id="instafeed" class="margin-bottom-xsmall"></div>
 </div>
 
-<h2 class="text-center">Video</h2>
-<p class="text-center">Collegare canale youtube</p>
+@Html.Partial("/Views/Partial/Home/_Newsletter.cshtml", Model)
+
+<div class=" video-podcast background-color-grey padding-bottom-small">
+
+    @Html.Partial("/Views/Partial/Home/_Podcast.cshtml", Model)
+    
+    <section id="youtube">
+        <h2 class="text-center font-weight-500">Video</h2>
+        <p class="text-center">Collegare canale youtube</p>
+    </section>
+
+</div>
 
 
-<h2 class="text-center">Podcast</h2>
-<p class="text-center">Collegare canale spotify</p>
+
+
 
 <script src="~/js/home.js"></script>
 <script>

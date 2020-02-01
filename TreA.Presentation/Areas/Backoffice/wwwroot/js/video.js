@@ -46,7 +46,8 @@ var videoController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Video/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createVideoList)
+        app.callback(event, createVideoList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -59,7 +60,7 @@ var videoController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createVideoList)
+        app.callback(event, createVideoList);
     };
 
 
@@ -71,7 +72,6 @@ var videoController = (function(){
     };
 
     var createVideoList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 

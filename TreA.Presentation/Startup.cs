@@ -91,7 +91,7 @@ namespace TreA.Presentation
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IArgumentService argumentService, IPostService postService, ISlugService slugService, TreAContext ctx)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -105,6 +105,8 @@ namespace TreA.Presentation
             }
 
             app.UseHttpsRedirection();
+
+
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -120,7 +122,13 @@ namespace TreA.Presentation
 
             app.UseCookiePolicy();
             app.UseAuthentication();
-        
+           
+            var option = new RewriteOptions()
+                .AddRewrite(@"^Blog/(.*)", "Blog/Index?param=$1", skipRemainingRules: true);
+            
+            app.UseRewriter(option);
+
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -158,13 +166,11 @@ namespace TreA.Presentation
                     template: "{controller=Post}/{action=Search}/{value?}"
                 );
 
-                routes.MapRoute(
-                    name: "blog",
-                    template: "Blog/{category}/{argument?}/{post?}",
-                    defaults: new {controller = "Blog", action = "Index"}
-                );
-                
-                app.UseRewriter(new RewriteOptions().Add(new RewriteUrl(argumentService, postService, slugService, ctx)));
+                //routes.MapRoute(
+                //    name: "blog",
+                //    template: "Blog/{category}/{argument?}/{post?}",
+                //    defaults: new {controller = "Blog", action = "Index"}
+                //);
             });
                 
         }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using TreA.Data;
 using TreA.Data.Entities;
+using TreA.Services.Category;
 using TreA.Services.Argument;
 using TreA.Services.Post;
 using TreA.Services.Slug;
@@ -15,44 +16,52 @@ namespace TreA.Presentation
 {
     public class RewriteUrl : Microsoft.AspNetCore.Rewrite.IRule
     {
+        private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
         private readonly IPostService _postService;
         private readonly ISlugService _slugService;
-        private readonly TreAContext _ctx;
         public int StatusCode { get; } = 302;
 
-        public RewriteUrl(IArgumentService argumentService, IPostService postService, ISlugService slugService, TreAContext ctx){
+        public RewriteUrl(ICategoryService categoryService,IArgumentService argumentService, IPostService postService, ISlugService slugService){
+            this._categoryService = categoryService;
             this._argumentService = argumentService;
             this._postService = postService;
             this._slugService = slugService;
-            this._ctx = ctx;
         }
 
         public void ApplyRule(RewriteContext context){
-            var id = 0;
+            var NewUrl = "";
             var request = context.HttpContext.Request;
+            var host = request.Host;
+            var slug = request.QueryString.Value.Replace("?param=", "/Blog/");
+                    
+            var entity = _slugService.GetByName(slug).entityname;
+            var id = _slugService.GetByName(slug).id;
 
-            if(request.Path.Value.Contains("List")){
-                var queryParameters = request.QueryString.Value.Replace("?","").Split("&");
-             
-                if(queryParameters[0].Contains("argumentId=")){
-                    id = Convert.ToInt32(queryParameters[0].Replace("argumentId=", ""));
-                }  
+            if(entity == "Category"){
+                var categoryId = _categoryService.GetBySlugId(id).id;
+                var arguments = _argumentService.GetByCategoryId(categoryId);
 
-                if(id > 0){
-                    //var slugId = _argumentService.GetById(id).slugId;
-                    //var slug = _slugService.GetById(slugId).name;
+                NewUrl = request.Scheme + "://" + host + "/Argument/List?categoryId=" + categoryId + "&PageSize=50&PageNumber=1";  
+
+            } else if(entity == "Argument"){
+                var argumentId = _argumentService.GetBySlugId(id).id;
+                var posts = _postService.GetByArgumentId(argumentId);
+                
+                if(posts.Count > 1){
+                    NewUrl = request.Scheme + "://" + host + "/Post/List?argumentId=" + argumentId + "&PageSize=50&PageNumber=1";
+                } else {
+                    NewUrl = request.Scheme + "://" + host + "/Post/GetByPostId/" + posts[0].id;  
                 }
-                
-                var host = request.Host;
-                
-                string newPath = request.Scheme + "://www." + request.Path.Value;
+            } else {
+                var postId = _postService.GetBySlugId(id).id;
+                NewUrl = request.Scheme + "://" + host + "/Post/GetByPostId/" + postId;  
+            }
 
-                var response = context.HttpContext.Response;
-                response.StatusCode = StatusCode;
-               // response.Headers[HeaderNames.Location] = newPath;
+            var response = context.HttpContext.Response;
+            response.StatusCode = StatusCode;
+            response.Headers[HeaderNames.Location] = NewUrl;
 
-            } 
         }
     }
 }

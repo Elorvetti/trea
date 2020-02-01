@@ -46,7 +46,8 @@ var podcastController = (function(){
         var param = '?' + $('form').serialize() + '&pageSize=15&pageNumber=1';
         event.data = new app.Data(false, null, param, '/backoffice/Podcast/Find', true, $('div.content > ul.list'));
 
-        return app.callback(event, createPodcastList)
+        app.callback(event, createPodcastList);
+        $('div#overlay').remove();
     };
 
     var removeFilter = function(){
@@ -59,7 +60,7 @@ var podcastController = (function(){
             $('form.display-filter').remove();
         }
 
-        return app.callback(event, createPodcastList)
+        app.callback(event, createPodcastList)
     };    
 
     /* GET ALL */
@@ -70,7 +71,6 @@ var podcastController = (function(){
     };
 
     var createPodcastList = function(obj){
-        $('div#overlay').remove();
         $('div.content > ul.list > li').remove();
         var element = '';
 
@@ -173,6 +173,7 @@ var podcastController = (function(){
         var element = '';
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         element = element + '<input type="text" name="name" class="name" id="name" autocomplete="off" value="'+ name +'" required>';
+        element = element + '<textarea type="text" name="description" class="name" id="description" autocomplete="off">' + obj.description + '</textarea>';
         element = element + '<audio class="border-radius-small"><source src="' + obj.path + '"></audio>';
         
         element = element + '<div class="text-right">';

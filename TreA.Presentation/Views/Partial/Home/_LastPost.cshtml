@@ -1,14 +1,14 @@
 @model HomeModel
 
-<div id="lastPost" class="padding-bottom-medium backround-color-grey">
-    <h2 class="text-center font-weight-500 margin-top-small margin-bottom-small">Ultimi post</h2>
+<div id="lastPost" class="padding-bottom-xsmall background-color-grey">
+    <h2 class="text-center font-weight-500 padding-top-small padding-bottom-small margin-remove">Ultimi post</h2>
     <div class="carousel-wrapper">
         <div class="owl-carousel owl-theme">
             @foreach (var post in Model.PostDisplays)
             {   
-                <div id="@post.id" class="item carousel__photo text-center" >
+                <div id="@post.id" class="item carousel__photo text-center">
                     <section class="card-head border-radius-small box-shadow" style="background-image: url('@post.coverImage')"></section>
-                    <section class="card-body border-radius-small padding-xsmall box-shadow margin-bottom-medium">
+                    <section class="card-body padding-xsmall box-shadow margin-bottom-medium background-color-white">
                         <h3 class="font-weight-600">@post.title</h3>
                         <p>@Html.Raw(post.testo)</p>
                     </section>

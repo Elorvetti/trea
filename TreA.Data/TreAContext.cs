@@ -92,6 +92,7 @@ namespace TreA.Data
             modelBuilder.Entity<Podcasts>(entity => {
                 entity.HasKey(p => p.id);
                 entity.Property(p => p.name);
+                entity.Property(p => p.description);
                 entity.Property(p => p.path);
             });
 

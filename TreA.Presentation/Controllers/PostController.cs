@@ -89,91 +89,13 @@ namespace TreA.Presentation.Controllers
                     id = post.id,
                     slug = _slugService.GetById(post.slugId).name,
                     coverImage = _photoService.GetById(post.PhotoId).path,
-                    title = post.title
+                    title = post.title,
+                    testo = Regex.Replace(post.testo, "<.*?>", string.Empty).Substring(0, 200)
+                    
                 });
             }
 
             return View(model);
-        }
-
-        public IActionResult GetBySlugId(string id){
-            var model = new PostModel();
-
-            //Convert slugId to Int and Find Post
-            var slugId = Convert.ToInt32(id);
-            var post = _postService.GetBySlugId(slugId);
-            
-            //BreadCrumb
-            model.categoryName = _categoryService.GetById(post.categoryId).name;
-            var argument = _argumentService.GetById(post.argumentId);
-            if(argument != null){
-                model.argumentName = argument.name;
-            }
-            model.breadcrumb = string.Concat(model.categoryName, " > ", model.argumentName, " > ", post.title);
-            
-            //SEO
-            ViewBag.description = Regex.Replace(post.testo, "<.*?>", string.Empty).Substring(0, 255);
-
-            //Post data
-            model.id = post.id;
-            model.coverImage = _photoService.GetById(post.PhotoId).path;
-            model.title = post.title;
-            model.subtitle = post.subtitle;
-            model.testo = post.testo;
-            model.albumId = post.albumId;
-            model.argumentId = post.argumentId;
-
-            ViewBag.title = post.title;
-            ViewBag.subtitle = post.subtitle;
-
-            //Related Post
-            var realtedPosts = _postService.GetByCategoryId(post.categoryId);
-            foreach(var relatedPost in realtedPosts){
-                model.realtedPost.Add(new ArgumentDisplay(){
-                    id = relatedPost.id,
-                    title = relatedPost.title,
-                    subtitle = relatedPost.subtitle,
-                    slug = _slugService.GetById(relatedPost.slugId).name
-                });
-            }
-
-            //Related argument
-            var relatedArguments = _argumentService.GetByCategoryId(post.categoryId);
-            foreach(var relatedArgument in relatedArguments){
-                model.realtedArgument.Add(new ArgumentDisplay(){
-                    id = relatedArgument.id,
-                    title = relatedArgument.name,
-                    nOfElement = _postService.GetByArgumentId(relatedArgument.id).Count,
-                    slug = _slugService.GetById(relatedArgument.slugId).name
-                });
-            }
-
-            //Album
-            var album = _albumService.GetById(post.albumId);
-            
-            if(album != null){
-                var imageIds = album.idImmagini.Split('|');
-                foreach(var imageId in imageIds){
-                    if(!string.IsNullOrEmpty(imageId)){
-                        model.album.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
-                    }
-                }
-
-                var videoIds = album.idVideo.Split('|');
-                foreach(var videoId in videoIds){
-                    if(!string.IsNullOrEmpty(videoId)){
-                        model.album.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
-                    }
-                }
-            }
-
-            var totalReview = _reviewService.GetByPostId(post.id).Count;
-            model.sectionName= "Reviews/";
-            model.reviewData.pageSize = 10;
-            model.reviewData.pageTotal =  Math.Ceiling((double)totalReview / 10);
-            model.reviewData.reviews = _reviewService.GetByPostId(post.id);
-            
-            return View("GetById", model);
         }
         
         public IActionResult GetByPostId(string id){
@@ -185,14 +107,20 @@ namespace TreA.Presentation.Controllers
             
             //BreadCrumb
             model.categoryName = _categoryService.GetById(post.categoryId).name;
-            model.argumentName = _argumentService.GetById(post.argumentId).name;
-            model.breadcrumb = string.Concat(model.categoryName, " > ", model.argumentName, " > ", post.title);
+            var argument = _argumentService.GetById(post.argumentId);
+            if(argument != null){
+                model.argumentName = argument.name;
+                model.breadcrumb = string.Concat(model.categoryName, " > ", model.argumentName, " > ", post.title);
+            } else {
+                model.breadcrumb = string.Concat(model.categoryName, " > ", post.title);
+            }
             
             //SEO
             ViewBag.description = Regex.Replace(post.testo, "<.*?>", string.Empty).Substring(0, 255);
 
             //Post data
             model.id = post.id;
+             model.coverImage = _photoService.GetById(post.PhotoId).path;
             model.title = post.title;
             model.subtitle = post.subtitle;
             model.testo = post.testo;
@@ -200,6 +128,7 @@ namespace TreA.Presentation.Controllers
             
             ViewBag.title = post.title;
             ViewBag.subtitle = post.subtitle;
+            
 
             //Related Post
             var realtedPosts = _postService.GetByCategoryId(post.categoryId);
@@ -221,7 +150,7 @@ namespace TreA.Presentation.Controllers
                     slug = _slugService.GetById(relatedArgument.slugId).name,
                 });
             }
-
+            
             return View("GetById", model);
         }
 
@@ -242,8 +171,8 @@ namespace TreA.Presentation.Controllers
             return model;
         }
 
-       [HttpPost]
-       [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddReview(int Id, IFormCollection data){
             var model = new Reviews();
             

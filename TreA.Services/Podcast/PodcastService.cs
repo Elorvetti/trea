@@ -40,6 +40,7 @@ namespace TreA.Services.Podcast
             var podcast = _ctx.podcast.Find(id);
             podcast.name = model.name;
             podcast.path = model.path;
+            podcast.description = model.description;
             _ctx.SaveChanges();
         }
 
