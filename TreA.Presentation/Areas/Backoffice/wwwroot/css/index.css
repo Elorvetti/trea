@@ -54,6 +54,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .background-color-pink-light{ background-color: #FCBDB2; }
 .background-color-blue-light{ background-color: #73AFBA; }
 .background-color-blue{ background-color: #1C2E3D; }
+.background-color-grey{ background-color: #ECECEC; }
 
 .text-center{ text-align: center; }
 .text-left{ text-align: left; }
@@ -239,7 +240,6 @@ li#review{ background-image: url('../img/comment.png'); }
     #logout{ right: 95px; }
 }
 
-section{ margin: 0 5px; }
 section h2{ position: relative; display: inline-block; margin: 10px 0; width: auto; }
 section > .btn{ position: absolute; display: inline-block; width: 40px; height: 40px; }
 section > span#add.btn{ margin: 10px 5px; right: 20px; z-index: 9998; }
@@ -602,7 +602,7 @@ form#container section.header:before {
     right: 0;
     bottom: 0;
     background: rgb(0,0,0);
-    background: linear-gradient(180deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 100%);
 }
 section.header ul.social{ position: absolute; display: inline-block; width: 35%; z-index: 9996;}
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
@@ -632,21 +632,24 @@ form#container span.menu.active > span:nth-child(3){transform: rotate(-45deg); t
 
 form#container section.header span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
 
-form#container div.about-us{ position: absolute; display: inline-block; left: 10px; bottom: 60px; height: 300px; width: 70%; background-color: rgba(0,0,0,.9); overflow: hidden; }
-form#container .note-editor.note-frame .note-editing-area{ height: 150px;}
-form#container div.about-us > h3{ margin: .3em 0; font-size: 22px; line-height: 33px; }
+form#container div.about-us{ position: absolute; display: inline-block; left: 20px; bottom: 175px; max-height: 250px; width: 70%; overflow: hidden; }
+form#container div.about-us > h2{ margin: .6em 0; }
 form#container div.about-us > p{ font-size: 16px; line-height: 24px; }
+form#container .note-editor.note-frame .note-editing-area{ height: 150px;}
 
 form#container span.search-bar{ 
     position: absolute; 
-    left: 10px; 
-    bottom: 10px; 
+    left: 20px; 
+    bottom: 110px; 
     line-height: 35px; 
     width: 70%; 
     background-image: url('../img/search.png'); 
     background-size: 26px;
     background-position: 98% center;
     background-repeat: no-repeat;
+    border: 1px solid transparent;
+    cursor: text;
+    font-size: 16px;
 }
 
 /* SIDEBAR FE */
@@ -667,24 +670,45 @@ form#container div.newsletter > section input[type="submit"]{ width: 140px; line
 form#container div.newsletter span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
 
 /* LAST POST */
-div#lastPost{ width: 100%; }
+div#lastPost, div#lastPost > h2{ width: 100%; }
+
+div#lastPost div.item.carousel__photo{ max-width: 335px; margin: 0 auto; }
 .carousel-wrapper{ width: 90%; margin: 0 auto; }
-.carousel__photo{ background-size: cover; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
-.carousel__photo > h3{ display: inline-block; margin: 0; width: 100%; height: 100%; line-height: 250px; opacity: 0; z-index: 9996;}
-.carousel__photo:hover > h3{ opacity: 1;  background-color:rgba(115, 175, 186, .8); }
+section.card-head{ position: relative; display: inline-block; margin: 0; width: 100%; height: 200px; background-size: cover; background-position: center center; background-repeat: no-repeat; z-index: 9994; }
+section.card-body{ position: relative; display: inline-block; width: 95%; min-height: 200px; max-height: 280px; overflow: hidden; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+section.card-body > h3{ line-height: .3em; }
+section.card-body > p{ font-size: 14px; line-height: 21px; }
+section.card-body + span.btn{ position: absolute; display: inline-block; left: 35px; right: 35px; bottom: 25px; line-height: 50px; }
+
 .owl-dots{ text-align: center; }
 .owl-dots > .owl-dot{ margin: 5px 3px; width: 15px; height: 15px; border-radius: 50%; background-color: #fff!important; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
-.owl-dots > .owl-dot.active{ background-color: #73AFBA!important; }
+.owl-dots > .owl-dot.active{ background-color: #C3C9C7!important; border: 1px solid transparent; }
 
 /* INSTAGRAM */
-div#instafeed  .carousel__photo{ height: 250px; }
-section.interactions { position: relative; display: inline-block; margin: 0; width: 100%; height: 100%; opacity: 0; }
-section.interactions > h3{ line-height: 1.3em; }
-section.interactions > span{ position: relative; display: inline-block; padding-left: 40px; width: 40px; height: 40px; line-height: 40px; background-position: center center; background-size: 24px; background-repeat: no-repeat; }
-section.interactions span.likes{ background-image: url('../img/heart.png'); }
-section.interactions span.comments{ background-image: url('../img/comment.png'); }
-.carousel__photo:hover > section.interactions{ opacity: 1; background-color: rgba(115, 175, 186, .8); }
+div.instagram > h2{ background-image: url('../img/social/instagram-black.png'); background-size: 48px; background-position: 15%; background-repeat: no-repeat; width: 100%; }
+div.instagram div.item.carousel__photo{ border-top-left-radius: 5px; border-top-right-radius: 5px; }
+div.instagram section.image{ position: relative; display: inline-block; width: 100%; height: 250px; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+div.instagram section.user-data{ position: relative; display: inline-block; width: 100%; padding: 15px 10px; }
+div.instagram section.user-data > span{ position: relative; display: inline-block; max-width: 200px; }
+div.instagram section.user-data > span.avatar{  width: 50px; height: 50px; background-size: cover; background-position: center center; background-repeat: no-repeat; }
+div.instagram section.user-data > span + span{ padding-left: 5px; }
+div.instagram a.link{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; bottom: 0; }
 
+/* YOUTUBE VIDEO AND PODCAST */
+div.video-podcast{ position: relative; display: inline-block; width: 100%; }
+
+/*PODCAST*/
+section#podcast h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/podcast-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
+section#podcast h2 > a.goto{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; bottom: 0; } 
+div.item.carousel__photo > h3{ margin: .3em 0; }
+div.item.carousel__photo > p{ font-size: 16px; line-height: 24px; }
+div.item.carousel__photo > span.btn-list{ cursor: pointer; }
+div.item.carousel__photo > audio{ max-width: 100%; } 
+section#podcast .owl-stage-outer{ margin-bottom: 10px; }
+section#podcast .owl-nav{ display: none; }
+
+/* YOUTUBE */
+section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
 
 /* FOOTER */
 form#container section.footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
@@ -699,15 +723,21 @@ form#container[device="mobile"] section.header ul.category{ display: none;}
 
 form#container[device="tablet"] section.header ul.category{ display: none;}
 form#container[device="tablet"] div.newsletter > section{ top: 30px; left: 30px; right: unset; }
-form#container[device="tablet"] div.about-us{ width: 40%; }
-form#container[device="tablet"] span.search-bar{ width: 40%; }
+form#container[device="tablet"] div.about-us{ max-width: 50%; left: 50px; bottom: 180px;  }
+form#container[device="tablet"] span.search-bar{ max-width: 50%; left: 50px; bottom: 110px; }
+form#container[device="tablet"] section.card-body + span.btn{ left: 60px; right: 60px; }
 
 form#container[device="desktop"] span.menu{display: none; }
 form#container[device="desktop"] section#sidebarFE{ display: none; }
 form#container[device="desktop"] div.newsletter > section{ top: 30%; left: 33%; right: unset; }
-form#container[device="desktop"] div.about-us{ width: 40%; }
-form#container[device="desktop"] span.search-bar{ width: 40%; }
+form#container[device="desktop"] div.about-us{ max-width: 30%; left: 50px; bottom: 200px;}
+form#container[device="desktop"] span.search-bar{ max-width: 30%; left: 50px; bottom: 140px; }
 form#container[device="desktop"] h1{ width: 65%; }
+form#container[device="desktop"] section.main div.instagram{ width: 50%; float: left; }
+form#container[device="desktop"] section.main div.newsletter{ width: 50%; float: right; }
+form#container[device="desktop"] section#podcast{ width: 50%; float: left; }
+form#container[device="desktop"] section#youtube{ width: 50%; float: right; }
+
 
 @media(min-width: 768px){
     ul#home > li.tablet{ display: inline-block; }

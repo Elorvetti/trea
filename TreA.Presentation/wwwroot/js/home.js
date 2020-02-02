@@ -92,7 +92,7 @@ var homeController = (function(){
                     .then(function(insta){
                         element = element + '<div class="carousel-wrapper">';
                         element = element + '<div class="owl-carousel owl-theme">';
-                        console.log(insta)
+
                         var images = insta.data;
                         for(var i in images){
                             element = element + '<div id="' + images[i].id + '" class="item carousel__photo box-shadow margin-xsmall">';

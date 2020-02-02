@@ -141,16 +141,42 @@ namespace TreA.Presentation.Controllers
                 });
             }
 
+            //Related argument
             var relatedArguments = _argumentService.GetByCategoryId(post.categoryId);
             foreach(var relatedArgument in relatedArguments){
                 model.realtedArgument.Add(new ArgumentDisplay(){
                     id = relatedArgument.id,
                     title = relatedArgument.name,
                     nOfElement = _postService.GetByArgumentId(relatedArgument.id).Count,
-                    slug = _slugService.GetById(relatedArgument.slugId).name,
+                    slug = _slugService.GetById(relatedArgument.slugId).name
                 });
             }
+
+            //Album
+            var album = _albumService.GetById(post.albumId);
             
+            if(album != null){
+                var imageIds = album.idImmagini.Split('|');
+                foreach(var imageId in imageIds){
+                    if(!string.IsNullOrEmpty(imageId)){
+                        model.album.Add(_photoService.GetById(Convert.ToInt32(imageId)).path);
+                    }
+                }
+
+                var videoIds = album.idVideo.Split('|');
+                foreach(var videoId in videoIds){
+                    if(!string.IsNullOrEmpty(videoId)){
+                        model.album.Add(_videoService.GetById(Convert.ToInt32(videoId)).path);
+                    }
+                }
+            }
+        
+            var totalReview = _reviewService.GetByPostId(post.id).Count;
+            model.sectionName= "Reviews/";
+            model.reviewData.pageSize = 10;
+            model.reviewData.pageTotal =  Math.Ceiling((double)totalReview / 10);
+            model.reviewData.reviews = _reviewService.GetByPostId(post.id);
+         
             return View("GetById", model);
         }
 

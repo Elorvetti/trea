@@ -341,7 +341,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                     slug = _slugService.GetById(post.slugId).name,
                     coverImage = _photoService.GetById(post.PhotoId).path,
                     title = post.title,
-                    testo = post.testo
+                    testo = Regex.Replace(post.testo, "<.*?>", string.Empty).Substring(0, 200)
                 });
            }
            

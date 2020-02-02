@@ -135,11 +135,14 @@ var appController = (function(){
                             element = element + '<ul class="text-center">'
                             
                             for(var i in data){
-                                element = element + '<li>' 
-                                element = element + '<p class="font-weight-600 text-uppercase">' + data[i].title + '</p>'
-                                element = element + '<p>' +  data[i].testo + '</p>'
-                                element = element + '<a href="' +  data[i].slug  + '"></a>'
-                                element = element + '</li>'
+                                element = element + '<li>' ;
+                                element = element + '<span class="border-radius-small image" style="background-image: url(\'' + data[i].coverImage + '\')"></span>';
+                                element = element + '<span class="padding-left-xsmall text-container">'
+                                element = element + '<p class="font-weight-600 text-uppercase">' + data[i].title + '</p>';
+                                element = element + '<p>' +  data[i].testo + '</p>';
+                                element = element + '</span>'
+                                element = element + '<a href="' +  data[i].slug  + '"></a>';
+                                element = element + '</li>';
                             }
                             
                             element = element + '</ul>';

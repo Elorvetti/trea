@@ -48,7 +48,7 @@ var hpController = (function(){
                         var headerImageurl = 'url('+ data.headerBackgroundImage +')';
                         var newsletterImageurl = 'url('+ data.newsletterBackgroundImage +')';
 
-                        $('div.about-us > h3').text(data.headerTitolo);
+                        $('div.about-us > h2').text(data.headerTitolo);
                         $('input#titleHeader').val(data.headerTitolo);
                         $('div.about-us > p').html(data.headerTesto);
                         $('input#testoHeader').val(data.headerTesto);
@@ -171,11 +171,16 @@ var hpController = (function(){
                 res.json()
                     .then(function(data){
                         element = element + '<div class="carousel-wrapper">';
-                        element = element + '<div class="owl-carousel owl-theme">';
-                        
+                        element = element + '<div class="owl-carousel post owl-theme">';
+
                         for(var i in data){
-                            element = element + '<div id="' + data[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + data[i].coverImage + '\')">';
-                            element = element + '<h3 class="text-center color-white border-radius-small">' + data[i].title + '</h3>';
+                            element = element + '<div id="' + data[i].id + '" class="item carousel__photo text-center">';
+                            element = element + '<section class="card-head border-radius-small box-shadow" style="background-image: url(\'' + data[i].coverImage + '\')"></section>'
+                            element = element + '<section class="card-body padding-xsmall box-shadow margin-bottom-medium background-color-white">'
+                            element = element + '<h3 class="font-weight-600">' + data[i].title + '</h3>';
+                            element = element + '<p>' + data[i].testo + '</p>'
+                            element = element + '</section>'
+                            element = element + '<span class="text-center background-color-blue color-white border-radius-small text-uppercase btn readmore"> Leggi di più </span>'
                             element = element + '</div>';
                         }
                         element = element + '</div>';
@@ -207,16 +212,18 @@ var hpController = (function(){
                 res.json()
                     .then(function(insta){
                         element = element + '<div class="carousel-wrapper">';
-                        element = element + '<div class="owl-carousel owl-theme">';
+                        element = element + '<div class="owl-carousel insta owl-theme">';
 
                         var images = insta.data;
-
                         for(var i in images){
-                            element = element + '<div id="' + images[i].id + '" class="item carousel__photo border-radius-small box-shadow" style="background-image: url(\'' + images[i].images.standard_resolution.url + '\')">';
-                            element = element + '<section class="interactions border-radius-small text-center">'
-                            element = element + '<h3 class="text-center color-white border-radius-small padding-top-large">' + images[i].caption.text + '</h3>';
-                            element = element + '<span class="text-center margin-right-small color-white border-radius-small likes">' + images[i].likes.count + '</span>';
-                            element = element + '<span class="text-center color-white border-radius-small comments">' + images[i].comments.count + '</span>';
+                            element = element + '<div id="' + images[i].id + '" class="item carousel__photo box-shadow margin-xsmall">';
+                            element = element + '<section class="image text-center" style="background-image: url(\'' + images[i].images.standard_resolution.url + '\')"></section>'
+                            element = element + '<section class="user-data">'
+                            element = element + '<span class="btn-circle avatar" style="background-image: url(\'' + images[i].user.profile_picture + '\')"></span>'
+                            element = element + '<span class="user-name">'
+                            element = element + '<p class="color-black">' + images[i].user.full_name + '</p>'
+                            element = element + '<p class="color-black">@' + images[i].user.username + '</p>'
+                            element = element + '</span>'
                             element = element + '</section>'
                             element = element + '</div>';
                         }
@@ -234,82 +241,68 @@ var hpController = (function(){
 
     }
 
-   var youtube = function(elem){
-   //    var element = '';
-   //    var data = {
-   //        part: 'snipped',
-   //        chanelId: 'UCAwsqjnD-64ZpWJ-umXfTaA'
-   //    }
-
-   //    var url = 'https://www.googleapis.com/youtube/v3/playlists?part='+ data.part +'&channelId=' + data.chanelId;
-   //    fetch(url)
-   //        .then(function(res){
-   //            res.json()
-   //                .then(function(data){
-   //                    console.log(data)    
-   //            })
-   //        })
-   }
-
     /* CAROUSEL INIT */
     var carouselInit = function(){
         if($('form#container').attr('device') === 'mobile'){
-            $(".owl-carousel").owlCarousel('destroy'); 
-            $(".owl-carousel").owlCarousel({
-                loop: true,
-                margin: 10,
+            $(".owl-carousel.post").owlCarousel('destroy'); 
+            $(".owl-carousel.post").owlCarousel({
+                loop: false,
+                margin: 20,
                 nav: false,
                 dots: true,
-                items: 2,
+                items: 1,
             });
         } else if($('form#container').attr('device') === 'tablet'){
-            $(".owl-carousel").owlCarousel('destroy'); 
-            $(".owl-carousel").owlCarousel({
-                loop: true,
-                margin: 10,
+            $(".owl-carousel.post").owlCarousel('destroy'); 
+            $(".owl-carousel.post").owlCarousel({
+                loop: false,
+                margin: 0,
                 nav: false,
                 dots: true,
                 dotsEach: 2, 
                 items: 2,
             });
         } else {
-            $(".owl-carousel").owlCarousel('destroy'); 
-            $(".owl-carousel").owlCarousel({
+            $(".owl-carousel.post").owlCarousel('destroy'); 
+            $(".owl-carousel.post").owlCarousel({
                 loop: false,
                 margin: 20,
                 nav: false,
-                items: 4,
+                items: 4
             });
         }
     }
 
     var carouselInsta = function(){
         if($('form#container').attr('device') === 'mobile'){
-            $(".owl-carousel").owlCarousel('destroy'); 
-            $(".owl-carousel").owlCarousel({
-                loop: true,
+            $(".owl-carousel.insta").owlCarousel('destroy'); 
+            $(".owl-carousel.insta").owlCarousel({
+                loop: false,
                 margin: 10,
                 nav: false,
                 dots: true,
-                items: 2,
+                dotsEach: 1,
+                items: 1
             });
         } else if($('form#container').attr('device') === 'tablet'){
-            $(".owl-carousel").owlCarousel('destroy'); 
-            $(".owl-carousel").owlCarousel({
-                loop: true,
-                margin: 10,
-                nav: false,
-                dots: true,
-                dotsEach: 2, 
-                items: 2,
-            });
-        } else {
-            $(".owl-carousel").owlCarousel('destroy'); 
-            $(".owl-carousel").owlCarousel({
+            $(".owl-carousel.insta").owlCarousel('destroy'); 
+            $(".owl-carousel.insta").owlCarousel({
                 loop: false,
                 margin: 20,
                 nav: false,
-                items: 4,
+                dots: true,
+                items: 2,
+                dotsEach: 2,
+            });
+        } else {
+            $(".owl-carousel.insta").owlCarousel('destroy'); 
+            $(".owl-carousel.insta").owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: false,
+                dots: true,
+                items: 2,
+                dotsEach: 2,
             });
         }
     }
@@ -346,7 +339,6 @@ var hpController = (function(){
         getSetting: getSetting,
         getLastPost: getLastPost,
         instagram: instagram,
-        youtube: youtube,
         summernoteInit: summernoteInit
     }
 
@@ -391,9 +383,6 @@ var hp = (function(hpUI, hpCtrl){
         //Add instagram photos
         hpCtrl.instagram(DOMElement.instagramContainer);
 
-        //Add video from youtube playlists
-        hpCtrl.youtube();
-        
         $(document).on('click', DOMElement.btnDevice, hpCtrl.changeDeviceView);
         $(document).on('click', DOMElement.btnHamburger, hpCtrl.toggleMenu);
         $(document).on('click', DOMElement.btnSubMenu, hpCtrl.toggleSubList);
