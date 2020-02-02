@@ -46,19 +46,20 @@ namespace TreA.Presentation.Controllers
             ViewBag.description = "Tutti i Post disponibili";
 
             var excludeRecords = (pageSize * pageNumber) - pageSize;
-            var total =_postService.GetAll().Count;
+            var total =_postService.GetAllActive().Count;
 
             model.sectionName = "Lista Post";
             model.pageSize = pageSize;
             model.pageTotal =  Math.Ceiling((double)total / pageSize);
-            model.posts = _postService.GetAll();
+            model.posts = _postService.GetAllActive(excludeRecords, pageSize);
 
             foreach(var post in model.posts){
                 model.postsDisplay.Add(new PostDisplayModel(){
                     id = post.id,
                     slug = _slugService.GetById(post.slugId).name,
                     coverImage = _photoService.GetById(post.PhotoId).path,
-                    title = post.title
+                    title = post.title,
+                    testo = Regex.Replace(post.testo, "<.*?>", string.Empty).Substring(0, 200)
                 });
             }
 
@@ -120,7 +121,8 @@ namespace TreA.Presentation.Controllers
 
             //Post data
             model.id = post.id;
-             model.coverImage = _photoService.GetById(post.PhotoId).path;
+            model.argumentId = post.argumentId;
+            model.coverImage = _photoService.GetById(post.PhotoId).path;
             model.title = post.title;
             model.subtitle = post.subtitle;
             model.testo = post.testo;

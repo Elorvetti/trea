@@ -5,6 +5,8 @@ var postController = (function(){
         var coverImagePath = $('input#coverImage').val();
         var backgroundImage = 'url("' + coverImagePath + '")';
         $('header').css('background-image', backgroundImage);
+        $('.slide-in-top').addClass('active');
+        $('.slide-in-left').addClass('active');
     }
 
     //Display Related Post / Argument
@@ -22,7 +24,7 @@ var postController = (function(){
 
     var relatedArgument = function(){
         var activeArgument = $('div#post-display').attr('argument');
-        
+        console.log($('div#post-display').attr('argument'))
         $('div.related-argument > ul > li').each(function(){
             $(this).removeClass('active');
 

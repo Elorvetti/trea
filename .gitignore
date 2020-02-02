@@ -23,6 +23,8 @@ TreA.DOC/*
 
 #Conn String
 TreA.Presentation/appsettings.json
+TreA.Presentation/Properties/*
+Release/*
 
 #file bin
 TreA.Common/obj/*
@@ -32,6 +34,5 @@ TreA.Data/bin/*
 TreA.Presentation/obj/*
 TreA.Presentation/bin/*
 TreA.Presentation/App_Data/*
-TreA.Services/bin/*
-TreA.Services/obj/*
-
+*.pdb
+*.dll

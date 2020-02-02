@@ -1,14 +1,17 @@
 @model ArgumentModel
 
-<h3 class="text-center text-uppercase">@Model.sectionName</h3>
+<h2 class="text-center font-weight-500 text-uppercase padding-top-small padding-bottom-small margin-remove">@Model.sectionName</h2>
 <div id="list" class="padding-bottom-small margin-bottom-medium">
 
     @foreach (var argument in Model.argumentsDisplay)
     {
-        <div id="@argument.id" class="item carousel__photo border-radius-small box-shadow" style="background-image: url('@argument.coverImage')" data-href="@argument.slug">
-            <h3 class="text-center color-white border-radius-small"> 
-                <a class="text-center color-white border-radius-small" href="@argument.slug"> @argument.title  </a>
-            </h3>
+        <div id="@argument.id" class="item carousel__photo text-center argument" data-href="@argument.slug">
+            <section class="card-head border-radius-small box-shadow" style="background-image: url('@argument.coverImage')"></section>
+            <section class="card-body padding-xsmall box-shadow margin-bottom-medium background-color-white">
+                <h3 class="font-weight-600 text-center text-uppercase">@argument.title</h3>
+                <p>@Html.Raw(argument.descrizione)</p>
+            </section>
+            <a class="text-center background-color-blue color-white border-radius-small text-uppercase btn readmore" href="@argument.slug"> Leggi di più </a>
         </div>
     }
 </div>

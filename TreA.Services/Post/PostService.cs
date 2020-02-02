@@ -32,7 +32,14 @@ namespace TreA.Services.Post
         public virtual IList<Posts> GetAll(int excludeRecord, int pageSize){
             return _ctx.post.OrderBy(p => p.categoryId).ThenBy(p => p.argumentId).Skip(excludeRecord).Take(pageSize).ToList();
         }
-        
+        public virtual IList<Posts> GetAllActive(){
+            return _ctx.post.Where(p => p.pubblico == true).OrderBy(p => p.categoryId).ThenBy(p => p.argumentId).ToList();
+        }
+
+        public virtual IList<Posts> GetAllActive(int excludeRecord, int pageSize){
+            return _ctx.post.Where(p => p.pubblico == true).OrderBy(p => p.categoryId).ThenBy(p => p.argumentId).Skip(excludeRecord).Take(pageSize).ToList();
+        }
+
         public virtual IList<Posts> GetLast(int nPost){
             return _ctx.post.Where(p => p.pubblico == true).OrderByDescending(p => p.id).Take(nPost).ToList();
         }

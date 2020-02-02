@@ -14,6 +14,8 @@ namespace TreA.Services.Post
         void Insert(Posts model);
         IList<Posts> GetAll();
         IList<Posts> GetAll(int excludeRecord, int pageSize);
+        IList<Posts> GetAllActive();
+        IList<Posts> GetAllActive(int excludeRecord, int pageSize);
         IList<Posts> GetLast(int nPost);
         Posts GetById(int id);
         Posts GetBySlugId(int slugId);
