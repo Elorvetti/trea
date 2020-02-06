@@ -15,6 +15,7 @@ using TreA.Presentation.Areas.Backoffice.Models;
 using TreA.Services.Common;
 using TreA.Services.Category;
 using TreA.Services.Argument;
+using TreA.Services.Post;
 using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
@@ -25,12 +26,14 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICommonService _commonService;
         private readonly IArgumentService _argumentService;
         private readonly ICategoryService _categoryService;
+        private readonly IPostService _postService;
         private readonly ISlugService _slugService;
 
-        public ArgumentController(ICommonService commonService, IArgumentService argumentService, ICategoryService categoryService, ISlugService slugService){
+        public ArgumentController(ICommonService commonService, IArgumentService argumentService, ICategoryService categoryService, IPostService postService, ISlugService slugService){
             this._commonService = commonService;
             this._argumentService = argumentService;
             this._categoryService = categoryService;
+            this._postService = postService;
             this._slugService = slugService;
         }
 
@@ -50,6 +53,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             //Get folder name
             model.name = data["name"];   
             model.description = data["description"];
+            model.livello = Convert.ToInt32(data["livello"]);
+            model.idPadre = Convert.ToInt32(data["idPadre"]);
             model.categoryId = categoryId;
             model.coverImageId = Convert.ToInt32(data["coverImage"]);
             model.slugId = InsertSlug(model, categoryId);
@@ -70,12 +75,23 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.pageSize = pageSize;
             model.pageTotal =  Math.Ceiling((double)total / pageSize);
             model.arguments = _argumentService.GetAll(excludeRecords, pageSize);
+            model.posts = _postService.GetAllByCategoryId(model.categoryId);
 
             if(model.pageTotal > 1){
                 model.displayPagination = true;
             } else {
                 model.displayPagination = false;
             }
+
+            return model;
+        }
+
+        [HttpPost]
+        public ArgumentModel GetByCategoryId(int id, int level = 1, int idPadre = 0){
+            var model = new ArgumentModel();
+
+            model.arguments = _argumentService.GetByCategoryId(id, level, idPadre);
+            model.posts = _postService.GetByArgumentId(idPadre);
 
             return model;
         }
@@ -88,6 +104,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
             model.id = argument.id;
             model.categoryId = argument.categoryId;
+            model.livello = argument.livello;
             model.category = _categoryService.GetById(argument.categoryId);
             model.categories = _categoryService.GetAll();
             model.name = argument.name;
@@ -96,7 +113,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
             return model;
         }
-
 
         [HttpPost]
         public void Update(int id, IFormCollection data){
@@ -152,7 +168,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
             return _slugService.GetByName(name).id;
         }
-
         public void UpdateSlug(ArgumentModel argument){
             var postSlug = string.Concat(_commonService.cleanStringPath(argument.name), '/');
             var categorySlug = _slugService.GetById(argument.slugId).name;

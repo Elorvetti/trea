@@ -19,6 +19,7 @@ namespace TreA.Services.Post
         IList<Posts> GetLast(int nPost);
         Posts GetById(int id);
         Posts GetBySlugId(int slugId);
+        IList<Posts> GetAllByCategoryId(int categoryId);
         IList<Posts> GetByCategoryId(int categoryId);
         IList<Posts> GetByArgumentId(int argumentId);
         IList<Posts> Search(string value);

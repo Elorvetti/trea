@@ -12,7 +12,9 @@ namespace TreA.Presentation.Areas.Backoffice.Models
         public double pageTotal { get; set; }
         public bool displayPagination{ get; set; }
         public string sectionName { get; set; }
-        public IList<Categories> categories{ get; set; }
+        public IList<Categories> categories{ get; set; } = new List<Categories>();
+        public IList<Arguments> arguments { get; set; } = new List<Arguments>();
+        public IList<Posts> posts { get; set; } = new List<Posts>();
         public IList<ArgumentChild> Children { get; set; } = new List<ArgumentChild>();
     }
 

@@ -55,6 +55,8 @@ namespace TreA.Data
                 entity.Property(a => a.slugId);
                 entity.Property(a => a.description);
                 entity.Property(c => c.coverImageId);
+                entity.Property(c => c.livello);
+                entity.Property(c => c.idPadre);
                 entity.HasOne(c => c.category);
             });
 

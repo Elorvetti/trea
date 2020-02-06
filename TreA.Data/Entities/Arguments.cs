@@ -11,6 +11,8 @@ namespace TreA.Data.Entities
         public int slugId { get; set; }
         public string description { get; set; }
         public int coverImageId { get; set; }
+        public int livello { get; set; }
+        public int idPadre{ get; set; }
         public int categoryId { get; set; }
         public Categories category{ get; set; }
 

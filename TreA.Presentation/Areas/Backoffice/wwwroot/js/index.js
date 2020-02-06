@@ -193,7 +193,7 @@ var appUI = (function(){
         var event = {};
         var section = DOMSidebar.section;
         var mainId = $(DOMElement.Main.list).attr('id');
-        
+    
         //if section have same id of area add class active else remove it
         for(var menu in section){
             var menuId = $(section[menu]).attr('id');
@@ -223,6 +223,7 @@ var appUI = (function(){
         showClass: 'active',
         section: {
             user: 'li#user',
+            siteTree: 'li#siteTree',
             category: 'li#category',
             photo: 'li#photo',
             video: 'li#video',

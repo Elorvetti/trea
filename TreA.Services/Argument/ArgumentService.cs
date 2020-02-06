@@ -32,6 +32,7 @@ namespace TreA.Services.Argument
         public virtual IList<Arguments> GetAll(int excludeRecord, int pageSize){
             return _ctx.argument.Skip(excludeRecord).Take(pageSize).ToList();
         }
+       
         public virtual Arguments GetById(int id){
             return _ctx.argument.FirstOrDefault(a => a.id == id);
         }
@@ -39,9 +40,12 @@ namespace TreA.Services.Argument
         public virtual Arguments GetBySlugId(int slugId){
             return _ctx.argument.First(c => c.slugId == slugId);
         }
-
         public virtual IList<Arguments> GetByCategoryId(int categoryId){
             return _ctx.argument.Where(a => a.categoryId == categoryId).ToList();
+        }
+
+        public virtual IList<Arguments> GetByCategoryId(int categoryId, int livello, int idPadre){
+            return _ctx.argument.Where(a => a.categoryId == categoryId && a.livello == livello && a.idPadre == idPadre).ToList();
         }
 
         public void Update(int id, Arguments model){

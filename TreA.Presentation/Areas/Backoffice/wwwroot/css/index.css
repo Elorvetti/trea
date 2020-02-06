@@ -110,6 +110,10 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .padding-bottom-large{ padding-bottom: 70px; }
 
 .padding-remove{ padding: 0px; }
+.padding-top-remove{ padding-top: 0; }
+.padding-left-remove{ padding-left: 0; }
+.padding-right-remove{ padding-right: 0; }
+.padding-bottom-remove{ padding-bottom: 0; }
 
 .box-shadow{
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
@@ -124,13 +128,16 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .btn:hover{ opacity: .8; border-bottom: 1px solid transparent;}
 
 .btn.close{ background-image: url('../img/close.png'); float: unset; opacity: 1; }
-.btn.add, .btn.add-child{ background-image: url('../img/plus.png'); }
+.btn.add{ background-image: url('../img/plus.png'); }
 .btn.filter{ background-image: url('../img/filter.png'); }
 .btn.remove{ background-image: url('../img/delete.png'); }
+.btn.display-child{ background-image: url('../img/chevron-right.png'); }
 .btn.edit{ background-image: url('../img/edit.png'); }
 .btn.preview{ background-image: url('../img/search.png'); }
 .btn.crop{ background-image: url('../img/crop.png'); }
 .btn.info{ background-image: url('../img/info-blue.png'); }
+.btn.folder-add{ background-image: url('../img/folder-add.png'); }
+.btn.file-add{ background-image: url('../img/file-add.png'); }
 .btn.logout{ background-image: url('../img/logout.png'); background-position: center center; background-repeat: no-repeat; }
 
 .btn-rounded{ border-radius: 40px; }
@@ -190,10 +197,10 @@ header > span.menu.active > span:nth-child(1){transform: rotate(45deg) translate
 header > span.menu.active > span:nth-child(2){ display: none; }
 header > span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out;}
 
-
 div#sidebar{ position: absolute; display: inline-block; top: 50px; left: 100%; }
 div#sidebar.active{ position: fixed; top: 0; transform: translateX(0px)!important; left: 0; right: 0; bottom: 0; z-index: 9999; overflow: scroll;}
 div.content{ position: relative; display: inline-block; width: 100%; height: 100%; }
+
 span.user-image{
     position: relative;
     display: inline-block;
@@ -216,6 +223,7 @@ section.manage ul li.active:hover{ border: 0; }
 section.manage ul li:hover{ border: 1px solid #fff; }
 
 li#user{ background-image: url('../img/account.png');}
+li#siteTree{ background-image: url('../img/site-tree.png');}
 li#category{ background-image: url('../img/category.png');}
 li#photo{ background-image: url('../img/image.png');}
 li#video{ background-image: url('../img/video.png');}
@@ -367,16 +375,19 @@ div#select > section{ min-height: 450px; overflow: hidden; }
 
 ul.list li{ 
     margin: 0 auto 15px;
-    padding-left: 30px; 
+    padding-left: 35px; 
     height: 40px; 
     width: 90%;
     border-bottom: 1px solid #73AFBA; 
     background-size: 25px; 
     background-position: 5px center; 
     background-repeat: no-repeat; 
+    transition: height 2s;
 }
 ul#user li{ background-image: url('../img/account-blue.png'); }
-ul#category li { background-image: url('../img/category-blue.png'); }
+ul li.category.list { background-image: url('../img/folder.png'); }
+ul li.argument.list { background-image: url('../img/folder.png'); }
+ul li.post.list { background-image: url('../img/file.png'); }
 ul#argument li { background-image: url('../img/arguments-blue.png'); }
 ul#post li { background-image: url('../img/post-blue.png'); }
 ul.list li:hover{ border-bottom: 2px solid #73AFBA; }
@@ -389,6 +400,26 @@ ul.list li span{ float: right; margin-right: 10px; width: 35px  ; height: 35px; 
 ul.list li p[public]{ padding-left: 30px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
 ul.list li p[public="false"] { background-image: url('../img/post-not-public.png'); }
 ul.list li p[public="true"] { background-image: url('../img/post-public.png'); }
+
+ul.list li.display-child{ 
+    border-radius: 5px;
+    height: auto; 
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    background-position: 5px 7px;
+    border-bottom: 1px solid transparent;
+}
+ul.list li.display-child:hover{ border-bottom: 1px solid transparent; }
+ul.list li.display-child > ul > li.add-child{ height: 60px; border-bottom: 1px solid transparent; }
+ul.list li.display-child > ul > li.add-child:hover{ border-bottom: 1px solid transparent; }
+
+/*div.content > ul.list.display-child{ display: inline-block; width: 30%; }
+div.content > ul > li.children{ min-height: 250px; overflow: hidden; overflow-y: scroll; }
+
+div.content > ul > li.add-child > span.close-child{ float: left; background-image: url('../img/arrow-left.png'); }*/
+
+
 
 @media(min-width: 1024px){
     ul.list li p{ max-width: 400px; }
@@ -828,7 +859,7 @@ div#preview div.related-container li.gallery > video{ max-width: 100%; max-heigh
 
 @media(min-width: 768px){
     div#preview h4.breadcrumb, div#post-display{ margin-left: 50px; width: 60%;  }
-    div#preview div#post-display > p > img{ position: relative; display: inline-block; width: 100%!important; height: auto!important; }
+    div#preview div#post-display > p > img{ position: relative; display: inline-block; height: auto!important; }
     div#preview div.related-container{ top: -130px; width: 29%;  }
     div#preview div.related-post, div.related-argument{ display: inline-block;  }
 }
@@ -847,4 +878,23 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
 @media(min-width: 1440px){
     div#preview .owl-nav > button.owl-prev{ left: 20px; }
     div#preview .owl-nav > button.owl-next{ right: 20px; }
+}
+
+
+/* SITE TREE */
+@media(min-width: 1024px){
+    div#addSiteTree{ display: block; margin: 20px auto 0; width: 95%; height: 95%; overflow: hidden; }
+    div#addSiteTree > ul#siteTree{ display: inline-block; width: 30%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
+    div#addSiteTree > ul#child{ display: inline-block; width: 70%; height: 99%; overflow-y: scroll;}
+    
+    div#addSiteTree  ul  li{ margin-bottom: 5px; height: auto; min-height: 45px; border-bottom: 1px solid transparent; border-radius: 5px; cursor: pointer; background-position: 0 9px; }
+    div#addSiteTree  ul  li:hover, div#addSiteTree  ul  li.active{ box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); border: 1px solid #1C2E3D; }
+    div#addSiteTree  ul  li  p{ line-height: 46px; }
+    div#addSiteTree  ul  li  span{ margin-top: 4px; }
+    
+    div#addSiteTree  ul#child  li{ position: relative; margin-left: 0; width: 100%; }
+    div#addSiteTree  ul#child  li > span.fake-btn{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; height: 45px; width: 60%; z-index: 9990; }
+    
+
+
 }
