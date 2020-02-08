@@ -20,6 +20,7 @@ using TreA.Services.Files;
 using TreA.Services.Folder;
 using TreA.Services.Home;
 using TreA.Services.Login;
+using TreA.Services.PhotoFolder;
 using TreA.Services.Photo;
 using TreA.Services.Podcast;
 using TreA.Services.Post;
@@ -73,6 +74,7 @@ namespace TreA.Presentation
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IArgumentService, ArgumentService>();
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IPhotoFolderService, PhotoFolderService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<IAlbumService, AlbumService>();

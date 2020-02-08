@@ -38,14 +38,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         [Authorize]
-        public IActionResult Index(){
-            ViewBag.Title = "Argomenti";
-
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Index(IFormCollection data){
+        public void Index(IFormCollection data){
             var model = new ArgumentModel();
             
             var categoryId = Convert.ToInt32(data["idCategory"]);
@@ -60,8 +54,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.slugId = InsertSlug(model, categoryId);
 
             _argumentService.Insert(model);
-           
-            return View();
         }
 
         [HttpPost]
@@ -91,7 +83,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var model = new ArgumentModel();
 
             model.arguments = _argumentService.GetByCategoryId(id, level, idPadre);
-            model.posts = _postService.GetByArgumentId(idPadre);
+            model.posts = _postService.GetAllByCategoryAndArgumentId(id, idPadre);
 
             return model;
         }
@@ -120,6 +112,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
             var categoryId = _argumentService.GetById(id).categoryId;
             
+            model.id = id;
             model.name = data["name"];
             model.categoryId = Convert.ToInt32(data["idCategory"]);
             model.description = data["description"];
@@ -158,7 +151,16 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         public int InsertSlug(ArgumentModel argument, int categoryId){
             var categorySlugId = _categoryService.GetById(categoryId).slugId;
             var categorySlug = _slugService.GetById(categorySlugId).name;
-            var name = string.Concat(categorySlug, _commonService.cleanStringPath(argument.name), '/');
+            var name = "";
+
+            var idPadre = _argumentService.GetById(argument.idPadre).id;
+
+            if(idPadre > 0){
+                var nomePadre = _argumentService.GetById(idPadre).name;
+                name = string.Concat(categorySlug, nomePadre, '/', _commonService.cleanStringPath(argument.name), '/');
+            } else {
+                name = string.Concat(categorySlug, _commonService.cleanStringPath(argument.name), '/');
+            }
             
             var model = new SlugModel();
             model.name = name;
@@ -169,16 +171,29 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             return _slugService.GetByName(name).id;
         }
         public void UpdateSlug(ArgumentModel argument){
-            var postSlug = string.Concat(_commonService.cleanStringPath(argument.name), '/');
-            var categorySlug = _slugService.GetById(argument.slugId).name;
-            
-            var exist = categorySlug.IndexOf(postSlug);
-            if(exist > 0){
-               categorySlug = categorySlug.Remove(exist);
+            var postSlug = _commonService.cleanStringPath(argument.name);
+
+            //Get all argument with father id this argument and update slug
+            var arguments = _argumentService.GetByFatherId(argument.id);
+            foreach(var arg in arguments){
+                var slug = _slugService.GetById(arg.slugId).name;
+                var replace = _slugService.GetById(argument.slugId).name.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var newSlug = slug.Replace(replace[replace.Length - 1], postSlug);      
+                _slugService.Update(arg.slugId, newSlug);
             }
-            
-            string  name = string.Concat(categorySlug, postSlug);
-            
+
+            //Get all post with this argument id and update slug
+            var posts = _postService.GetAllByArgumentId(argument.id);
+            foreach(var post in posts){
+                var slug = _slugService.GetById(post.slugId).name;
+                var replace = _slugService.GetById(argument.slugId).name.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var newSlug = slug.Replace(replace[replace.Length - 1], postSlug);
+                _slugService.Update(post.slugId, newSlug);
+            }
+
+            var argumentSlug = _slugService.GetById(argument.slugId).name;
+            var slugArray = argumentSlug.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var name = argumentSlug.Replace(slugArray[slugArray.Length -1], postSlug);            
             _slugService.Update(argument.slugId, name);
             
         }

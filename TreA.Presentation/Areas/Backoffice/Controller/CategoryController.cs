@@ -16,6 +16,7 @@ using TreA.Data.Entities;
 using TreA.Services.Common;
 using TreA.Services.Category;
 using TreA.Services.Argument;
+using TreA.Services.Post;
 using TreA.Services.Slug;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
@@ -26,24 +27,19 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICommonService _commonService;
         private readonly ICategoryService _categoryService;
         private readonly IArgumentService _argumentService;
-
+        private readonly IPostService _postService;
         private readonly ISlugService _slugService;
-        public CategoryController(ICommonService commonService, ICategoryService categoryService, IArgumentService argumentService, ISlugService slugService){
+        public CategoryController(ICommonService commonService, ICategoryService categoryService, IArgumentService argumentService, IPostService postService ,ISlugService slugService){
             this._commonService = commonService;
             this._categoryService = categoryService;
             this._argumentService = argumentService;
+            this._postService = postService;
             this._slugService = slugService;
         }
 
         [Authorize]
-        public IActionResult Index(){
-            ViewBag.Title = "Categorie";
-
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Index(IFormCollection category){
+        public void Index(IFormCollection category){
             var model = new CategoryModel();            
 
             model.name = category["name"];
@@ -52,8 +48,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.slugId = InsertSlug(model);
 
             _categoryService.Insert(model);
-
-            return View();
         }
 
         [HttpPost]
@@ -86,6 +80,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         public void Update(int id, IFormCollection category){
             var model = new CategoryModel();
 
+            model.id = id;
             model.name = category["name"];
             model.displayOrder = Convert.ToInt32(category["order"]);
             model.description = category["description"];
@@ -134,9 +129,30 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         public void UpdateSlug(CategoryModel category){
-            string  name = string.Concat('/', _commonService.cleanStringPath(category.name), '/');
+            var categorySlug =  _commonService.cleanStringPath(category.name);
+            
+            //Get all argument with this category id and update slug
+            var arguments = _argumentService.GetByCategoryId(category.id);
+            foreach(var arg in arguments){
+                var slug = _slugService.GetById(arg.slugId).name;
+                var replace = _slugService.GetById(category.slugId).name.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var newSlug = slug.Replace(replace[replace.Length - 1], categorySlug);      
+                _slugService.Update(arg.slugId, newSlug);
+            }
 
-            _slugService.Update(category.slugId, name);       
+            //Get all post with this category id and update slug
+            var posts = _postService.GetAllByCategory(category.id);
+            foreach(var post in posts){
+                var slug = _slugService.GetById(post.slugId).name;
+                var replace = _slugService.GetById(category.slugId).name.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                var newSlug = slug.Replace(replace[replace.Length - 1], categorySlug);
+                _slugService.Update(post.slugId, newSlug);
+            }
+
+            var oldSlug = _slugService.GetById(category.slugId).name;
+            var slugArray = oldSlug.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var name = oldSlug.Replace(slugArray[slugArray.Length -1], categorySlug);            
+            _slugService.Update(category.slugId, name);    
         }
     }
 }

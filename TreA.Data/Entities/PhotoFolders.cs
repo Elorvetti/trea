@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TreA.Data.Entities
 {
-    public partial class Photos
+    public partial class PhotoFolders
     {
         public int id { get; set; }
         public string name { get; set; }
         public string path { get; set; }
-        public int folderId { get; set; }
     }
 }

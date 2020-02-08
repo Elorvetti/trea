@@ -12,6 +12,7 @@ namespace TreA.Services.Photo
         IList<Photos> GetAll();
         IList<Photos> GetAll(int excludeRecord, int pageSize);
         Photos GetById(int id);
+        IList<Photos> GetByFolderId(int id);
         void Update(int id, Photos model);
         void Delete(int id);
         IList<Photos> Find(string name, int excludeRecord, int pageSize);

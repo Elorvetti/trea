@@ -14,6 +14,6 @@ namespace TreA.Presentation.Areas.Backoffice.Models
         public double pageTotal { get; set; }
         public bool displayPagination{ get; set; }
         public string sectionName { get; set; }
-        public IList<Photos> photos { get; set; }
+        public IList<Photos> photos { get; set; } = new List<Photos>();
     }
 }

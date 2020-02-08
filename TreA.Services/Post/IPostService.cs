@@ -19,9 +19,12 @@ namespace TreA.Services.Post
         IList<Posts> GetLast(int nPost);
         Posts GetById(int id);
         Posts GetBySlugId(int slugId);
+        IList<Posts> GetAllByCategory(int categoryId);
         IList<Posts> GetAllByCategoryId(int categoryId);
         IList<Posts> GetByCategoryId(int categoryId);
+        IList<Posts> GetAllByArgumentId(int argumentId);
         IList<Posts> GetByArgumentId(int argumentId);
+        IList<Posts> GetAllByCategoryAndArgumentId(int categoryId, int argumentId);
         IList<Posts> Search(string value);
         void Update(int id, Posts name);
         void Delete(int id);

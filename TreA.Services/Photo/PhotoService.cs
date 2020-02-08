@@ -37,6 +37,10 @@ namespace TreA.Services.Photo
             return _ctx.photo.First(p => p.id == id);
         }
 
+        public IList<Photos> GetByFolderId(int id){
+            return _ctx.photo.Where(p => p.folderId == id).ToList();
+        }
+
         public void Update(int id, Photos model){
             var photo = _ctx.photo.Find(id);
             photo.name = model.name;

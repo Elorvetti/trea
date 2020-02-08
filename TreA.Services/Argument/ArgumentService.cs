@@ -40,11 +40,16 @@ namespace TreA.Services.Argument
         public virtual Arguments GetBySlugId(int slugId){
             return _ctx.argument.First(c => c.slugId == slugId);
         }
+
+        public virtual IList<Arguments> GetByFatherId(int id){
+            return _ctx.argument.Where(a => a.idPadre == id).ToList();
+        }
+
         public virtual IList<Arguments> GetByCategoryId(int categoryId){
             return _ctx.argument.Where(a => a.categoryId == categoryId).ToList();
         }
 
-        public virtual IList<Arguments> GetByCategoryId(int categoryId, int livello, int idPadre){
+        public virtual IList<Arguments> GetByCategoryId(int categoryId, int livello = 1, int idPadre = 0){
             return _ctx.argument.Where(a => a.categoryId == categoryId && a.livello == livello && a.idPadre == idPadre).ToList();
         }
 

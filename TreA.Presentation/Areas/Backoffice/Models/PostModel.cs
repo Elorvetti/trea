@@ -20,11 +20,11 @@ namespace TreA.Presentation.Areas.Backoffice.Models
         public double pageTotal { get; set; }
         public bool displayPagination{ get; set; }
         public string sectionName { get; set; }
-        public IList<Posts> posts { get; set; }
-        public Categories category { get; set; }
-        public Arguments argument { get; set; }
-        public IList<Categories> categories { get; set; }
-        public IList<Arguments> arguments { get; set; }
+        public IList<Posts> posts { get; set; } = new List<Posts>();
+        public Categories category { get; set; } = new Categories();
+        public Arguments argument { get; set; } = new Arguments();
+        public IList<Categories> categories { get; set; } = new List<Categories>();
+        public IList<Arguments> arguments { get; set; } = new List<Arguments>();
         public string breadcrumb { get; set; }
         public string coverImage{ get; set; }
         public IList<ArgumentDisplay> realtedArgument{ get; set; } = new List<ArgumentDisplay>();

@@ -38,13 +38,15 @@ var appController = (function(){
 
     var callbackUpload = function(event, callback){
         event.preventDefault();
-
         var files = $(event.data.input).prop('files');
+        var folderId = event.data.id;
+
         var data = new FormData();
         
         for (var i = 0; i != files.length; i++) {
             data.append("files", files[i]);
         };
+        data.append("folderId", folderId); 
 
         $.ajax({
             method: 'POST',

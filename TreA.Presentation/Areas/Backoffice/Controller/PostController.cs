@@ -49,22 +49,16 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         [Authorize]
-        public IActionResult Index(){
-            ViewBag.Title = "Post";
-        
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Index(IFormCollection data){
+        public void Index(IFormCollection data){
             var model = new PostModel();
             
             var albumId = AddAlbumToPost(data);
 
             //Add Post
             var title = data["title"];
-            int categoryId = Convert.ToInt32(data["categoryId"]);
-            int argumentId = Convert.ToInt32(data["argumentId"]);
+            int categoryId = Convert.ToInt32(data["category-id"]);
+            int argumentId = Convert.ToInt32(data["argument-id"]);
 
             model.title = title;
             model.subtitle = data["subtitle"];
@@ -83,8 +77,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             }
 
             _postService.Insert(model);
-
-            return View();
         }
 
         [HttpPost]
@@ -161,6 +153,15 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             return model;
         }
         
+        public PostModel GetByCategoryAndArgumentId(int categoryId, int argumentId, int livello, int idPadre){
+            var model = new PostModel();
+
+            model.arguments = _argumentService.GetByCategoryId(categoryId, livello, idPadre);
+            model.posts = _postService.GetAllByCategoryAndArgumentId(categoryId, argumentId);
+
+            return model;
+        }
+        
         public void Update(int id, IFormCollection data){
             var post = new Posts();
 
@@ -168,6 +169,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var categoryId = Convert.ToInt32(data["categoryId"]);
             var argumentId = Convert.ToInt32(data["argumentId"]);
 
+            post.id = id;
             post.categoryId = categoryId;
             post.argumentId = argumentId;
             post.title = postTitle;
@@ -284,9 +286,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             
             }
 
-
-
-  
             return View(model);
             
         }
@@ -370,17 +369,11 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         public void UpdateSlug(Posts model){
-            var postSlug = string.Concat(_commonService.cleanStringPath(model.title), '/');
-            var categoryArgumentSlug = _slugService.GetById(model.slugId).name;
-            
-            var exist = categoryArgumentSlug.IndexOf(postSlug);
-            if(exist > 0){
-               categoryArgumentSlug = categoryArgumentSlug.Remove(exist);
-            }
-            string  name = string.Concat(categoryArgumentSlug,postSlug);
-            
-            _slugService.Update(model.slugId, name);
-            
+            var postSlug = _commonService.cleanStringPath(model.title);
+            var oldSlug = _slugService.GetById(model.slugId).name;
+            var slugArray = oldSlug.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var name = oldSlug.Replace(slugArray[slugArray.Length -1], postSlug);            
+            _slugService.Update(model.slugId, name);            
         }
     }
 }

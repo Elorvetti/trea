@@ -234,10 +234,10 @@ var siteTreeController = (function(){
             element = element + '<li class="list argument" id="' + children[child].id +'" level="' + children[child].livello + '" >';
             element = element + '<span class="fake-btn"></span>';
             element = element + '<p>' +  children[child].name + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="btn btn-circle file-add background-color-blue box-shadow"></span>';
-            element = element + '<span class="btn btn-circle folder-add background-color-white-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle folder-add background-color-white-light box-shadow"></span>';
             element = element + '</li>';
         }
 
@@ -252,10 +252,10 @@ var siteTreeController = (function(){
             element = element + '<li class="list argument" id="' + obj.arguments[i].id +'" level="' + obj.arguments[i].livello +'">';
             element = element + '<span class="fake-btn"></span>';
             element = element + '<p>' +  obj.arguments[i].name + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="btn btn-circle file-add background-color-blue box-shadow"></span>';
-            element = element + '<span class="btn btn-circle folder-add background-color-white-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle folder-add background-color-white-light box-shadow"></span>';
             element = element + '</li>';
         }
 
@@ -499,10 +499,9 @@ var siteTreeController = (function(){
             element = element + '<li class="list argument" id="' + obj.arguments[i].id +'" level="' + obj.arguments[i].livello +'">';
             element = element + '<span class="fake-btn"></span>';
             element = element + '<p>' +  obj.arguments[i].name + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="btn btn-circle file-add background-color-blue box-shadow"></span>';
-            element = element + '<span class="btn btn-circle folder-add background-color-white-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow"></span>';
             element = element + '</li>';
         }
 
@@ -515,10 +514,22 @@ var siteTreeController = (function(){
 
     // POST //
     //1. Get All Post
+    var getAllPost = function(event){
+        var categoryId = $('ul#child').attr('category-id');
+        var argumentId = 0;
+        var livello = 1;
+        var idPadre = 0;
+
+        var param = '?categoryId=' + categoryId + '&argumentId=' + argumentId + '&livello=' + livello+ '&idPadre=' + idPadre;
+        var event = {};
+        event.data = new app.Data(false, param, null, 'Post/GetByCategoryAndArgumentId', true, $('ul#child.list'))
+        app.callback(event, createPostListAfterInsert)
+    };
+
     var CreatePostList = function(children, element){
         for(var child in children){
-            element = element + '<li class="list post" id="' + children[child].id +'">';
-            element = element + '<p>' +  children[child].title + '</p>';
+            element = element + '<li class="list post" id="' + children[child].id +'" category-id="' + children[child].categoryId + '" argument-id="' + children[child].argumentId + '">';
+            element = element + '<p public="' + children[child].pubblico + '">' +  children[child].title + '</p>';
             element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
             element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
             element = element + '<span class="btn btn-circle preview background-color-pink-light box-shadow"></span>';
@@ -526,18 +537,28 @@ var siteTreeController = (function(){
         }
 
         return element;
-    }
+    };
+
+    var createPostListAfterInsert = function(obj){
+        $('div.content > ul#child.list > li').remove();
+        var element = '';
+        
+        element = CreateArgumentList(obj.arguments, element);
+        element = CreatePostList(obj.posts, element);
+
+        return element;
+    };
 
     //2. Add new post
-    var createNewPostForm = function(obj){
-        var argumentId = 0;
+    var createNewPostForm = function(event){
         var categoryId = $(this).parent().attr('id');
-        console.log($(this))
-        if($(this).parent().parent().attr('category-id') !== undefined){
-            categoryId = $(this).parent().parent().attr('category-id');
-            argumentId = $(this).parent().attr('id');
+        var argumentId = 0;
+
+        if($(this).hasClass('argument')){
+            categoryId = $('ul#child').attr('category-id');
+            argumentId = $(event.target).parent().attr('id');
         }
-         
+        
         var $overlay = app.createOverlay();
         $overlay.addClass("post");
 
@@ -546,8 +567,8 @@ var siteTreeController = (function(){
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add post" autocomplete="off">';
         element = element + '<input name="title" class="name" id="name" placeholder="Nome post" autocolplete="off" required />'
         element = element + '<input name="subtitle" class="name" id="subtitle" placeholder="Sottotitolo" autocolplete="off" required />'
-        element = element + '<input type="hidden" name="categoryId" value="' + categoryId + '" />'
-        element = element + '<input type="hidden" name="argumentId" value="' + argumentId + '" />'
+        element = element + '<input type="hidden" name="category-id" value="' + categoryId + '" />'
+        element = element + '<input type="hidden" name="argument-id" value="' + argumentId + '" />'
        
         element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
         element = element + '<input type="hidden" name="coverImage" class="name" id="cover">';
@@ -571,6 +592,22 @@ var siteTreeController = (function(){
         summernoteInit();
     };
 
+    var validateNewPost = function(){
+        return $('form').validate({
+            rules: {
+                name: {
+                    required: true
+                },
+            },
+            message: {
+                name:{
+                    required: 'Il campo Nome è obbligatorio',
+                }, 
+            }
+        });
+
+    };
+
     var addNewPost = function(event){
         event.preventDefault();
 
@@ -592,26 +629,157 @@ var siteTreeController = (function(){
         })
 
         if(valid){
-            event.data = new app.Data(true, null, null, 'Post/Index', false, null);
+            event.data = new app.Data(true, null, null, 'Post/Index', false, null);   
             app.callback(event, updatePostList);
         }
     };
 
-    var validateNewPost = function(){
-        return $('form').validate({
-            rules: {
-                name: {
-                    required: true
-                },
-            },
-            message: {
-                name:{
-                    required: 'Il campo Nome è obbligatorio',
-                }, 
-            }
-        });
+    //3. Edit-Update Post List
+    var editPost = function(event){
+        var $overlay = app.createOverlay();
 
+        var id = parseInt($(this).parent().attr('id'));
+        var url = 'Post/GetById/'+ id;
+
+        //GET POST DATA FROM SERVER
+        fetch(url,{method: 'POST'})
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    
+                    //CREATE EDIT POST
+                    CreateEditList(data, $overlay);
+                    
+                    //ADD SKELETON FOR ALUBM IMAGE AND VIDEO 
+                    album.addSkeletonOfImageForRadio('Photo/GetById/', data.photoId, $('.skeleton-container'));
+                    
+                    if(data.album !== null){
+
+                        if(data.album.idImmagini !== ""){
+                            album.addSkeletonOfImage('Photo/GetById/', data.album.idImmagini, $('.skeleton-container'));
+                        }
+
+                        if(data.album.idVideo !== ""){
+                            album.addSkeletonOfVideo('Video/GetById/', data.album.idVideo, $('.skeleton-container'));
+                        }
+                    }
+
+                    //ADD SUMMERNOTE
+                    summernoteInit()
+                })
+        });
+        
     };
+
+    var CreateEditList = function(obj, elemToAppend){
+        
+        $('div#overlay > span').addClass("post");
+    
+        var element = '';
+        element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit post" autocomplete="off">';
+        element = element + '<input name="title" class="name" id="name" autocolplete="off" value="' + obj.title + '" required />'
+        element = element + '<input name="subtitle" class="name" id="subtitle" autocolplete="off" value="' + obj.subtitle + '" required />'
+        element = element + '<input type="hidden" name="categoryId" value="' + obj.categoryId + '">'
+        element = element + '<input type="hidden" name="argumentId" value="' + obj.argumentId + '">'
+        
+        if(obj.pubblico === true){
+            element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch" checked><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+        } else {
+            element = element + '<input name="IsPublic" id="IsPublic" type="checkbox" class="is-active btn-switch"><label for="IsPublic" data-off="non pubblico" data-on="pubblicato"></label>';
+        };
+
+        element = element + '<input type="hidden" name="coverImage" class="name" id="cover" value="' + obj.photoId + '">';
+
+        if(obj.album !== null && obj.album !== undefined){
+            element = element + '<input type="hidden" name="images" class="name" id="album" value="' + obj.album.idImmagini +'">';
+            element = element + '<input type="hidden" name="video" class="name" id="video" value="' + obj.album.idVideo + '">';
+        } else {
+            element = element + '<input type="hidden" name="images" class="name" id="album">';
+            element = element + '<input type="hidden" name="video" class="name" id="video">';
+        }
+
+        element = element + '<span class="btn cover text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Cover image</span>';
+        element = element + '<span class="btn upload-album text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi album</span>';
+        element = element + '<span class="btn upload-video text-center box-shadow border-radius-small background-color-pink-light color-white margin-top-small">Aggiungi video</span>';
+        
+        //Update skeleton with image or video in album
+        element = element + '<div class="text-center skeleton-container">'
+        element = element + '</div>'
+
+        element = element + '<textarea name="testo" id="editor">' + obj.testo  + '</textarea>'
+        
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+        element = element + '<input type="submit" id="update" class="btn btn-rounded update btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Aggiorna">';   
+        element = element + '</div>';
+        
+        element = element + '</form>'
+
+        elemToAppend.after(element);
+    };
+
+    var updatePost = function(event){
+        event.preventDefault();
+        var id = $('form').attr('id');
+
+        event.data = new app.Data(true, id, null, 'Post/Update/', false, null);
+
+        app.callback(event, updatePostList);
+    };
+
+    var updatePostList = function(event){
+        //remove element to DOM
+        summernoteDestroy();
+        $('#overlay').remove();
+        $('ul#child.list li').remove();
+        
+        if($('#overlay').length === 0){
+            var $overlay = app.createOverlay();
+        }
+        
+        if($('ul#child.list li').length === 0){
+            getAllPost(event)
+            var feedback = '';
+
+            //2.1.3 remove overlay
+            feedback = app.feedbackEvent(true, 'Post aggiornata');
+        } else {
+            feedback = app.feedbackEvent(false, 'ops, si è verificato un errore nell\'aggiornamento del post, provare a ricicare la pagina');
+        } 
+        $overlay.after(feedback);
+    };
+
+    /* 5. Delete Post */
+    var createRemovePost = function(event){
+        var id = $(this).parent().attr('id');
+        var postName = $(this).prev().prev().text();
+       
+        var element = '';
+
+        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white post-delete"><p class="text-center confirm">Sei sicuro di voler eliminare il post: ' + postName + '?</p>';
+        element = element + '<div class="text-right">';
+        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">'
+        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
+        element = element + '</div>';
+
+        element = element + '</div>';
+
+        var $overlay = app.createOverlay();
+        $overlay.after(element);
+    };
+
+    var deletePost = function(event){
+        var id = $('div.post-delete').attr('id');
+        event.data = new app.Data(true, id, null, 'Post/Delete/', false, null);
+        app.callback(event, updatePostList);
+    };
+
+    /* 6. Preview Post */
+    var previewPost = function(){
+        var id = parseInt($(event.target).parent().attr('id'));
+        var url = 'Post/Preview/'+ id;
+        window.open(url);
+    }
 
     /* SUMMERNOTE */
     var summernoteInit = function(){
@@ -658,6 +826,13 @@ var siteTreeController = (function(){
         createNewArgumentFolderForm: createNewArgumentFolderForm,
         getArgumentFolder: getArgumentFolder,
         createNewPostForm: createNewPostForm,
+        addNewPost: addNewPost,
+        editPost: editPost,
+        updatePost: updatePost,
+        createRemovePost: createRemovePost,
+        deletePost: deletePost,
+        previewPost: previewPost,
+        summernoteDestroy: summernoteDestroy
     }
 })();
 
@@ -681,7 +856,14 @@ var siteTreeUI = (function(){
         btnDeleteArgument: 'div.argument-delete input#delete',
         btnAddArgumentFolder: 'li.argument.list > span.btn.folder-add',
         btnGetArgumentFolder: 'ul#child > li.argument > span.fake-btn',
-        btnAddNewPost: 'li.list > span.btn.file-add'
+        btnAddNewPost: 'li.list > span.btn.file-add',
+        btnSaveNewPost: 'form.post.add input#save',
+        btnEditPost: 'ul#child > li.post > span.edit',
+        btnUpdatePost: 'form.post.edit input#update',
+        btnRemovePost: 'li.post.list > span.btn.remove',
+        btnDeletePost: 'div.post-delete input#delete',
+        btnPreviewPost: 'li.post.list > span.btn.preview',
+        btnCloseOverlay: '.btn#close'
     }
 
 
@@ -727,7 +909,16 @@ var siteTree = (function(siteTreeCtrl, siteTreeUI){
         $(document).on('click', DOMElement.btnGetArgumentFolder, siteTreeCtrl.getArgumentFolder);
 
         //3. Post
-        $(document).on('click', DOMElement.btnAddNewPost, siteTreeCtrl.createNewPostForm)
+        $(document).on('click', DOMElement.btnAddNewPost, siteTreeCtrl.createNewPostForm);
+        $(document).on('click', DOMElement.btnSaveNewPost, siteTreeCtrl.addNewPost);
+        $(document).on('click', DOMElement.btnEditPost, siteTreeCtrl.editPost);
+        $(document).on('click', DOMElement.btnUpdatePost, siteTreeCtrl.updatePost);
+        $(document).on('click', DOMElement.btnRemovePost, siteTreeCtrl.createRemovePost);
+        $(document).on('click', DOMElement.btnDeletePost, siteTreeCtrl.deletePost);
+        $(document).on('click', DOMElement.btnPreviewPost, siteTreeCtrl.previewPost);
+
+        //Distroy summernote
+        $(document).on('click', DOMElement.btnCloseOverlay, siteTreeCtrl.summernoteDestroy);
     };
 
     return {

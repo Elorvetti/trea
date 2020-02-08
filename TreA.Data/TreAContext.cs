@@ -15,6 +15,7 @@ namespace TreA.Data
         public virtual DbSet<Categories> category { get; set; }
         public virtual DbSet<Arguments> argument { get; set; }
         public virtual DbSet<Posts> post { get; set; }
+        public virtual DbSet<PhotoFolders> photoFolder { get; set; }
         public virtual DbSet<Photos> photo { get; set; }
         public virtual DbSet<Videos> video { get; set; }
         public virtual DbSet<Albums> album { get; set; }
@@ -73,10 +74,17 @@ namespace TreA.Data
                 entity.Property(p => p.dateInsert);
             });
 
+            modelBuilder.Entity<PhotoFolders>(entity => {
+                entity.HasKey(p => p.id);
+                entity.Property(p => p.name);
+                entity.Property(p => p.path);
+            });
+
             modelBuilder.Entity<Photos>(entity => {
                 entity.HasKey(p => p.id);
                 entity.Property(p => p.name);
                 entity.Property(p => p.path);
+                entity.Property(p => p.folderId);
             });
 
             modelBuilder.Entity<Videos>(entity => {

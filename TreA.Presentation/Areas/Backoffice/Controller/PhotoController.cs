@@ -15,6 +15,7 @@ using TreA.Presentation.Areas.Backoffice.Models;
 using TreA.Data.Entities;
 using TreA.Services.Common;
 using TreA.Services.Photo;
+using TreA.Services.PhotoFolder;
 using TreA.Services.Folder;
 using TreA.Services.Files;
 using TreA.Services.User;
@@ -26,20 +27,78 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
     {
         private readonly ICommonService _commonService;
         private readonly IPhotoService _photoService;
+        private readonly IPhotoFolderService _photoFolderService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
 
 
-        public PhotoController(ICommonService commonService, IPhotoService photoService, IFolderService folderService, IFileService fileService, IUserService userService){
+        public PhotoController(ICommonService commonService, IPhotoService photoService, IPhotoFolderService photoFolderService, IFolderService folderService, IFileService fileService, IUserService userService){
             this._commonService = commonService;
             this._photoService = photoService;
+            this._photoFolderService = photoFolderService;
             this._folderService = folderService;
             this._fileService = fileService;
             this._userService = userService;
         }
 
         [Authorize]
+        [HttpPost]
+        public FolderModel GetAllFolder(){
+            var model = new FolderModel();
+
+            model.folders = _photoFolderService.GetAll(); 
+            
+            return model;
+        }
+
+        [HttpPost]
+        public void AddFolder(IFormCollection folder){
+            var model = new FolderModel();
+
+            model.name = folder["name"];
+            var nameClean = _commonService.cleanStringPath(model.name);
+            model.path = string.Concat("Content/Images/",nameClean);
+            var existFolder = _folderService.Exist(string.Concat("Content\\Images\\", nameClean));
+            if (!existFolder)
+            {
+                _folderService.Create(string.Concat("Content\\Images\\", nameClean));
+            }
+
+            _photoFolderService.Insert(model);
+        }
+
+        [HttpPost]
+        public PhotoFolders GetFolderById(int id){
+            return _photoFolderService.GetById(id);
+        }
+
+        [HttpPost]
+        public void UpdateFolder(int id, IFormCollection folder){
+            var model = new PhotoFolders();
+            
+            model.name = folder["name"];
+            var folderNameClean = _commonService.cleanStringPath(model.name);
+            var path = _photoFolderService.GetById(id).path;
+            var oldPath = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var newPath = path.Replace(oldPath[oldPath.Length - 1], folderNameClean);
+            
+            model.path = newPath;
+            _photoFolderService.Update(id, model);
+            _folderService.Update(path.Replace('/', '\\'), string.Concat("Content\\Images\\",folderNameClean));
+        }
+
+        public PhotoModel GetPhotoByFolderId(int id){
+            var model = new PhotoModel();
+            
+            model.photos = _photoService.GetByFolderId(id);
+            model.folderId = id;
+            return model;
+        }
+
+
+
+
         public IActionResult Index(){
             ViewBag.Title = "Foto";
 
@@ -47,19 +106,19 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(IList<IFormFile> files){
+        public async Task<IActionResult> Index(IList<IFormFile> files, IFormCollection data){
 
             var fileExtension = new[] { "image/gif", "image/jpg", "image/jpeg", "image/tiff", "image/png" };
+            var folderId = Convert.ToInt32(data["folderId"]);
+            var folderName = _photoFolderService.GetById(folderId).name;
 
             if(files.Count() > 0)
             {
-
-                var existFolder = _folderService.Exist("Content\\Images");
+                var existFolder = _folderService.Exist(string.Concat("Content\\Images\\", folderName));
                 if (!existFolder)
                 {
-                    _folderService.Create("Content\\Images");
+                    _folderService.Create(string.Concat("Content\\Images\\", folderName));
                 }
-
 
                 var model = new PhotoModel();
                 model.images = files;
@@ -69,16 +128,15 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                     var fileExtensionOk = _fileService.fileExtensionOk(image.ContentType, fileExtension);
                     if (fileExtensionOk)
                     {
-                        var existFile = _fileService.exist("Content\\Images", image.FileName);
+                        var existFile = _fileService.exist(string.Concat("Content\\Images\\", folderName, "\\"), image.FileName);
                         if(!existFile){
 
-                            await _fileService.uploadFile("Content\\Images", image);
+                            await _fileService.uploadFile(string.Concat("Content\\Images\\", folderName), image);
 
                             model.name = image.FileName;
-                            model.path = "/App_Data/Content/Images/" + image.FileName;
-
+                            model.path = string.Concat("/App_Data/Content/Images/", folderName, "/", image.FileName);
+                            model.folderId = folderId;
                             _photoService.Insert(model);
-                            
                         }
                     }
                 }
@@ -122,15 +180,16 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
             var ext = Path.GetExtension(path);
             var fileNameFromPost = _commonService.cleanStringPath(form["name"]) + ext;
-
-            var exist = _fileService.exist("Content\\Images\\", fileNameFromPost);
+            var folderId = Convert.ToInt32(form["folderId"]);
+            var folderName =  _commonService.cleanStringPath(_photoFolderService.GetById(folderId).name);
+            var exist = _fileService.exist(string.Concat("Content\\Images\\", folderName, "\\"), fileNameFromPost);
             if (!exist)
             {
-                var oldFileName = "Content\\Images\\" + photo.name;
-                var newFileName = "Content\\Images\\" + fileNameFromPost;
+                var oldFileName = string.Concat("Content\\Images\\", folderName, "\\", photo.name);
+                var newFileName = string.Concat("Content\\Images\\", folderName, "\\", fileNameFromPost);
                 _fileService.update(oldFileName, newFileName);
 
-                model.path = "/App_Data/Content/Images/" + fileNameFromPost;
+                model.path = string.Concat("/App_Data/Content/Images/", folderName, '/', fileNameFromPost);
                 model.name = fileNameFromPost;
                 _photoService.Update(id, model);
             }
@@ -140,7 +199,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         [HttpPost]
         public void Delete(int id){
             var photo = _photoService.GetById(id);
-
+            var folderName = _commonService.cleanStringPath(_photoFolderService.GetById(photo.folderId).name);
+            
             //remove avatar photo
             var admins = _userService.GetByPhotoId(id);
             foreach(var admin in admins)
@@ -148,10 +208,9 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 admin.photoId = 0;
             }
 
-            var filePath = "Content\\Images\\" + photo.name;
+            var filePath = string.Concat("Content\\Images\\", folderName, "\\", photo.name);
             _fileService.Delete(filePath);
             _photoService.Delete(id);
-            
         }
 
         [HttpPost]
@@ -168,7 +227,5 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
             return model;
         }
-
-
     }
 }
