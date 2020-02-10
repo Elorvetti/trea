@@ -16,6 +16,7 @@ using TreA.Data.Entities;
 using TreA.Services.Common;
 using TreA.Services.Photo;
 using TreA.Services.PhotoFolder;
+using TreA.Services.Album;
 using TreA.Services.Folder;
 using TreA.Services.Files;
 using TreA.Services.User;
@@ -28,15 +29,17 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly ICommonService _commonService;
         private readonly IPhotoService _photoService;
         private readonly IPhotoFolderService _photoFolderService;
+        private readonly IAlbumService _albumService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
 
 
-        public PhotoController(ICommonService commonService, IPhotoService photoService, IPhotoFolderService photoFolderService, IFolderService folderService, IFileService fileService, IUserService userService){
+        public PhotoController(ICommonService commonService, IPhotoService photoService, IPhotoFolderService photoFolderService, IAlbumService albumService, IFolderService folderService, IFileService fileService, IUserService userService){
             this._commonService = commonService;
             this._photoService = photoService;
             this._photoFolderService = photoFolderService;
+            this._albumService = albumService;
             this._folderService = folderService;
             this._fileService = fileService;
             this._userService = userService;
@@ -95,9 +98,6 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             model.folderId = id;
             return model;
         }
-
-
-
 
         public IActionResult Index(){
             ViewBag.Title = "Foto";
@@ -206,6 +206,24 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             foreach(var admin in admins)
             {
                 admin.photoId = 0;
+            }
+
+            //remove photo from album
+            var albums = _albumService.GetAll();
+            foreach(var album in albums){
+                var images = album.idImmagini.Split('|').Where(x => x != id.ToString()).ToArray();
+                var newAlbumImages = "";
+                foreach(var image in images){
+                    newAlbumImages = string.Concat(newAlbumImages, image, "|");
+                }
+                var newAlbum = new AlbumModel();
+                if(newAlbumImages.Length > 0){
+                    newAlbum.idImmagini = newAlbumImages.Remove(newAlbumImages.Length - 1);
+                } else {
+                    newAlbum.idImmagini = "";
+                }
+                newAlbum.idVideo = album.idVideo;
+                _albumService.Update(album.id, newAlbum);
             }
 
             var filePath = string.Concat("Content\\Images\\", folderName, "\\", photo.name);

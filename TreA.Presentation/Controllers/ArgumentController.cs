@@ -46,7 +46,7 @@ namespace TreA.Presentation.Controllers
                     slug = _slugService.GetById(argument.slugId).name,
                     coverImage = _photoService.GetById(argument.coverImageId).path,
                     title = argument.name,
-                    descrizione = argument.description.Substring(0, 200)
+                    descrizione = argument.description.Length > 200 ? argument.description.Substring(0, 200) : argument.description
                 });
             }
 

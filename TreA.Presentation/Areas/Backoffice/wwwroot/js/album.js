@@ -1,29 +1,169 @@
 "use strict"
 
 var albumController = (function(){
-    /* GET ALL */
-    var getAllImage = function(event){
-        var element = '';
-        var element = '<div id="select" ><span class="btn close select"></span><form class="image background-color-white border-radius-small"><div class="text-center"></div></form></div>'
-        
-        $('body').append(element)
-        
-        event.data = new app.Data(false, null, '?pageSize=16&pageNumber=1', 'Photo/GetAll', true,  $('div#select form div'));
-        
-        //Home page and cover image for post can be take only one image, so we create a radio list
-        if($('ul#home').length > 0 || $(this).hasClass('cover') ){
-            displayAllImage($(this), 'Photo/GetAll?pageSize=16&pageNumber=1', $('div#select form div'))
-        } else {
-            app.callback(event, createPhotosList);
-            $('div#select form div').after(createBtn());
+    /* FOLDER */
+    //1. Get And display folder list
+    var getAllFolder = function(){
+        var inputType = 'checkbox';
+        var homeSection =  $(this).attr('element');
+
+        if($(this).hasClass('cover') || $(this).attr('element') == 'header' || $(this).attr('element') == 'newsletter'){
+            inputType = "radio";
         }
 
-        $(document).on('click', '.btn.close.select', function(){
-            $('div#select').remove();
+        var element = '';
+        var element = '<div id="select"><span class="btn close select"></span><div id="addPhoto" class="background-color-white"><ul id="photo" class="list" input-type="' + inputType + '" home-section="' + homeSection + '"></ul></div></div>'
+        
+        $('body').append(element)
+
+        var event = {};
+        event.data = new app.Data(false, null, null, 'Photo/GetAllFolder', true, $('div#select div#addPhoto ul#photo'));
+        app.callback(event, displayFolderList);
+    }
+
+    var displayFolderList = function(obj){
+        $('div#addPhoto > ul#photo.list > li').remove();
+    
+        var element = '';
+        for(var a in obj.folders){
+            element = element + '<li class="argument folder list" id="' + obj.folders[a].id +'">';
+            element = element + '<p>' + obj.folders[a].name + '</p>';
+            element = element + '</li>';
+        }
+        
+        return element;
+    }
+    
+    //2. Display Photo
+    var displayPhoto = function(){
+        $('ul#photo > li.folder').each(function(){
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }
         })
 
+        $(this).addClass('active');
+
+        var inputType = $('ul#photo').attr('input-type');
+        var id = $(this).attr('id');
+        var url = 'Photo/GetPhotoByFolderId/' + id;
+
+        fetch(url, { method: 'POST' })
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    var element = '';
+                    element = element + '<ul id="child" class="photo padding-xsmall" folder-id="' + data.folderId + '">';        
+                    element = createPhotoList(data, element, inputType);
+                    element = createBtn(element)
+                    element = element + '</ul>';
+                    element = element + '<input type="hidden" id="element-selected" />'
+                    $('ul#photo').after(element);
+                })
+        })
+
+
+    }
+
+    var createPhotoList = function(obj, element, inputType){
+        var ids = '';
+        $('ul#child > li').remove();
+
+        for(var i in obj.photos){
+            var name = obj.photos[i].name.replace(/\.[^/.]+$/, "");
+            element = element + '<li class="photo-list box-shadow" id="' + obj.photos[i].id + '">';
+            element = element + '<span style="background-image: url(\'' + obj.photos[i].path + '\')"></span>';
+            element = element + '<p class="text-center">' + name + '</p>';
+            
+            if(inputType == 'radio'){
+                if($('ul#photo').attr('home-section') == 'header'){
+                    ids = $('input#idHeaderImage').val();
+                } else if ($('ul#photo').attr('home-section') == 'newsletter'){
+                    ids = $('input#idNewsletterImage').val();
+                } else {
+                    ids = $('input#cover').val();
+                }
+
+                if( obj.photos[i].id == ids){
+                    element = element + '<input type="' + inputType + '" name="album-image" id="img-' + obj.photos[i].id + '" class="checkbox-image" checked>';
+                } else {
+                    element = element + '<input type="' + inputType + '" name="album-image" id="img-' + obj.photos[i].id + '" class="checkbox-image">';
+                }
+
+            } else {
+                ids = $('input#album').val().split('|');
+
+                var selected = ids.filter(function(value){
+                    return value == obj.photos[i].id
+                });
+
+                if(selected.length > 0){
+                    element = element + '<input type="' + inputType + '" name="album-image" id="img-' + obj.photos[i].id + '" class="checkbox-image" checked>';
+                } else {
+                    element = element + '<input type="' + inputType + '" name="album-image" id="img-' + obj.photos[i].id + '" class="checkbox-image">';
+                }
+            }
+
+            element  = element + '<label for="img-' + obj.photos[i].id + '"></label>';    
+            element = element + '</li>';
+        }
+        return element;
     };
 
+    var createBtn = function(element){
+        element = element + '<div class="text-right btn-container">';
+        element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
+        element = element + '</div>';
+
+        return element
+    };
+
+    //3. Selected Image
+    var SavePhotoSelected = function(){
+        var id = $(this).attr('id');
+        var inputType = $('ul#photo').attr('input-type');
+        var value = '';
+        $('div#select input[type="'+ inputType +'"]:checked').each(function(){
+            value = value + $(this).parent().attr('id');
+            if(inputType !== 'radio'){
+                value = value + '|';
+            }
+        });
+
+        //remove last pipe from value
+        if(inputType !== 'radio'){
+            value = value.slice(0, -1);
+        }
+
+        $('#element-selected').val(value);
+    
+    }
+
+    var uploadAlbumPhotos = function(){
+        var value = $('#element-selected').val();
+        var inputType = $('ul#photo').attr('input-type');
+        var isListOfImage = $('div#addPhoto').length;
+        
+        //create skeleton of album
+        var lastElementChecked = $('div#select input[type="'+ inputType +'"]:checked + label').last().parent().find('span');
+        var totalImages = $('div#select input[type="'+ inputType +'"]:checked').length;
+        
+        if(inputType == 'radio'){
+            $('input#cover').val(value);
+            createSkeletonFromRadio(lastElementChecked);
+        } else {
+            $('input#album').val(value);
+            if(totalImages > 0){
+                createSkeleton(lastElementChecked, totalImages, isListOfImage)
+            } else {
+                $('div.skeleton-container #album').remove();
+            }    
+        }
+
+        $('.btn.close.select').trigger('click');
+    }
+
+    //4. Add Video To Post
     var getAllVideo = function(event){
         var element = '';
         var element = '<div id="select" ><span class="btn close select"></span><form class="video background-color-white border-radius-small"><div class="text-center"></div></form></div>'
@@ -32,33 +172,9 @@ var albumController = (function(){
         event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Video/GetAll', true, $('div#select form div'));
         app.callback(event, createVideoList);
 
-        $('div#select form > div').after(createBtn());
-
         $(document).on('click', '.btn.close.select', function(){
             $('div#select').remove();
         })
-    };
-
-    var createPhotosList = function(obj){
-        var element = '';
-        var ids = $('input#album').val().split('|');
-        
-        for(var i in obj.photos){
-            var selected = ids.filter(function(value){
-                return value == obj.photos[i].id
-            });
-            
-            if(selected.length > 0){
-                element = element + '<input type="checkbox" name="album-image" id="' + obj.photos[i].id + '" class="checkbox-image" checked>';
-            } else {
-                element = element + '<input type="checkbox" name="album-image" id="' + obj.photos[i].id + '" class="checkbox-image">';
-            }
-                    
-            element  = element + '<label for="' + obj.photos[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj.photos[i].path + '\');" ></label>';    
-        }
-        
-        return element;
-
     };
 
     var createVideoList = function(obj){
@@ -78,59 +194,43 @@ var albumController = (function(){
            element  = element + '<label for="' + obj.videoList[i].id + '" class="border-radius-small"><video><source src="' + obj.videoList[i].path + '"></video></label>';
         }
 
+        element = createBtn(element);
+
+        console.log(element);
+
         return element;
        
     }
 
-    /* CREATE BTN BTN */
-    var createBtn = function(){
-        var element = '';     
-
-        element = element + '<div class="text-right btn-container">';
-        element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
-        element = element + '</div>';
-
-        return element
-    };
-
-    /* EDIT */
-    var uploadAlbum = function(){
+    //5. Upload Video To Post
+    var uploadVideoToAlbum = function(event){
+        event.preventDefault();
         var value = '';
 
-        $('div#select > form input[type="checkbox"]:checked').each(function(){
+        $('div#select input[type="checkbox"]:checked').each(function(){
             value = value + $(this).attr('id');
             value = value + '|';
         });
 
         //remove last pipe from value
         value = value.slice(0, -1);
-
-        //update input with id of image or video selected
-        var isListOfImage = $('form.image').length;
-        if(isListOfImage > 0){
-            $('input#album').val(value);
-        } else {
-            $('input#video').val(value);
-        }
+        $('input#video').val(value);
         
         //create skeleton of album
-        var lastElementChecked = $('div#select > form input[type="checkbox"]:checked + label').last();
-        var totalImages = $('div#select > form input[type="checkbox"]:checked').length;
+        var lastElementChecked = $('div#select input[type="checkbox"]:checked + label').last();
+        var totals = $('div#select input[type="checkbox"]:checked').length;
         
-        if(totalImages > 0){
-            createSkeleton(lastElementChecked, totalImages, isListOfImage)
+        if(totals > 0){
+            createSkeleton(lastElementChecked, totals, 0)
         } else {
-            if(isListOfImage > 0){
-                $('div.skeleton-container #album').remove();
-            } else {
                 $('div.skeleton-container #video').remove();
-            }
         }
 
         //close popup
         $('.btn.close.select').trigger('click')
     }
 
+    //6. Create skeleton
     var createSkeleton = function(lastElement, length, isListOfImage){
         var elem = '';
         var background = '';
@@ -153,6 +253,14 @@ var albumController = (function(){
         $('div.skeleton-container').append(elem);
 
     };
+
+    var createSkeletonFromRadio = function(element){
+        var background = background = element.css('background-image').replace(/"/g, "");
+        var elementToAppend = '';
+        $('span#cover.skeleton').remove();
+        elementToAppend = elementToAppend + '<span id="cover" class="skeleton border-radius-small" style="background-image:'+ background +'"></span>';
+        $('div.skeleton-container').prepend(elementToAppend);
+    }
 
     var addSkeletonOfImage = function(url, stringArray, elemToAppend){
         var element = '';
@@ -191,95 +299,27 @@ var albumController = (function(){
 
     };
 
-    //Manege single image for HOME PAGE and COVER IMAGE in POST
-    var displayAllImage = function(elementPressed, url, appendTo){
+    //7. Home 
+    var updateHeaderImage = function(){
+        var imageSelected = $('#element-selected').val();
+        var urlImageSelected = $('div#select  input[type="radio"]:checked + label').parent().find('span').css('background-image');
 
-        var id = "", type ="";
+        $('#idHeaderImage').val(imageSelected);
+        $('section.header').css('background-image', urlImageSelected);
 
-        if(elementPressed.attr('element') === "header"){
-            id = $('input#idHeaderImage').val();
-            type = "header";
-        } else if(elementPressed.attr('element') === "newsletter"){
-            id = $('input#idNewsletterImage').val();
-            type = "newsletter";
-        } else {
-            id = $('input#cover').val();
-            type = "cover";
-        }
+        $('.btn.close.select').trigger('click')
+    }
+
+    var updateNewsletterImage = function(){
+        var imageSelected = $('#element-selected').val();
+        var urlImageSelected = $('div#select  input[type="radio"]:checked + label').parent().find('span').css('background-image');
+
+        $('input#idNewsletterImage').val(imageSelected);
+        $('div.newsletter').css('background-image', urlImageSelected);
+
+        $('.btn.close.select').trigger('click')
+    }
     
-        fetch(url, {method: 'POST'})
-            .then(function(res){
-                res.json()
-                    .then(function(data){
-                        var element = createListRadio(data, id)
-                        appendTo.append(element);
-                        
-                    })
-            })
-
-            appendTo.after(createBtnRadio(type));
-    }
-
-    var createListRadio = function(obj, id){
-        var element = '';
-
-        for(var i in obj.photos){
-            if(id == obj.photos[i].id ){
-                element = element + '<input type="radio" name="group" id="img-' + obj.photos[i].id + '" checked/>';
-            } else {
-                element = element + '<input type="radio" name="group" id="img-' + obj.photos[i].id + '" />';
-            }
-            element  = element + '<label for="img-' + obj.photos[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj.photos[i].path + '\');" ></label>';    
-        }
-        
-        return element
-    }
-
-    var createBtnRadio = function(type){
-        var element = '';
-
-        element = element + '<div class="text-right btn-container">';
-        element = element + '<input type="' + type + '" type="submit" id="setImage" class="btn btn-rounded btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
-        element = element + '</div>';
-
-        return element
-    };
-
-    var createSkeletonFromRadio = function(element){
-        var background = background = element.css('background-image').replace(/"/g, "");
-        var elementToAppend = '';
-        $('span#cover.skeleton').remove();
-        elementToAppend = elementToAppend + '<span id="cover" class="skeleton border-radius-small" style="background-image:'+ background +'"></span>';
-        $('div.skeleton-container').prepend(elementToAppend);
-    }
-
-    var updateSelectFromRadio = function(event){
-        event.preventDefault();
-        
-        var type = $(this).attr('type');;
-        var idImageSelected = $('div#select > form input[type="radio"]:checked').attr('id').replace('img-', '');
-
-        
-        if(type === "header" || type === "newsletter"){
-            var urlImageSelected = $('div#select > form input[type="radio"]:checked + label').css('background-image');
-           
-            if(type === "header"){
-                $('input#idHeaderImage').val(idImageSelected);
-                $('section.header').css('background-image', urlImageSelected);
-            } else {
-                $('input#idNewsletterImage').val(idImageSelected);
-                $('div.newsletter').css('background-image', urlImageSelected);
-            }
-            
-        } else {
-            $('input#cover').val(idImageSelected);
-            var elementChecked = $('div#select > form input[type="radio"]:checked + label').last();
-            createSkeletonFromRadio(elementChecked);
-        }         
-        
-        $('div#select > span.btn.close').trigger('click');
-    }
-
     var addSkeletonOfImageForRadio = function(url, id, elemToAppend){
         var element = '';
         var url = url + id;
@@ -296,13 +336,17 @@ var albumController = (function(){
     };
 
     return {
-        getAllImage: getAllImage,
+        getAllFolder: getAllFolder,
+        displayPhoto: displayPhoto,
+        SavePhotoSelected: SavePhotoSelected,
+        uploadAlbumPhotos: uploadAlbumPhotos,
         getAllVideo: getAllVideo,
-        uploadAlbum: uploadAlbum,
+        uploadVideoToAlbum: uploadVideoToAlbum,
         addSkeletonOfImage: addSkeletonOfImage,
-        updateSelectFromRadio: updateSelectFromRadio,
         addSkeletonOfImageForRadio: addSkeletonOfImageForRadio,
-        addSkeletonOfVideo: addSkeletonOfVideo
+        addSkeletonOfVideo: addSkeletonOfVideo,
+        updateHeaderImage: updateHeaderImage,
+        updateNewsletterImage: updateNewsletterImage
     };
 
 })();
@@ -310,16 +354,18 @@ var albumController = (function(){
 var albumUI = (function(){
 
     var DOM = {
-        btnCloseOverlay: '.btn#close',
-        btnCoverImage: '.btn.cover',
-        btnUploadAlbum: '.btn.upload-album',
-        btnUploadVideo: '.btn.upload-video',
-        btnUpload: 'div#select > form input#save',
-        btnHpHeader: 'span[element="header"].btn.edit',
+        btnCloseOverlay: '.btn.close',
+        btnAddCoverImageToPost: '.btn.cover',
+        btnAddAlbumToPost: '.btn.upload-album',
+        btnDisplayPhoto: 'ul#photo > li',
+        btnAddPhotoToAlbum: 'div#select ul#child > li',
+        btnUploadAlbumPhotos: 'div#select ul#photo[home-section="undefined"] + ul#child input#save',
+        btnAddVideoToPost: '.btn.upload-video',
+        btnUploadVideoToAlbum: 'form.video  input#save',
         btnHpNewsLetter: 'span[element="newsletter"].btn.edit',
-        btnHpCoverUpload: 'input#setImage',
-        btnImgRadio: 'div#select > form input[type="radio"] + label',
-        btnImgCheckBox: 'div#select > form input[type="radio"] + label'
+        btnHpHeader: 'span[element="header"].btn.edit',
+        btnUploadHomeHeaderImage: 'div#select ul#photo[home-section="header"] + ul#child input#save',
+        btnUploadHomeNewsletterImage: 'div#select ul#photo[home-section="newsletter"] + ul#child input#save',
     }
 
     return {
@@ -334,21 +380,26 @@ var album = (function(albumCtrl, albumUI){
     var init = function(){
         console.log('album init');
 
-        //Cover Image
-        $(document).on('click', DOMElement.btnCoverImage, albumCtrl.getAllImage);
+        //remove overlay
+        $(document).on('click', DOMElement.btnCloseOverlay, function(){
+            $('#select').remove();
+        })
 
-        //Upload album-video
-        $(document).on('click', DOMElement.btnUploadAlbum, albumCtrl.getAllImage);
-        $(document).on('click', DOMElement.btnUploadVideo, albumCtrl.getAllVideo);
-        $(document).on('click', DOMElement.btnUpload, albumCtrl.uploadAlbum);
+        //Photos
+        $(document).on('click', DOMElement.btnAddCoverImageToPost, albumCtrl.getAllFolder);
+        $(document).on('click', DOMElement.btnAddAlbumToPost, albumCtrl.getAllFolder);
+        $(document).on('click', DOMElement.btnDisplayPhoto, albumCtrl.displayPhoto);
+        $(document).on('click', DOMElement.btnAddPhotoToAlbum, albumCtrl.SavePhotoSelected);
+        $(document).on('click', DOMElement.btnUploadAlbumPhotos, albumCtrl.uploadAlbumPhotos);
+
+        $(document).on('click', DOMElement.btnAddVideoToPost, albumCtrl.getAllVideo);
+        $(document).on('click', DOMElement.btnUploadVideoToAlbum, albumCtrl.uploadVideoToAlbum)
 
         //Home Page Managment background-image for header and newsletter
-        $(document).on('click', DOMElement.btnHpHeader, albumCtrl.getAllImage);
-        $(document).on('click', DOMElement.btnHpNewsLetter, albumCtrl.getAllImage);
-        
-        $(document).on('click', DOMElement.btnHpCoverUpload, albumCtrl.updateSelectFromRadio);
-
-
+        $(document).on('click', DOMElement.btnHpHeader, albumCtrl.getAllFolder);
+        $(document).on('click', DOMElement.btnHpNewsLetter, albumCtrl.getAllFolder);
+        $(document).on('click', DOMElement.btnUploadHomeHeaderImage, albumCtrl.updateHeaderImage);
+        $(document).on('click', DOMElement.btnUploadHomeNewsletterImage, albumCtrl.updateNewsletterImage);
     }
 
     var addSkeletonOfImage = albumCtrl.addSkeletonOfImage;

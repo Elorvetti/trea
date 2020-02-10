@@ -1,18 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
 using TreA.Presentation.Areas.Backoffice.Models;
-using TreA.Data.Entities;
 using TreA.Services.Photo;
 using TreA.Services.Category;
 using TreA.Services.Argument;
@@ -86,39 +76,35 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         [HttpPost]
-        public IList<CategoryModel> GetMenu(){
-             var model = new List<CategoryModel>();
+        public HomeModel GetCategory(){
+            var model = new HomeModel();
             
             var categories = _categoryService.GetAll();
             foreach(var category in categories){
-                
-                //Get argument of this category
-                var children = new List<ArgumentChild>();
-                var arguments = _argumentService.GetByCategoryId(category.id);
-                foreach(var argument in arguments){
-                    children.Add(new ArgumentChild(){
-                        id = argument.id,
-                        name = argument.name,
-                    });
-                }
-
-                if(arguments.Count == 0){
-                    var posts = _postService.GetByCategoryId(category.id);
-                    foreach(var post in posts){
-                        children.Add(new ArgumentChild(){
-                            id = post.id,
-                            name = post.title,
-                        });
-                    }
-                }
-                
-                model.Add(new CategoryModel(){
+                model.categoryMenus.Add(new CategoryMenu(){
                     id = category.id,
                     name = category.name,
-                    Children = children
+                    HasChild = _argumentService.GetByCategoryId(category.id).Any() ? true : false,
                 });
             }
-            
+
+            return model;
+        }
+
+        [HttpPost]
+        public HomeModel GetArgument(int categoryId, int livello, int IdPadre){
+            var model = new HomeModel();
+
+            var arguments = _argumentService.GetByCategoryId(categoryId, livello,IdPadre);
+            foreach(var argument in arguments){
+                model.argumentMenus.Add(new ArgumentMenu(){
+                    id = argument.id,
+                    name = argument.name,
+                    categoryId = categoryId,
+                    HasChild = _argumentService.GetByCategoryId(categoryId, 2, argument.id).Any() ? true : false
+                });
+            }
+
             return model;
         }
     }

@@ -65,30 +65,18 @@ var hpController = (function(){
     /* MENU */
     var getMenu = function(){
         var event = {};
-        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Home/GetMenu', false, null);
+        event.data = new app.Data(false, null, null, 'Home/GetCategory', false, null);
         app.callback(event, createMenu);
     }
 
     var createMenu = function(data){
         var element = '';
         element = element + '<ul class="category text-right">';
-        for(var i in data){
-            if(data[i].children.length > 1){
-                element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white" child="close">' + data[i].name;
-                element = element + '<ul class="border-radius-small">';
-                for(var y in data[i].children){
-                    element = element + '<li id="' + data[i].children[y].id + '" class="padding-left-small color-white">' + data[i].children[y].name + '</li>';
-                }
-                element = element + '</ul>';
-
-            } else if(data[i].children.length === 1) {
-                element = element + '<li id="' + data[i].children[0].id + '" class="margin-right-xsmall color-white">' + data[i].name;
-                
-            } else {
-                element = element + '<li id="' + data[i].id + '" class="margin-right-xsmall color-white">'
-                element = element + '<a class="color-white">' + data[i].name + '</a>'
+        for(var i in data.categoryMenus){
+            element = element + '<li id="' +data.categoryMenus[i].id + '" class="category margin-right-xsmall color-white" child="' + data.categoryMenus[i].hasChild  + '" display="false">' + data.categoryMenus[i].name;
+            if(data.categoryMenus[i].hasChild){
+                element = element + '<span class="fake-btn"></span>'   
             }
-            element = element + '</li>' 
         }
         element = element + '</ul>'
 
@@ -96,21 +84,53 @@ var hpController = (function(){
         $('form#container h1').after(element);
     }
 
-    /* MENU EVENT */
-    var toggleSubList = function(){
-        var subchildAttr = $(this).attr('child');
-        if(subchildAttr !== undefined){
-            switch (subchildAttr){
-                case "close":
-                    $(this).attr('child', 'open');
-                    break;
-                case "open":
-                    $(this).attr('child', 'close');
-                    break;
-            }
+    var getChildMenu = function(){
+        var self = $(this).parent();
+        var id = self.attr('id');
+        var idPadre = 0;
+        var livello = 1;
+
+        if(self.attr('display') == 'false'){
+            self.attr('display', 'true');
+        } else {
+            self.attr('display', 'false');
+
         }
+        if(self.find('ul').length > 0){
+            self.find('ul').remove();
+        }
+
+        if(self.hasClass('argument')){
+            id = self.attr('category-id');
+            idPadre = self.attr('id');
+            livello = 2
+        } else {
+            $('div.nav-container').toggleClass('open-child');
+        }
+
+        var url = 'Home/GetArgument?categoryId=' + id + '&livello=' + livello + '&idPadre=' + idPadre;
+        
+        fetch(url, {method: 'POST'})
+            .then(function(res){
+                res.json()
+                    .then(function(data){
+                        var element = '';
+                        element = element + '<ul class="argument text-right background-color-blue">';
+                        for(var i in data.argumentMenus){
+                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white" child="' + data.argumentMenus[i].hasChild  + '" display="false" category-id="' + data.argumentMenus[i].categoryId + '">' + data.argumentMenus[i].name        
+                            if(data.argumentMenus[i].hasChild){
+                                element = element + '<span class="fake-btn"></span>'   
+                            }
+                        }
+                        element = element + '</ul>'
+                        if(self.attr('display') == 'true'){
+                            self.append(element);
+                        }
+                    })
+            })
     }
 
+    /* MENU EVENT */
     var toggleMenu = function(){
         $(this).toggleClass('active');
         $('section#sidebarFE').toggleClass('active');
@@ -157,7 +177,7 @@ var hpController = (function(){
         $('input#testoHeader').val(headerText);
 
         //update view 
-        $('div.about-us > h3').text(headerTitle);
+        $('div.about-us > h2').text(headerTitle);
         $('div.about-us > p').html(headerText);
 
         $('#overlay').remove();
@@ -331,8 +351,8 @@ var hpController = (function(){
         changeDeviceView: changeDeviceView,
         setContainerWidth: setContainerWidth,
         getMenu: getMenu,
+        getChildMenu: getChildMenu,
         toggleMenu: toggleMenu,
-        toggleSubList: toggleSubList,
         editHeader: editHeader,
         saveHeader: saveHeader,
         saveSetting: saveSetting, 
@@ -348,7 +368,8 @@ var hpUI = (function(){
     var DOM = {
         btnDevice: 'ul#home > li',
         btnHamburger: 'span.menu',
-        btnSubMenu: 'ul.category > li',
+        btnDisplayChild: 'ul > li.category[child="true"] > span.fake-btn',
+        btnDisplayArgumentChild: 'ul > li.argument[child="true"] > span.fake-btn',
         btnEditorHeader: 'span#addEditorHeader',
         btnSaveHeader: 'input#save',
         btnSaveSetting: 'span#saveSetting',
@@ -385,8 +406,9 @@ var hp = (function(hpUI, hpCtrl){
 
         $(document).on('click', DOMElement.btnDevice, hpCtrl.changeDeviceView);
         $(document).on('click', DOMElement.btnHamburger, hpCtrl.toggleMenu);
-        $(document).on('click', DOMElement.btnSubMenu, hpCtrl.toggleSubList);
-
+        $(document).on('click', DOMElement.btnDisplayChild, hpCtrl.getChildMenu);
+        $(document).on('click', DOMElement.btnDisplayArgumentChild, hpCtrl.getChildMenu);
+    
         //Editor header
         $(document).on('click', DOMElement.btnEditorHeader, hpCtrl.editHeader);
         $(document).on('click', DOMElement.btnSaveHeader, hpCtrl.saveHeader);

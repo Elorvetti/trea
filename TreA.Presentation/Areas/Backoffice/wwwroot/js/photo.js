@@ -155,7 +155,6 @@ var photoController = (function(){
         .then(function(res){
             res.json()
                 .then(function(data){
-                    console.log(data);
                     var element = '';
                     element = element + '<ul id="child" class="photo padding-xsmall" folder-id="' + data.folderId + '">';                     
                     element = createPhotoList(data, element);
@@ -172,9 +171,23 @@ var photoController = (function(){
     //1. Add New Photo
     var getAllPhoto = function(){
         var folderId = $('ul#child').attr('folder-id');
-        var event = {};
-        event.data = new app.Data(false, null, folderId, 'Photo/GetPhotoByFolderId', true, $('div.content > ul#photo.list'));
-        app.callback(event, displayFolderList);
+        $('div.content > ul#child').remove();
+
+        var url = 'Photo/GetPhotoByFolderId/' + folderId;
+
+        fetch(url, { method: 'POST' })
+        .then(function(res){
+            res.json()
+                .then(function(data){
+                    var element = '';
+                    element = element + '<ul id="child" class="photo padding-xsmall" folder-id="' + data.folderId + '">';                     
+                    element = createPhotoList(data, element);
+                    element = element + '</ul>';
+
+                    $('ul#photo').after(element);
+                })
+        })
+
     }
 
     var createNewPhotoForm = function(){

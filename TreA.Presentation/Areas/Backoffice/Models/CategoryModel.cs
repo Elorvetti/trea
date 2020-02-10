@@ -15,10 +15,6 @@ namespace TreA.Presentation.Areas.Backoffice.Models
         public IList<Categories> categories{ get; set; } = new List<Categories>();
         public IList<Arguments> arguments { get; set; } = new List<Arguments>();
         public IList<Posts> posts { get; set; } = new List<Posts>();
-        public IList<ArgumentChild> Children { get; set; } = new List<ArgumentChild>();
     }
 
-    public class ArgumentChild : Arguments{
-        public string slug{ get; set; }
-    }
 }

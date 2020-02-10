@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
@@ -75,42 +75,37 @@ namespace TreA.Presentation.Controllers
         }
         
         [HttpPost]
-        public IList<CategoryModel> GetAllCategory(){
-            var model = new List<CategoryModel>();
+        public HomeModel GetAllCategory(){
+            var model = new HomeModel();
             
             var categories = _categoryService.GetAll();
             foreach(var category in categories){
-                
-                //Get argument of this category
-                var children = new List<ArgumentChild>();
-                var arguments = _argumentService.GetByCategoryId(category.id);
-                foreach(var argument in arguments){
-                    children.Add(new ArgumentChild(){
-                        id = argument.id,
-                        name = argument.name,
-                        slug = _slugService.GetById(argument.slugId).name
-                    });
-                }
-
-                if(arguments.Count == 0){
-                    var posts = _postService.GetByCategoryId(category.id);
-                    foreach(var post in posts){
-                        children.Add(new ArgumentChild(){
-                            id = post.id,
-                            name = post.title,
-                            slug = _slugService.GetById(post.slugId).name
-                        });
-                    }
-                }
-                
-                model.Add(new CategoryModel(){
+                model.categoryMenus.Add(new CategoryMenu(){
                     id = category.id,
                     name = category.name,
-                    slug = _slugService.GetById(category.slugId).name,
-                    Children = children
+                    HasChild = _argumentService.GetByCategoryId(category.id).Any() ? true : false,
+                    slug = _slugService.GetById(category.slugId).name
                 });
             }
-            
+
+            return model;
+        }
+
+        [HttpPost]
+        public HomeModel GetArgument(int categoryId, int livello, int IdPadre){
+            var model = new HomeModel();
+
+            var arguments = _argumentService.GetByCategoryId(categoryId, livello,IdPadre);
+            foreach(var argument in arguments){
+                model.argumentMenus.Add(new ArgumentMenu(){
+                    id = argument.id,
+                    name = argument.name,
+                    categoryId = categoryId,
+                    HasChild = _argumentService.GetByCategoryId(categoryId, 2, argument.id).Any() ? true : false,
+                    slug = _slugService.GetById(argument.slugId).name
+                });
+            }
+
             return model;
         }
 

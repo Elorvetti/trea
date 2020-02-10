@@ -131,7 +131,6 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .btn.add{ background-image: url('../img/plus.png'); }
 .btn.filter{ background-image: url('../img/filter.png'); }
 .btn.remove{ background-image: url('../img/delete.png'); }
-.btn.display-child{ background-image: url('../img/chevron-right.png'); }
 .btn.edit{ background-image: url('../img/edit.png'); }
 .btn.preview{ background-image: url('../img/search.png'); }
 .btn.crop{ background-image: url('../img/crop.png'); }
@@ -276,20 +275,11 @@ div#overlay > form select{ position: relative; display: block; margin-bottom: 10
 div#overlay p.confirm{ padding: 20px; }
 
 div#select{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; text-align: center; z-index: 9999; background-color: rgba(0,0,0,.9); }
-div#select > span{ position: relative; display: block; margin: 0 auto; top: 40px; width: 90%; max-width: 500px; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
+div#select > span{ position: relative; display: block; margin: 0 auto; top: 40px; width: 90%; height: 40px; background-size: contain; background-position: right center; background-repeat: no-repeat; cursor: pointer; }
 
-div#select > form{
-    position: relative;
-    display: inline-block;
-    top: 40px;
-    width: 90%;
-    max-width: 500px;
-    min-height: 450px;
-    overflow-y: scroll;
-    text-align: center;
-}
-div#select > form > div > input[type="checkbox"]{ position: relative; display: inline-block; width: 10px; opacity: 0; }
-div#select > form > div > input[type="checkbox"] + label{
+div#select > form{ position: relative; display: inline-block; top: 40px; min-width: 90%; max-width: 90%; min-height: 90%; max-height: 90%; text-align: center; }
+div#select div > input[type="checkbox"]{ position: relative; display: inline-block; width: 10px; opacity: 0; }
+div#select div > input[type="checkbox"] + label{
     position: relative;
     display: inline-block;
     width: 90px;
@@ -299,13 +289,13 @@ div#select > form > div > input[type="checkbox"] + label{
     background-position: center center;
     cursor: pointer;
 }
-div#select > form > div > input[type="checkbox"] + label > video{
+div#select div > input[type="checkbox"] + label > video{
     position: relative;
     display: inline-block;
     width: 90px;
     height: 90px;
 }
-div#select > form > div > input[type="checkbox"]:checked + label::after{
+div#select div > input[type="checkbox"]:checked + label::after{
     content: '';
     position: absolute;
     top: 0;
@@ -401,26 +391,6 @@ ul.list li span{ float: right; margin-right: 10px; width: 35px  ; height: 35px; 
 ul.list li p[public]{ padding-left: 30px; background-size: 26px; background-position: left center; background-repeat: no-repeat; }
 ul.list li p[public="false"] { background-image: url('../img/post-not-public.png'); }
 ul.list li p[public="true"] { background-image: url('../img/post-public.png'); }
-
-ul.list li.display-child{ 
-    border-radius: 5px;
-    height: auto; 
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
-    -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
-    -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
-    background-position: 5px 7px;
-    border-bottom: 1px solid transparent;
-}
-ul.list li.display-child:hover{ border-bottom: 1px solid transparent; }
-ul.list li.display-child > ul > li.add-child{ height: 60px; border-bottom: 1px solid transparent; }
-ul.list li.display-child > ul > li.add-child:hover{ border-bottom: 1px solid transparent; }
-
-/*div.content > ul.list.display-child{ display: inline-block; width: 30%; }
-div.content > ul > li.children{ min-height: 250px; overflow: hidden; overflow-y: scroll; }
-
-div.content > ul > li.add-child > span.close-child{ float: left; background-image: url('../img/arrow-left.png'); }*/
-
-
 
 @media(min-width: 1024px){
     ul.list li p{ max-width: 400px; }
@@ -636,7 +606,7 @@ form#container section.header:before {
     background: rgb(0,0,0);
     background: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 100%);
 }
-section.header ul.social{ position: absolute; display: inline-block; width: 35%; z-index: 9996;}
+section.header ul.social{ position: absolute; display: inline-block; width: 35%; z-index: 9994;}
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
 ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
 ul.social li.instagram{ background-image: url('../img/social/instagram.png') }
@@ -645,14 +615,25 @@ ul.social li > a{ position: relative; display: inline-block; width: 100%; height
 
 form#container h1{ position: absolute; display: inline-block; font-size: 28px; font-weight: 600; margin-bottom: .1em; width: 100% }
 
-form#container section.header ul.category{ position: absolute; right: 10px; width: 60%; }
+form#container section.header > div.nav-container{ position: relative; display: inline-block; width: 100%; transition: 0.4s; }
+form#container section.header ul.category{ position: absolute; right: 0; z-index: 9998; }
 form#container section.header ul.category > li{ display: inline-block; padding: 0 25px; line-height: 40px; cursor: pointer; background-size: 26px; background-position: 100% 5px; background-repeat: no-repeat; }
-form#container section.header ul.category > li[child="close"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
-form#container section.header ul.category > li[child="open"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
-form#container section.header ul.category > li[child="open"] > ul{ background-color:rgba(0,0,0,.9); }
-
+form#container section.header ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
+form#container section.header ul.category > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
+form#container section.header ul.category > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 35px; }
+form#container section.header ul.category > li > ul.argument{ position: absolute; left: 25px; right: 0; height: auto; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+form#container section.header ul.category > li > ul.argument > li{ width: 30%; }
+form#container section.header ul.category > li > ul.argument > li:hover, form#container section.header ul.category > li > ul.argument > li:active{ color: #73AFBA!important; }
+form#container section.header ul.argument{ border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;  }
 ul.category > li[child="open"] > ul > li:hover, ul.category > li[child="open"] > ul > li:active{ color: #73AFBA!important; }
 ul.category > li:hover, ul.category > li:active{ color: #73AFBA!important; }
+
+ul.category > li > ul.argument, ul.category > li > ul.argument > li {position: relative; display: block; cursor: pointer; background-size: 26px; background-repeat: no-repeat; background-position: 100% 0; }
+ul.category > li > ul.argument > li[child="true"][display="false"]{ background-image: url('../img/chevron-up.png'); max-height: 30px; overflow: hidden; }
+ul.category > li > ul.argument > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
+ul.category > li > ul.argument > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 27px; }
+
+ul.category > li > ul.argument, ul.category > li > ul.argument > li > ul{ padding-left: 10px; }
 
 form#container span.menu{ position: absolute; display: inline-block; right: 10px; padding: 6px 0; height: 40px; line-height: 10px; text-align: center; cursor: pointer; }
 form#container span.menu > span{ display: block; margin: 5px auto; width: 30px; height: 3px; }
@@ -687,10 +668,12 @@ form#container span.search-bar{
 /* SIDEBAR FE */
 form#container section#sidebarFE{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 0; z-index: 9997; transform: translateX(4000px); }
 form#container section#sidebarFE > * { position: relative; display: inline-block; width: 100%; }
-form#container section#sidebarFE > ul.category > li{ padding-left: 20px; line-height: 35px; cursor: pointer; background-size: 26px; background-position: 90% 5px; background-repeat: no-repeat; }
+form#container section#sidebarFE  ul > li{ padding-left: 20px; line-height: 35px; cursor: pointer; background-size: 26px; background-position: 90% 5px; background-repeat: no-repeat; }
 form#container section#sidebarFE.active{  transform: translateX(0); transform-style: preserve-3d; transition: .3s ease-in-out; }
-form#container section#sidebarFE ul > li[child="close"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
-form#container section#sidebarFE ul > li[child="open"]{ background-image: url('../img/chevron-down.png'); max-height: unset; }
+form#container section#sidebarFE  ul > li[child="true"][display="false"]{ background-image: url('../img/chevron-down.png'); max-height: 35px; overflow: hidden; }
+form#container section#sidebarFE  ul > li[child="true"][display="true"]{ background-image: url('../img/chevron-up.png'); max-height: unset; }
+form#container section#sidebarFE  ul > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 35px; }
+form#container section#sidebarFE  ul > li > ul, form#container section#sidebarFE  ul > li > ul > li{ position: relative; }
 
 /* MAIN */
 form#container section.main{ position: relative; display: inline-block; margin: 0; width: 100%; }
@@ -769,6 +752,7 @@ form#container[device="desktop"] section.main div.instagram{ width: 50%; float: 
 form#container[device="desktop"] section.main div.newsletter{ width: 50%; float: right; }
 form#container[device="desktop"] section#podcast{ width: 50%; float: left; }
 form#container[device="desktop"] section#youtube{ width: 50%; float: right; }
+form#container[device="desktop"] section.header > div.nav-container.open-child{ height: 40px; background-color: #1C2E3D; }
 
 
 @media(min-width: 768px){
@@ -885,6 +869,29 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
 /* SITE TREE */
 @media(min-width: 1024px){
     div#addSiteTree, div#addPhoto{ display: block; margin: 20px auto 0; width: 95%; height: 95%; overflow: hidden; }
+    div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 45%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
+    div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 55%; height: 99%; overflow-y: scroll;}
+    
+    div#addSiteTree ul li, div#addPhoto > ul#photo li.folder{ margin-bottom: 5px; height: auto; min-height: 45px; border-bottom: 1px solid transparent; border-radius: 5px; cursor: pointer; background-position: 0 9px; }
+    div#addSiteTree ul li:hover, div#addSiteTree  ul  li.active,  div#addPhoto > ul#photo li.folder:hover,  
+    div#addPhoto > ul#photo li.folder.active{ box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); border: 1px solid #1C2E3D; }
+    div#addSiteTree ul li p{ line-height: 46px; }
+    div#addSiteTree ul li span, div#addPhoto ul#photo li span{ margin-top: 4px; }
+    
+    div#addSiteTree ul#child li{ position: relative; margin-left: 0; width: 100%; }
+    div#addSiteTree ul#child li > span.fake-btn{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; height: 45px; width: 60%; z-index: 9990; }
+    
+    div#addPhoto ul#child li{ position: relative; display: inline-block; margin: 5px; width: 24%; height: 200px; border-top-right-radius: 5px; border-top-left-radius: 5px;}
+    div#addPhoto ul#child li > span{ position: relative; display: inline-block; width: 100%; height: 88%; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-right-radius: 5px; border-top-left-radius: 5px; }
+    div#addPhoto ul#child li > span.btn{ position: absolute; display: inline-block; width: 35px; height: 35px; top: 5px; background-size: 26px; z-index: 9997; border-radius: 50%;; } 
+    div#addPhoto ul#child li > span.btn.edit{ right: 5px; } 
+    div#addPhoto ul#child li > span.btn.remove{ right: 50px; } 
+    div#addPhoto ul#child li > span.btn.crop{ left: 5px; } 
+
+}
+
+@media(min-width: 1440px){
+    div#addSiteTree, div#addPhoto{ display: block; margin: 20px auto 0; width: 95%; height: 95%; overflow: hidden; }
     div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 30%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
     div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 70%; height: 99%; overflow-y: scroll;}
     
@@ -897,11 +904,30 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
     div#addSiteTree ul#child li{ position: relative; margin-left: 0; width: 100%; }
     div#addSiteTree ul#child li > span.fake-btn{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; height: 45px; width: 60%; z-index: 9990; }
     
-    div#addPhoto ul#child li{ position: relative; display: inline-block; width: 40%; height: 350px; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-right-radius: 5px; border-top-left-radius: 5px;}
-    div#addPhoto ul#child li > span{ position: relative; display: inline-block; width: 100%; height: 90%; }
-    div#addPhoto ul#child li > span.btn{ position: absolute; display: inline-block; width: 35px; height: 35px; top: 5px; background-size: 26px; z-index: 9997; } 
+    div#addPhoto ul#child li{ position: relative; display: inline-block; margin: 5px; width: 24%; height: 200px; border-top-right-radius: 5px; border-top-left-radius: 5px;}
+    div#addPhoto ul#child li > span{ position: relative; display: inline-block; width: 100%; height: 88%; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-right-radius: 5px; border-top-left-radius: 5px; }
+    div#addPhoto ul#child li > span.btn{ position: absolute; display: inline-block; width: 35px; height: 35px; top: 5px; background-size: 26px; z-index: 9997; border-radius: 50%;; } 
     div#addPhoto ul#child li > span.btn.edit{ right: 5px; } 
     div#addPhoto ul#child li > span.btn.remove{ right: 50px; } 
     div#addPhoto ul#child li > span.btn.crop{ left: 5px; } 
 
+    div#select > div#addPhoto{ margin-top: 40px; width: 90%; height: 90%; }
+}
+
+ul#child > div.btn-container{ position: relative; margin-top: 20px; }
+ul#child input[type="checkbox"],ul#child input[type="radio"]{ position: relative; display: inline-block; width: 10px; opacity: 0; }
+ul#child input[type="checkbox"] + label,ul#child input[type="radio"] + label{ position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: unset; height: unset; cursor: pointer; }
+ul#child input[type="checkbox"]:checked + label::after, ul#child input[type="radio"]:checked + label::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top-right-radius: 5px; 
+    border-top-left-radius: 5px;
+    background-color: rgba(0,0,0,.6);
+    background-image: url('../img/post-public.png');
+    background-repeat: no-repeat;
+    background-position: center center;
 }

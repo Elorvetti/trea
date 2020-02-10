@@ -15,6 +15,7 @@ using TreA.Presentation.Areas.Backoffice.Models;
 using TreA.Data.Entities;
 using TreA.Services.Common;
 using TreA.Services.Video;
+using TreA.Services.Album;
 using TreA.Services.Folder;
 using TreA.Services.Files;
 
@@ -25,12 +26,14 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
     {
         private readonly ICommonService _commonService;
         private readonly IVideoService _videoService;
+        private readonly IAlbumService _albumService;
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
 
-        public VideoController(ICommonService commonService, IVideoService videoService, IFolderService folderService, IFileService fileService){
+        public VideoController(ICommonService commonService, IVideoService videoService, IAlbumService albumService, IFolderService folderService, IFileService fileService){
             this._commonService = commonService;
             this._videoService = videoService;
+            this._albumService = albumService;
             this._folderService = folderService;
             this._fileService = fileService;
         }
@@ -137,6 +140,24 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         [HttpPost]
         public void Delete(int id){
             var video = _videoService.GetById(id);
+
+            //remove video from album
+            var albums = _albumService.GetAll();
+            foreach(var album in albums){
+                var videos = album.idVideo.Split('|').Where(x => x != id.ToString()).ToArray();
+                var newAlbumVideos = "";
+                foreach(var v in videos){
+                    newAlbumVideos = string.Concat(newAlbumVideos, v, "|");
+                }
+                var newAlbum = new AlbumModel();
+                if(newAlbumVideos.Length > 0){
+                    newAlbum.idVideo = newAlbumVideos.Remove(newAlbumVideos.Length - 1);
+                } else {
+                    newAlbum.idVideo = "";
+                }
+                newAlbum.idImmagini = album.idImmagini;
+                _albumService.Update(album.id, newAlbum);
+            }
 
             var filePath = "Content\\Videos\\" + video.name;
             _fileService.Delete(filePath);

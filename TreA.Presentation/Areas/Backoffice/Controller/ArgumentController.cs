@@ -153,9 +153,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             var categorySlug = _slugService.GetById(categorySlugId).name;
             var name = "";
 
-            var idPadre = _argumentService.GetById(argument.idPadre).id;
-
-            if(idPadre > 0){
+            if(argument.idPadre > 0){
+                var idPadre = _argumentService.GetById(argument.idPadre).id;
                 var nomePadre = _argumentService.GetById(idPadre).name;
                 name = string.Concat(categorySlug, nomePadre, '/', _commonService.cleanStringPath(argument.name), '/');
             } else {

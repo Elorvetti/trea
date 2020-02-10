@@ -11,7 +11,6 @@ namespace TreA.Services.Album
         void Insert(Albums model);
         IList<Albums> GetAll();
         Albums GetById(int id);
-
         int GetLast();
         void Update(int id, Albums model);
         void Delete(int id);
