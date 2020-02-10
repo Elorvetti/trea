@@ -123,8 +123,8 @@ namespace TreA.Presentation
             app.UseAuthentication();
            
             var option = new RewriteOptions()
-                .AddRewrite(@"^Blog/(.*)", "Blog/Index?param=$1", skipRemainingRules: true);
-            
+                .AddRewrite(@"^Blog/(.*)", "Rewrite/Index?param=$1", skipRemainingRules: true);
+
             app.UseRewriter(option);
 
 

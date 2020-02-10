@@ -79,8 +79,8 @@ var homeController = (function(){
 
         var  data = {
             get: 'users',
-            userId: '2276800813',
-            accessToken: '2276800813.1677ed0.654454a21887433286b9b67dfdd9c767',
+            userId: '27660395555',
+            accessToken: '27660395555.1677ed0.4396f6f9464a4e909c7f895c09fa2855',
             limit: 10
         }
 
@@ -107,7 +107,20 @@ var homeController = (function(){
                             element = element + '<a class="link" target="_blank" href="' + images[i].link  + '"></a>' 
                             element = element + '</div>';
                         }
-
+                        
+                        if(insta.data.length == 0){
+                            element = element + '<div class="item carousel__photo box-shadow margin-xsmall skeleton">';
+                            element = element + '<section class="image text-center background-color-grey"></section>'
+                            element = element + '<section class="user-data">'
+                            element = element + '<span class="btn-circle avatar background-color-grey"></span>'
+                            element = element + '<span class="user-name padding-left-small">'
+                            element = element + '<p class="color-black background-color-grey"></p>'
+                            element = element + '<p class="color-black background-color-grey"></p>'
+                            element = element + '</span>'
+                            element = element + '</section>'
+                            element = element + '</div>';
+                        }
+                        
                         element = element + '</div>';
                         element = element + '</div>';
 

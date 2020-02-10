@@ -233,7 +233,7 @@ header input.search-bar{
     cursor: text;
     font-size: 16px;
 }
-section#search-result{ position: absolute; display: inline-block; top: 80%; left: 20px; width: 70%; min-height: 360px; max-height: 360px; overflow-y: scroll; z-index: 9997; }
+section#search-result{ position: absolute; display: inline-block; top: 80%; left: 10px; width: 70%; min-height: 360px; max-height: 360px; overflow-y: scroll; z-index: 9997; }
 section#search-result > ul > li{ position: relative; display: inline-block; margin: 5px; padding: 5px; max-width: 95%; max-height: 80px; overflow: hidden; border-bottom: 1px solid #1C2E3D; cursor: pointer; }
 section#search-result > ul > li:hover{ background-color: #FCBDB2; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);}
 section#search-result > ul > li > span{ position: relative; display: inline-block; width: 70px; height: 70px; background-size: cover; background-position: center center; background-repeat: no-repeat; }
@@ -288,6 +288,8 @@ div.instagram section.user-data{ position: relative; display: inline-block; widt
 div.instagram section.user-data > span{ position: relative; display: inline-block; max-width: 200px; }
 div.instagram section.user-data > span.avatar{  width: 50px; height: 50px; background-size: cover; background-position: center center; background-repeat: no-repeat; }
 div.instagram a.link{ position: absolute; display: inline-block; top: 0; left: 0; right: 0; bottom: 0; }
+div.instagram div.item.carousel__photo.skeleton > section.user-data > span > p{ margin: 3px 0; min-width: 200px; height: 20px; }
+div.instagram div.item.carousel__photo.skeleton > section.user-data > span > p + p{ margin: 5px 0; }
 
 /* YOUTUBE VIDEO AND PODCAST */
 div.video-podcast{ position: relative; display: inline-block; width: 100%; }

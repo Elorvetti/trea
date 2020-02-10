@@ -52,7 +52,7 @@ namespace TreA.Presentation.Controllers
 
             return View(model);
         }
-        public IActionResult List(int categoryId, int pageSize, int pageNumber){      
+        public ArgumentModel List(int categoryId, int pageSize, int pageNumber){      
             var model = new ArgumentModel();
 
             //SEO 
@@ -76,7 +76,7 @@ namespace TreA.Presentation.Controllers
                 });
             }
 
-            return View(model);
+            return model;
         }
     }
 }

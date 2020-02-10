@@ -66,7 +66,7 @@ namespace TreA.Presentation.Controllers
             return View(model);
         }
 
-        public IActionResult List(int argumentId, int pageSize, int pageNumber){      
+        public PostModel List(int argumentId, int pageSize, int pageNumber){      
             var model = new PostModel();
 
             //SEO 
@@ -96,10 +96,10 @@ namespace TreA.Presentation.Controllers
                 });
             }
 
-            return View(model);
+            return model;
         }
         
-        public IActionResult GetByPostId(string id){
+        public PostModel GetByPostId(int id){
             var model = new PostModel();
 
             //Convert slugId to Int and Find Post
@@ -179,7 +179,7 @@ namespace TreA.Presentation.Controllers
             model.reviewData.pageTotal =  Math.Ceiling((double)totalReview / 10);
             model.reviewData.reviews = _reviewService.GetByPostId(post.id);
          
-            return View("GetById", model);
+            return model;
         }
 
         [HttpPost]
