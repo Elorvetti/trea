@@ -81,9 +81,19 @@ namespace TreA.Presentation.Controllers
             model.posts = _postService.GetByArgumentId(argumentId);
 
             //BreadCrumb
+            model.categoryId = _argumentService.GetById(argumentId).categoryId;
             model.categoryName = _categoryService.GetById(_argumentService.GetById(argumentId).categoryId).name;
             model.argumentName = _argumentService.GetById(argumentId).name;
-            model.breadcrumb = string.Concat(model.categoryName, " > ", model.argumentName);
+
+            model.breadcrumb.Add(new breadcrumbs(){
+                name = model.categoryName,
+                slug = _slugService.GetById(_categoryService.GetById(model.categoryId).slugId).name
+            });
+
+            model.breadcrumb.Add(new breadcrumbs(){
+                name = model.argumentName,
+                slug = _slugService.GetById(_argumentService.GetById(argumentId).slugId).name
+            });
 
             foreach(var post in model.posts){
                 model.postsDisplay.Add(new PostDisplayModel(){
@@ -107,13 +117,38 @@ namespace TreA.Presentation.Controllers
             var post = _postService.GetById(postId);
             
             //BreadCrumb
+            model.categoryId = _categoryService.GetById(post.categoryId).id;
             model.categoryName = _categoryService.GetById(post.categoryId).name;
+
             var argument = _argumentService.GetById(post.argumentId);
             if(argument != null){
                 model.argumentName = argument.name;
-                model.breadcrumb = string.Concat(model.categoryName, " > ", model.argumentName, " > ", post.title);
+
+                model.breadcrumb.Add(new breadcrumbs(){
+                    name = model.categoryName,
+                    slug = _slugService.GetById(_categoryService.GetById(model.categoryId).slugId).name
+                });
+
+                model.breadcrumb.Add(new breadcrumbs(){
+                    name = model.argumentName,
+                    slug = _slugService.GetById(_argumentService.GetById(post.argumentId).slugId).name
+                });
+
+                model.breadcrumb.Add(new breadcrumbs(){
+                    name = post.title,
+                    slug = _slugService.GetById(_postService.GetById(postId).slugId).name
+                });
+                
             } else {
-                model.breadcrumb = string.Concat(model.categoryName, " > ", post.title);
+                model.breadcrumb.Add(new breadcrumbs(){
+                    name = model.categoryName,
+                    slug = _slugService.GetById(_categoryService.GetById(model.categoryId).slugId).name
+                });
+
+                model.breadcrumb.Add(new breadcrumbs(){
+                    name = post.title,
+                    slug = _slugService.GetById(_postService.GetById(postId).slugId).name
+                });
             }
             
             //SEO
@@ -186,15 +221,17 @@ namespace TreA.Presentation.Controllers
         public IList<PostDisplayModel> Search(string id){
             var model = new List<PostDisplayModel>();
             var posts = _postService.Search(id);
-          
-            foreach(var post in posts){
-                model.Add(new PostDisplayModel(){
-                    slug = _slugService.GetById(post.slugId).name,
-                    coverImage = _photoService.GetById(post.PhotoId).path,
-                    title = post.title,
-                    testo = post.testo
-                });     
-            }
+
+            if(posts.Count > 0){
+                foreach(var post in posts){
+                    model.Add(new PostDisplayModel(){
+                        slug = _slugService.GetById(post.slugId).name,
+                        coverImage = _photoService.GetById(post.PhotoId).path,
+                        title = post.title,
+                        testo = post.testo
+                    });     
+                }
+            } 
 
             return model;
         }

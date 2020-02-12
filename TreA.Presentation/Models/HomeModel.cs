@@ -9,7 +9,7 @@ namespace TreA.Presentation.Models
         public IList<PostDisplayModel> PostDisplays{ get; set; } = new List<PostDisplayModel>();
         public NewsletterModel Newsletter{ get; set; } = new NewsletterModel();
         public IList<PodcastModel> podcasts { get; set; } = new List<PodcastModel>();
-public IList<CategoryMenu> categoryMenus{ get; set; } = new List<CategoryMenu>();
+        public IList<CategoryMenu> categoryMenus{ get; set; } = new List<CategoryMenu>();
         public IList<ArgumentMenu> argumentMenus { get; set; } = new List<ArgumentMenu>();
     }
 
@@ -19,7 +19,7 @@ public IList<CategoryMenu> categoryMenus{ get; set; } = new List<CategoryMenu>()
     }
 
     public class ArgumentMenu : Arguments{
-        public bool HasChild{ get; set; }
+        public IList <Arguments> Child { get; set; } = new List<Arguments>();
         public string slug{ get; set; }
     }
 

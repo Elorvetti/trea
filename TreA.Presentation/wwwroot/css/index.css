@@ -215,6 +215,13 @@ header > div.nav-container > span.menu.active > span:nth-child(1){transform: rot
 header > div.nav-container > span.menu.active > span:nth-child(2){ display: none; }
 header > div.nav-container > span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out;}
 
+header > div.nav-container + section.argument{ position: relative; z-index: 9999; }
+header > div.nav-container.fixed + section.argument{ position: fixed; top: 45px; left: 0; right: 0; }
+section.argument > ul{ position: relative; display: inline-block; width: 25%; margin: 0 auto;}
+section.argument > ul > li > a{ position: relative; display: inline-block; width: 100%; border-bottom: 1px solid #fff;; }
+section.argument > ul > li > ul > li{ border-bottom: 1px solid transparent; }
+section.argument  ul > li > a:hover, section.argument  ul > li > a:active{ color: #73AFBA!important; }
+
 header div.about-us{ position: absolute; display: inline-block; left: 20px; bottom: 175px; max-height: 250px; width: 70%; overflow: hidden; }
 header div.about-us > p{ font-size: 16px; line-height: 24px; }
 
@@ -233,7 +240,7 @@ header input.search-bar{
     cursor: text;
     font-size: 16px;
 }
-section#search-result{ position: absolute; display: inline-block; top: 80%; left: 10px; width: 70%; min-height: 360px; max-height: 360px; overflow-y: scroll; z-index: 9997; }
+section#search-result{ position: absolute; display: inline-block; top: 80%; left: 20px; width: 70%; min-height: 360px; max-height: 360px; overflow-y: scroll; z-index: 9997; }
 section#search-result > ul > li{ position: relative; display: inline-block; margin: 5px; padding: 5px; max-width: 95%; max-height: 80px; overflow: hidden; border-bottom: 1px solid #1C2E3D; cursor: pointer; }
 section#search-result > ul > li:hover{ background-color: #FCBDB2; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);}
 section#search-result > ul > li > span{ position: relative; display: inline-block; width: 70px; height: 70px; background-size: cover; background-position: center center; background-repeat: no-repeat; }
@@ -272,10 +279,6 @@ section.card-body > h3{ line-height: .3em; }
 section.card-body > p{ font-size: 14px; line-height: 21px; }
 section.card-body + a.btn{ position: absolute; display: inline-block; left: 35px; right: 35px; bottom: 25px; line-height: 50px; }
 
-@media(min-width: 425px){
-    section.card-body + a.btn{ left: 65px; right: 65px; }
-}
-
 .owl-dots{ text-align: center; }
 .owl-dots > .owl-dot{ margin: 5px 3px; width: 15px; height: 15px; border-radius: 50%; background-color: #fff!important; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
 .owl-dots > .owl-dot.active{ background-color: #C3C9C7!important; border: 1px solid transparent; }
@@ -308,7 +311,7 @@ section#podcast .owl-nav{ display: none; }
 section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
 
 @media(min-width: 1024px){
-    header > div.nav-container.open-child{ height: 40px; background-color: #1C2E3D; }
+    header > div.nav-container.open-child{ height: 45px; background-color: #1C2E3D; }
     ul.category > li > ul.argument{ position: absolute; left: 25px; right: 0; height: auto; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
     div.instagram{ width: 50%; float: left; }
     main div.newsletter{ width: 50%; float: right; }
@@ -321,7 +324,7 @@ section#youtube h2{ position: relative; display: inline-block; width: 100%; back
 footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
 footer > div{ display: inline-block; width: 49%; }
 footer > div  a{ position: relative; display: inline-block; width: 100%; font-size: 16px; line-height: 24px; cursor: pointer; }
-header input.search-bar.post-view{ margin-left: unset; left: 10px; }
+header input.search-bar.post-view{ margin-left: unset; left: 20px; }
 
 @media(min-width: 768px){
     header ul.social{ display: inline-block; }
@@ -406,6 +409,8 @@ div.related-container li.gallery > video{ max-width: 100%; max-height: 100%; }
 @media(min-width: 1440px){
     h4.breadcrumb, div#post-display{ width: 65%; margin-left: 80px; }
 }
+
+h4.breadcrumb > *:hover { color: #73AFBA;  }
 
 div#review{ position: relative; margin: 0 auto 80px; width: 90%; }
 div#review::before{ content: ''; position: relative; display:  inline-block; width: 100%; border: 1px solid #73AFBA; }

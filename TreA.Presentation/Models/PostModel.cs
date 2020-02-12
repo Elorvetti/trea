@@ -14,12 +14,17 @@ namespace TreA.Presentation.Models
         public IList<PostDisplayModel> postsDisplay { get; set; } = new List<PostDisplayModel>();
         public string categoryName { get; set; }
         public string argumentName{ get; set; }
-        public string breadcrumb { get; set; }
+        public IList<breadcrumbs> breadcrumb { get; set; } = new List<breadcrumbs>();
         public string coverImage{ get; set; }
         public IList<ArgumentDisplay> realtedPost { get; set; } = new List<ArgumentDisplay>();
         public IList<ArgumentDisplay> realtedArgument{ get; set; } = new List<ArgumentDisplay>();
         public ReviewModel reviewData{ get; set; } = new ReviewModel();
         public IList<string> album { get; set; } = new List<string>();
+    }
+
+    public class breadcrumbs{
+        public string name { get; set; }
+        public string slug { get; set; }
     }
 
     public class Album

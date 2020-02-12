@@ -59,7 +59,7 @@ namespace TreA.Presentation.Controllers
                 var argumentId = _argumentService.GetBySlugId(id).id;
                 var posts = _postService.GetByArgumentId(argumentId);
                 
-                if(posts.Count > 1){
+                if(posts.Count == 0 || posts.Count  > 1){
                     var postListModel = new PostController(_categoryService, _argumentService, _postService, _albumService, _photoService, _videoService, _slugService, _reviewService).List(argumentId, 50, 1);
                     
                     //SEO 

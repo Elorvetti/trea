@@ -92,20 +92,20 @@ namespace TreA.Presentation.Controllers
         }
 
         [HttpPost]
-        public HomeModel GetArgument(int categoryId, int livello, int IdPadre){
+        public HomeModel GetArgument(int categoryId, int livello = 1, int idPadre = 0){
             var model = new HomeModel();
 
-            var arguments = _argumentService.GetByCategoryId(categoryId, livello,IdPadre);
-            foreach(var argument in arguments){
+            var arguments = _argumentService.GetByCategoryId(categoryId, livello, idPadre);
+            foreach(var argument in arguments){               
                 model.argumentMenus.Add(new ArgumentMenu(){
                     id = argument.id,
                     name = argument.name,
                     categoryId = categoryId,
-                    HasChild = _argumentService.GetByCategoryId(categoryId, 2, argument.id).Any() ? true : false,
+                    Child = _argumentService.GetByCategoryId(categoryId, 2, argument.id),
                     slug = _slugService.GetById(argument.slugId).name
                 });
             }
-
+            
             return model;
         }
 

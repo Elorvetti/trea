@@ -31,6 +31,8 @@ TreA.Common/obj/*
 TreA.Common/bin/*
 TreA.Data/obj/*
 TreA.Data/bin/*
+TreA.Services/obj/*
+TreA.Services/bin/*
 TreA.Presentation/obj/*
 TreA.Presentation/bin/*
 TreA.Presentation/App_Data/*

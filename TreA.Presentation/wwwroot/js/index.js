@@ -49,8 +49,8 @@ var appController = (function(){
             self.attr('display', 'true');
         } else {
             self.attr('display', 'false');
-
         }
+
         if(self.find('ul').length > 0){
             self.find('ul').remove();
         }
@@ -62,8 +62,8 @@ var appController = (function(){
         } else {
             $('div.nav-container').toggleClass('open-child');
         }
-
-        var url = '/Home/GetArgument?categoryId=' + id + '&livello=' + livello + '&idPadre=' + idPadre;
+        
+        var url = '/Home/GetArgument?categoryId=' + id;
         
         fetch(url, {method: 'POST'})
             .then(function(res){
@@ -72,19 +72,74 @@ var appController = (function(){
                         var element = '';
                         element = element + '<ul class="argument padding-left-small margin-bottom-xsmall text-right background-color-blue">';
                         for(var i in data.argumentMenus){
-                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white" child="' + data.argumentMenus[i].hasChild  + '" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
-                            if(data.argumentMenus[i].hasChild){
-                                element = element + '<a class="color-white">' + data.argumentMenus[i].name + '</a>';
-                            } else{
-                                element = element + '<a class="color-white" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
+                            element = element + '<a class="color-white" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                            if(data.argumentMenus[i].child.length > 0){
+                                element = element + '<ul class="padding-left-small">';
+                                for(var y in data.argumentMenus[i].child){
+                                    element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-white" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
+                                    element = element + '<a class="color-white" href="' + data.argumentMenus[i].child[y].slug + '">' + data.argumentMenus[i].child[y].name  + '</a>';
+                                    element = element + '</li>'
+                                }
+                                element = element + '</ul>';
                             }
                         }
                         element = element + '</ul>'
                         if(self.attr('display') == 'true'){
-                            self.append(element);
+                           self.append(element);
                         }
                     })
             })
+    }
+
+    var getChildMenuDesktop = function(){
+        var id = $(this).attr('id');
+
+        $('div.nav-container').toggleClass('open-child');
+
+        if($(this).attr('display') == 'false'){
+            $(this).attr('display', 'true');
+            
+        } else {
+            $(this).attr('display', 'false');
+        }
+        
+        var url = '/Home/GetArgument?categoryId=' + id;
+        if($('div.nav-container + section.argument').length === 0){
+            fetch(url, {method: 'POST'})
+                .then(function(res){
+                    res.json()
+                        .then(function(data){
+                            var element = '';
+
+                            element = element + '<section class="argument padding-left-small margin-bottom-xsmall background-color-blue text-center">';
+                            for(var i in data.argumentMenus){
+                                element = element + '<ul>';
+                                element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white margin-xsmall" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
+                                element = element + '<a class="color-white text-uppercase" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                                if(data.argumentMenus[i].child.length > 0){
+                                    element = element + '<ul class="padding-left-xsmall">';
+                                    for(var y in data.argumentMenus[i].child){
+                                        element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-white margin-top-xsmall" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
+                                        element = element + '<a class="color-white" href="' + data.argumentMenus[i].slug + data.argumentMenus[i].child[y].name + '/">' + data.argumentMenus[i].child[y].name  + '</a>';
+                                        element = element + '</li>'
+                                        console.log(data.argumentMenus[i].child[y])
+                                    }
+                                    element = element + '</ul>';
+                                }
+                                element = element + '</li>'
+                                element = element + '</ul>';
+                            }
+                            element = element + '</section>';
+
+                            $('div.nav-container').after(element);
+                        })
+                })
+        }
+        
+        if($('div.nav-container + section.argument').length > 0){
+            $('div.nav-container + section.argument').remove();
+        }
     }
 
     var headerData = function(data){
@@ -151,7 +206,6 @@ var appController = (function(){
                 .then(function(res){
                     res.json()
                         .then(function(data){
-
                             if($('section#search-result').length > 0){
                                 $('section#search-result').remove();
                             }
@@ -166,15 +220,20 @@ var appController = (function(){
 
                             element = element + '<ul class="text-center">'
                             
-                            for(var i in data){
-                                element = element + '<li>' ;
-                                element = element + '<span class="border-radius-small image" style="background-image: url(\'' + data[i].coverImage + '\')"></span>';
-                                element = element + '<span class="padding-left-xsmall text-container">'
-                                element = element + '<p class="font-weight-600 text-uppercase">' + data[i].title + '</p>';
-                                element = element + '<p>' +  data[i].testo + '</p>';
-                                element = element + '</span>'
-                                element = element + '<a href="' +  data[i].slug  + '"></a>';
-                                element = element + '</li>';
+                            if(data.length > 0){
+                                for(var i in data){
+                        
+                                    element = element + '<li>' ;
+                                    element = element + '<span class="border-radius-small image" style="background-image: url(\'' + data[i].coverImage + '\')"></span>';
+                                    element = element + '<span class="padding-left-xsmall text-container">'
+                                    element = element + '<p class="font-weight-600 text-uppercase">' + data[i].title + '</p>';
+                                    element = element + '<p>' +  data[i].testo + '</p>';
+                                    element = element + '</span>'
+                                    element = element + '<a href="' +  data[i].slug  + '"></a>';
+                                    element = element + '</li>';
+                                }
+                            } else {
+                                element = element + '<li>Nessun risultato</li>';
                             }
                             
                             element = element + '</ul>';
@@ -219,6 +278,7 @@ var appController = (function(){
         toggleMenu: toggleMenu,
         toggleSubList: toggleSubList,
         getChildMenu: getChildMenu,
+        getChildMenuDesktop: getChildMenuDesktop,
         createOverlay: createOverlay,
         fixNav: fixNav,
         search: search,
@@ -230,7 +290,8 @@ var appUI = (function(){
     var DOM = {
         btnHamburger: 'span.menu',
         btnSubMenu: 'ul.category > li',
-        btnDisplayChild: 'ul > li.category[child="true"]',
+        btnDisplayChild: 'section#sidebar ul > li.category[child="true"]',
+        btnDisplayChildDesktop: 'div.nav-container ul > li.category[child="true"]',
         btnDisplayArgumentChild: 'ul > li.argument[child="true"]',
         btnReturn: '.btn.return',
         searchBox: 'input.search-bar',
@@ -250,6 +311,7 @@ var app = (function(appUI, appCtrl){
         $(document).on('click', DOMElement.btnHamburger, appCtrl.toggleMenu);
         $(document).on('click', DOMElement.btnSubMenu, appCtrl.toggleSubList);
         $(document).on('click', DOMElement.btnDisplayChild, appCtrl.getChildMenu);
+        $(document).on('click', DOMElement.btnDisplayChildDesktop, appCtrl.getChildMenuDesktop);
         $(document).on('click', DOMElement.btnDisplayArgumentChild, appCtrl.getChildMenu);
         //On scroll fix navbar
         $(window).on('scroll', appCtrl.fixNav)

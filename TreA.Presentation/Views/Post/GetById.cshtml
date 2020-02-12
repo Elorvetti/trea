@@ -1,6 +1,16 @@
 @model PostModel
 
-<h4 class="breadcrumb padding-left-small font-weight-400"> @Model.breadcrumb </h4>
+<h4 class="breadcrumb padding-left-small font-weight-400"> 
+    @for(var i = 0; i <= Model.breadcrumb.Count - 1; i++){
+        <a href="@Model.breadcrumb[i].slug">
+            @if(i < Model.breadcrumb.Count - 1 ){
+                @string.Concat(Model.breadcrumb[i].name, " >")
+            } else {
+                @Model.breadcrumb[i].name;
+            }
+        </a>
+    }
+</h4>
 
 <div id="post-display" class="padding-small" post="@Model.id" argument="@Model.argumentId">
     @Html.Raw(Model.testo)

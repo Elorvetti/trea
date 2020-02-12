@@ -29,7 +29,7 @@ var homeController = (function(){
                 },
                 1440:{
                     loop: false,
-                    margin: 20,
+                    margin: 10,
                     items: 5,
                     nav: false,
                 },
