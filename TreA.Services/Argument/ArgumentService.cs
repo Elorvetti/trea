@@ -53,6 +53,10 @@ namespace TreA.Services.Argument
             return _ctx.argument.Where(a => a.categoryId == categoryId && a.livello == livello && a.idPadre == idPadre).ToList();
         }
 
+        public virtual IList<Arguments> GetByCoverImageId(int id){
+            return _ctx.argument.Where(a => a.coverImageId == id).ToList();
+        }
+
         public void Update(int id, Arguments model){
             var argument = _ctx.argument.Find(id);
             

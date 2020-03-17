@@ -16,6 +16,7 @@ namespace TreA.Services.Argument
         IList<Arguments> GetByFatherId(int id);
         IList<Arguments> GetByCategoryId(int categoryId);
         IList<Arguments> GetByCategoryId(int categoryId, int livello, int idPadre);
+        IList<Arguments> GetByCoverImageId(int id);
         void Update(int id, Arguments model);
         void Delete(int id);
         IList<Arguments> Find(int idCategory, string name, int excludeRecord, int pageSize);

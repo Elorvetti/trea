@@ -11,6 +11,6 @@ namespace TreA.Services.Home
         void Insert(Homes model);
         Homes GetSetting();
         void Update(Homes model);
-
+        void UpdateImageOnDelete(int headerImageId, int newsletterImageId);
     }
 }

@@ -20,6 +20,8 @@ using TreA.Services.Album;
 using TreA.Services.Folder;
 using TreA.Services.Files;
 using TreA.Services.User;
+using TreA.Services.Home;
+using TreA.Services.Argument;
 
 namespace TreA.Presentation.Areas.Backoffice.Controllers
 {
@@ -33,9 +35,10 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         private readonly IFolderService _folderService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
+        private readonly IHomeService _homeService;
+        private readonly IArgumentService _argumentService;
 
-
-        public PhotoController(ICommonService commonService, IPhotoService photoService, IPhotoFolderService photoFolderService, IAlbumService albumService, IFolderService folderService, IFileService fileService, IUserService userService){
+        public PhotoController(ICommonService commonService, IPhotoService photoService, IPhotoFolderService photoFolderService, IAlbumService albumService, IFolderService folderService, IFileService fileService, IUserService userService, IHomeService homeService, IArgumentService argumentService){
             this._commonService = commonService;
             this._photoService = photoService;
             this._photoFolderService = photoFolderService;
@@ -43,6 +46,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             this._folderService = folderService;
             this._fileService = fileService;
             this._userService = userService;
+            this._homeService = homeService;
+            this._argumentService = argumentService;
         }
 
         [Authorize]
@@ -198,37 +203,57 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
 
         [HttpPost]
         public void Delete(int id){
-            var photo = _photoService.GetById(id);
-            var folderName = _commonService.cleanStringPath(_photoFolderService.GetById(photo.folderId).name);
+            if(id != 5){
+                var photo = _photoService.GetById(id);
+                var folderName = _commonService.cleanStringPath(_photoFolderService.GetById(photo.folderId).name);
             
-            //remove avatar photo
-            var admins = _userService.GetByPhotoId(id);
-            foreach(var admin in admins)
-            {
-                admin.photoId = 0;
-            }
-
-            //remove photo from album
-            var albums = _albumService.GetAll();
-            foreach(var album in albums){
-                var images = album.idImmagini.Split('|').Where(x => x != id.ToString()).ToArray();
-                var newAlbumImages = "";
-                foreach(var image in images){
-                    newAlbumImages = string.Concat(newAlbumImages, image, "|");
+                //remove avatar photo
+                var admins = _userService.GetByPhotoId(id);
+                foreach(var admin in admins)
+                {
+                    admin.photoId = 0;
                 }
-                var newAlbum = new AlbumModel();
-                if(newAlbumImages.Length > 0){
-                    newAlbum.idImmagini = newAlbumImages.Remove(newAlbumImages.Length - 1);
-                } else {
-                    newAlbum.idImmagini = "";
+            
+                //remove cover image from argument
+                var arguments = _argumentService.GetByCoverImageId(id);
+                foreach(var argument in arguments){
+                    argument.coverImageId = 5;
+                    _argumentService.Update(argument.id, argument);
                 }
-                newAlbum.idVideo = album.idVideo;
-                _albumService.Update(album.id, newAlbum);
-            }
+                
+                //remove photo from home
+                var homeSetting = _homeService.GetSetting();
+                if(homeSetting.headerImageId == id && homeSetting.newsletterImageId == id ){
+                    _homeService.UpdateImageOnDelete(5, 5);
+                } else if( homeSetting.headerImageId == id ){
+                    _homeService.UpdateImageOnDelete(5, homeSetting.newsletterImageId);
+                } else if(homeSetting.newsletterImageId == id){
+                    _homeService.UpdateImageOnDelete(homeSetting.headerImageId, 5);
+                }
 
-            var filePath = string.Concat("Content\\Images\\", folderName, "\\", photo.name);
-            _fileService.Delete(filePath);
-            _photoService.Delete(id);
+                //remove photo from album
+                var albums = _albumService.GetAll();
+                foreach(var album in albums){
+                    var images = album.idImmagini.Split('|').Where(x => x != id.ToString()).ToArray();
+                    var newAlbumImages = "";
+                    foreach(var image in images){
+                        newAlbumImages = string.Concat(newAlbumImages, image, "|");
+                    }
+                    var newAlbum = new AlbumModel();
+                    if(newAlbumImages.Length > 0){
+                        newAlbum.idImmagini = newAlbumImages.Remove(newAlbumImages.Length - 1);
+                    } else {
+                        newAlbum.idImmagini = "";
+                    }
+                    newAlbum.idVideo = album.idVideo;
+                    _albumService.Update(album.id, newAlbum);
+                }
+
+                var filePath = string.Concat("Content\\Images\\", folderName, "\\", photo.name);
+                _fileService.Delete(filePath);
+                _photoService.Delete(id);
+            }
+            
         }
 
         [HttpPost]

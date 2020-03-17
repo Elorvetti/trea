@@ -192,6 +192,8 @@ header ul.social{ position: absolute; display: none; width: 35%; z-index: 9996;}
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
 ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
 ul.social li.instagram{ background-image: url('../img/social/instagram.png') }
+ul.social li.youtube{ background-image: url('../img/social/youtube.png') }
+ul.social li.spotify{ background-image: url('../img/social/spotify.png') }
 ul.social li.cartorange{ background-image: url('../img/sponsor/cartorange.png'); }
 ul.social li > a{ position: relative; display: inline-block; width: 100%; height: 100%; }
 
@@ -313,8 +315,8 @@ section#youtube h2{ position: relative; display: inline-block; width: 100%; back
 @media(min-width: 1024px){
     header > div.nav-container.open-child{ height: 45px; background-color: #1C2E3D; }
     ul.category > li > ul.argument{ position: absolute; left: 25px; right: 0; height: auto; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-    div.instagram{ width: 50%; float: left; }
-    main div.newsletter{ width: 50%; float: right; }
+    div.instagram{ width: 100%; float: left; }
+    main div.newsletter{ width: 100%; float: right; }
     div.instagram section.image{ height: 350px; }
     section#podcast{ width: 50%; float: left; }
     section#youtube{ width: 50%; float: right; }

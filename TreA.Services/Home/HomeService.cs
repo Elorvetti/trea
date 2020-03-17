@@ -48,5 +48,14 @@ namespace TreA.Services.Home
 
             _ctx.SaveChanges();
         }
+
+        public void UpdateImageOnDelete(int headerImageId, int newsletterImageId){
+            var home = _ctx.home.FirstOrDefault();
+
+            home.headerImageId = headerImageId;
+            home.newsletterImageId = newsletterImageId;
+
+            _ctx.SaveChanges();
+        }
     }
 }
