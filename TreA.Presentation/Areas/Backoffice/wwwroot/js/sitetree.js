@@ -5,7 +5,7 @@ var siteTreeController = (function(){
     //1. Get All Category
     var getAllCategory = function(){
         var event = {};
-        event.data = new app.Data(false, null, '?pageSize=10000&pageNumber=1', 'Category/GetAll', true, $('div.content > ul#siteTree.list'));
+        event.data = new app.Data(false, null, '?pageSize=10000&pageNumber=1', '/Backoffice/Category/GetAll', true, $('div.content > ul#siteTree.list'));
         app.callback(event, createCategoryList);
     }
 
@@ -90,7 +90,7 @@ var siteTreeController = (function(){
         })
 
         if(valid){
-            event.data = new app.Data(true, null, null, 'Category/Index', false, null);
+            event.data = new app.Data(true, null, null, '/Backoffice/Category/Index', false, null);
             app.callback(event, updateCategoryList);
         }
         
@@ -101,7 +101,7 @@ var siteTreeController = (function(){
         var $overlay = app.createOverlay();
         var id = $(this).parent().attr('id');
 
-        event.data = new app.Data(false, id, null, 'Category/GetById/', false, $overlay);
+        event.data = new app.Data(false, id, null, '/Backoffice/Category/GetById/', false, $overlay);
 
         app.callback(event, createUpdateCategoryForm);
     }
@@ -127,7 +127,7 @@ var siteTreeController = (function(){
     var updateCategory = function(event){
         var id = $('form').attr('id');
 
-        event.data = new app.Data(true, id, null, 'Category/Update/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Category/Update/', false, null);
         app.callback(event, updateCategoryList);
     }
 
@@ -177,7 +177,7 @@ var siteTreeController = (function(){
     var deleteCategory = function(event){
         var id = $('div.category-delete').attr('id');
         
-        event.data = new app.Data(true, id, null, 'Category/Delete/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Category/Delete/', false, null);
         app.callback(event, updateCategoryList);
     }
 
@@ -196,7 +196,7 @@ var siteTreeController = (function(){
             $('ul#child').remove();
         };
 
-        var url = 'SiteTree/GetCategoryChildId/' + id;
+        var url = '/Backoffice/SiteTree/GetCategoryChildId/' + id;
     
         fetch(url, { method: 'POST' })
             .then(function(res){
@@ -225,7 +225,7 @@ var siteTreeController = (function(){
     var getAllArgument = function(){
         var id = $('ul#child').attr('category-id');
         var event = {};
-        event.data = new app.Data(false, id, null, 'Argument/GetByCategoryId/', true, $('div.content > ul#child.list'));
+        event.data = new app.Data(false, id, null, '/Backoffice/Argument/GetByCategoryId/', true, $('div.content > ul#child.list'));
         app.callback(event, createArgumentListAfterInsert);
     };
 
@@ -335,11 +335,16 @@ var siteTreeController = (function(){
     };
 
     //3. Edit-Update Argument List
-    var editArgument = function(event){
-        var $overlay =app.createOverlay();
+    var editArgument = function(event, argumentId){
+        var $overlay = app.createOverlay();
+        var id = "";
 
-        var id = $(this).parent().attr('id');
-        var url = 'Argument/GetById/' + id;
+        if (argumentId !== undefined) {
+            id = argumentId
+        } else {
+            id = $(this).parent().attr('id');
+        }
+        var url = '/Backoffice/Argument/GetById/' + id;
 
         fetch(url, {method: 'POST'})
             .then(function(res){
@@ -351,7 +356,7 @@ var siteTreeController = (function(){
 
                         //ADD SKELETON FOR COVER IMAGE
                         if(data.coverImageId > 0){
-                            album.addSkeletonOfImageForRadio('Photo/GetById/', data.coverImageId, $('.skeleton-container'));
+                            album.addSkeletonOfImageForRadio('/Backoffice/Photo/GetById/', data.coverImageId, $('.skeleton-container'));
                         }
 
                     })
@@ -388,7 +393,7 @@ var siteTreeController = (function(){
         event.preventDefault();
         var id = $('form').attr('id');
 
-        event.data = new app.Data(true, id, null, 'Argument/Update/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Argument/Update/', false, null);
 
         app.callback(event, updateArgumentList);
     };
@@ -437,7 +442,7 @@ var siteTreeController = (function(){
     var deleteArgument = function(event){
         var id = $('div.argument-delete').attr('id');
         
-        event.data = new app.Data(true, id, null, 'Argument/Delete/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Argument/Delete/', false, null);
         app.callback(event, updateArgumentList);
     };
     
@@ -479,7 +484,7 @@ var siteTreeController = (function(){
         $(this).parent().find('ul').remove();
            
         var queryString = '?id=' + categoryId + '&level=' + level + '&idPadre=' + idPadre;
-        var url = 'Argument/GetByCategoryId' + queryString;
+        var url = '/Backoffice/Argument/GetByCategoryId' + queryString;
 
         fetch(url, {method: 'POST'})
             .then(function(res){
@@ -522,7 +527,7 @@ var siteTreeController = (function(){
 
         var param = '?categoryId=' + categoryId + '&argumentId=' + argumentId + '&livello=' + livello+ '&idPadre=' + idPadre;
         var event = {};
-        event.data = new app.Data(false, param, null, 'Post/GetByCategoryAndArgumentId', true, $('ul#child.list'))
+        event.data = new app.Data(false, param, null, '/Backoffice/Post/GetByCategoryAndArgumentId', true, $('ul#child.list'))
         app.callback(event, createPostListAfterInsert)
     };
 
@@ -629,17 +634,22 @@ var siteTreeController = (function(){
         })
 
         if(valid){
-            event.data = new app.Data(true, null, null, 'Post/Index', false, null);   
+            event.data = new app.Data(true, null, null, '/Backoffice/Post/Index', false, null);   
             app.callback(event, updatePostList);
         }
     };
 
     //3. Edit-Update Post List
-    var editPost = function(event){
+    var editPost = function(event, postId){
         var $overlay = app.createOverlay();
+        var id = "";
 
-        var id = parseInt($(this).parent().attr('id'));
-        var url = 'Post/GetById/'+ id;
+        if (postId !== undefined) {
+            id = postId
+        } else {
+            id = parseInt($(this).parent().attr('id'));
+        }
+        var url = '/Backoffice/Post/GetById/'+ id;
 
         //GET POST DATA FROM SERVER
         fetch(url,{method: 'POST'})
@@ -651,16 +661,16 @@ var siteTreeController = (function(){
                     CreateEditList(data, $overlay);
                     
                     //ADD SKELETON FOR ALUBM IMAGE AND VIDEO 
-                    album.addSkeletonOfImageForRadio('Photo/GetById/', data.photoId, $('.skeleton-container'));
+                    album.addSkeletonOfImageForRadio('/Backoffice/Photo/GetById/', data.photoId, $('.skeleton-container'));
                     
                     if(data.album !== null){
 
                         if(data.album.idImmagini !== ""){
-                            album.addSkeletonOfImage('Photo/GetById/', data.album.idImmagini, $('.skeleton-container'));
+                            album.addSkeletonOfImage('/Backoffice/Photo/GetById/', data.album.idImmagini, $('.skeleton-container'));
                         }
 
                         if(data.album.idVideo !== ""){
-                            album.addSkeletonOfVideo('Video/GetById/', data.album.idVideo, $('.skeleton-container'));
+                            album.addSkeletonOfVideo('/Backoffice/Video/GetById/', data.album.idVideo, $('.skeleton-container'));
                         }
                     }
 
@@ -722,7 +732,7 @@ var siteTreeController = (function(){
         event.preventDefault();
         var id = $('form').attr('id');
 
-        event.data = new app.Data(true, id, null, 'Post/Update/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Post/Update/', false, null);
 
         app.callback(event, updatePostList);
     };
@@ -770,14 +780,14 @@ var siteTreeController = (function(){
 
     var deletePost = function(event){
         var id = $('div.post-delete').attr('id');
-        event.data = new app.Data(true, id, null, 'Post/Delete/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Post/Delete/', false, null);
         app.callback(event, updatePostList);
     };
 
     /* 6. Preview Post */
     var previewPost = function(){
         var id = parseInt($(event.target).parent().attr('id'));
-        var url = 'Post/Preview/'+ id;
+        var url = '/Backoffice/Post/Preview/'+ id;
         window.open(url);
     }
 
@@ -807,6 +817,20 @@ var siteTreeController = (function(){
         }
     }
 
+    /* GET ARGUMENT OR POST EDIT FROM QUERYSTRING */
+    var editFormQueryString = function (event) {
+        event = {};
+        const type = app.getParameterByName("type", window.location.search);
+        const id = app.getParameterByName("id", window.location.search);
+
+        if (id !== undefined && id !== null && id !== "") {
+            if (type === "argument") {
+                editArgument(event, id);
+            } else if (type === "post") {
+                editPost(event, id);
+            }
+        }
+    }
 
     return {
         getAllCategory: getAllCategory,
@@ -832,7 +856,8 @@ var siteTreeController = (function(){
         createRemovePost: createRemovePost,
         deletePost: deletePost,
         previewPost: previewPost,
-        summernoteDestroy: summernoteDestroy
+        summernoteDestroy: summernoteDestroy,
+        editFormQueryString: editFormQueryString
     }
 })();
 
@@ -881,6 +906,7 @@ var siteTree = (function(siteTreeCtrl, siteTreeUI){
         console.log('siteTree init');
         $('span#filter').remove();
         siteTreeCtrl.getAllCategory();
+        siteTreeCtrl.editFormQueryString(event);
 
         //Remove scrool on main
         $(DOMElement.main).css('overflow-y', 'hidden');

@@ -7,7 +7,7 @@ var albumController = (function(){
         var inputType = 'checkbox';
         var homeSection =  $(this).attr('element');
 
-        if($(this).hasClass('cover') || $(this).attr('element') == 'header' || $(this).attr('element') == 'newsletter'){
+        if ($(this).hasClass('cover') || $(this).hasClass('user-image') || $(this).attr('element') == 'header' || $(this).attr('element') == 'newsletter'){
             inputType = "radio";
         }
 
@@ -17,7 +17,7 @@ var albumController = (function(){
         $('body').append(element)
 
         var event = {};
-        event.data = new app.Data(false, null, null, 'Photo/GetAllFolder', true, $('div#select div#addPhoto ul#photo'));
+        event.data = new app.Data(false, null, null, '/Backoffice/Photo/GetAllFolder', true, $('div#select div#addPhoto ul#photo'));
         app.callback(event, displayFolderList);
     }
 
@@ -46,7 +46,7 @@ var albumController = (function(){
 
         var inputType = $('ul#photo').attr('input-type');
         var id = $(this).attr('id');
-        var url = 'Photo/GetPhotoByFolderId/' + id;
+        var url = '/Backoffice/Photo/GetPhotoByFolderId/' + id;
 
         fetch(url, { method: 'POST' })
         .then(function(res){
@@ -110,9 +110,11 @@ var albumController = (function(){
         return element;
     };
 
-    var createBtn = function(element){
+    var createBtn = function (element) {
+        var section = $('main > div').attr('id');
+
         element = element + '<div class="text-right btn-container">';
-        element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
+        element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small ' + section + '" value="Salva">';   
         element = element + '</div>';
 
         return element
@@ -163,13 +165,33 @@ var albumController = (function(){
         $('.btn.close.select').trigger('click');
     }
 
+    var updateUserImage = function () {
+        var inputType = $('ul#photo').attr('input-type');
+        var value = '';
+        var backgroundImage = '';
+        $('div#select input[type="' + inputType + '"]:checked').each(function () {
+            value = value + $(this).parent().attr('id');
+            backgroundImage = $(this).parent().find('span').css('background-image');
+            if (inputType !== 'radio') {
+                value = value + '|';
+            }
+        });
+
+        console.log(backgroundImage);
+        $('form.edit > span.user-image').css('background-image', backgroundImage);
+        $('input#cover').val(value);
+
+
+        $('.btn.close.select').trigger('click');
+    }
+
     //4. Add Video To Post
     var getAllVideo = function(event){
         var element = '';
         var element = '<div id="select" ><span class="btn close select"></span><form class="video background-color-white border-radius-small"><div class="text-center"></div></form></div>'
         $('body').append(element)
 
-        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', 'Video/GetAll', true, $('div#select form div'));
+        event.data = new app.Data(false, null, '?pageSize=50&pageNumber=1', '/Backoffice/Video/GetAll', true, $('div#select form div'));
         app.callback(event, createVideoList);
 
         $(document).on('click', '.btn.close.select', function(){
@@ -346,7 +368,8 @@ var albumController = (function(){
         addSkeletonOfImageForRadio: addSkeletonOfImageForRadio,
         addSkeletonOfVideo: addSkeletonOfVideo,
         updateHeaderImage: updateHeaderImage,
-        updateNewsletterImage: updateNewsletterImage
+        updateNewsletterImage: updateNewsletterImage,
+        updateUserImage: updateUserImage
     };
 
 })();
@@ -359,13 +382,15 @@ var albumUI = (function(){
         btnAddAlbumToPost: '.btn.upload-album',
         btnDisplayPhoto: 'ul#photo > li',
         btnAddPhotoToAlbum: 'div#select ul#child > li',
-        btnUploadAlbumPhotos: 'div#select ul#photo[home-section="undefined"] + ul#child input#save',
+        btnUploadAlbumPhotos: 'div#select ul#photo[home-section="undefined"] + ul#child input#save.addSiteTree',
         btnAddVideoToPost: '.btn.upload-video',
-        btnUploadVideoToAlbum: 'form.video  input#save',
+        btnUploadVideoToAlbum: 'form.video input#save',
         btnHpNewsLetter: 'span[element="newsletter"].btn.edit',
         btnHpHeader: 'span[element="header"].btn.edit',
         btnUploadHomeHeaderImage: 'div#select ul#photo[home-section="header"] + ul#child input#save',
         btnUploadHomeNewsletterImage: 'div#select ul#photo[home-section="newsletter"] + ul#child input#save',
+        btnAddUserPhoto: '.btn.user-image',
+        btnUpdateUserImage: 'div#select ul#photo[home-section="undefined"] + ul#child input#save.addUser',
     }
 
     return {
@@ -400,6 +425,11 @@ var album = (function(albumCtrl, albumUI){
         $(document).on('click', DOMElement.btnHpNewsLetter, albumCtrl.getAllFolder);
         $(document).on('click', DOMElement.btnUploadHomeHeaderImage, albumCtrl.updateHeaderImage);
         $(document).on('click', DOMElement.btnUploadHomeNewsletterImage, albumCtrl.updateNewsletterImage);
+
+        //Add User Image
+        $(document).on('click', DOMElement.btnAddUserPhoto, albumCtrl.getAllFolder);
+        $(document).on('click', DOMElement.btnUpdateUserImage, albumCtrl.updateUserImage);
+
     }
 
     var addSkeletonOfImage = albumCtrl.addSkeletonOfImage;

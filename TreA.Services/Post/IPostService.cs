@@ -25,6 +25,7 @@ namespace TreA.Services.Post
         IList<Posts> GetAllByArgumentId(int argumentId);
         IList<Posts> GetByArgumentId(int argumentId);
         IList<Posts> GetAllByCategoryAndArgumentId(int categoryId, int argumentId);
+        IList<Posts> GetByCoverImage(int id);
         IList<Posts> Search(string value);
         void Update(int id, Posts name);
         void Delete(int id);

@@ -150,6 +150,15 @@ var appController = (function(){
         $('div#overlay').remove();
     };
 
+    var getParameterByName = function(name, url){
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
     //Constructor
     var Data = function(method, id, parameter, url, updateList, father){
 
@@ -174,7 +183,8 @@ var appController = (function(){
         Data: Data,
         callbackServer: callbackServer,
         feedbackEvent: feedbackEvent,
-        callbackUpload: callbackUpload
+        callbackUpload: callbackUpload,
+        getParameterByName: getParameterByName
     };
 
 })();
@@ -279,6 +289,7 @@ var app = (function(UICtrl, appCtrl){
         createOverlay: appCtrl.createOverlay,
         feedbackEvent: appCtrl.feedbackEvent,
         callbackUpload: appCtrl.callbackUpload,
+        getParameterByName: appCtrl.getParameterByName
     }
 
 })(appUI, appController);

@@ -32,14 +32,13 @@ using TreA.Data.Entities;
             return _ctx.administrator.Skip(excludeRecord).Take(pageSize).ToList();
         }
 
-        public virtual IList<Administrators> GetByPhotoId(int photoId)
-        {
+        public virtual IList<Administrators> GetByPhotoId(int photoId){
             return _ctx.administrator.Where(a => a.photoId == photoId).ToList();
         }
 
-         public virtual Administrators GetById(int id){
-            return  _ctx.administrator.First(u => u.id == id);
-         }
+        public virtual Administrators GetById(int id){
+        return  _ctx.administrator.First(u => u.id == id);
+        }
 
         public virtual Administrators GetByEmail(string email){
             return _ctx.administrator.First(u => u.user == email);

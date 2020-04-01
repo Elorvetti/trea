@@ -22,19 +22,16 @@ jboss/server/minimal/work/**/*
 TreA.DOC/*
 
 #Conn String
+.vs/*
 TreA.Presentation/appsettings.json
 TreA.Presentation/Properties/*
-Release/*
-
-#file bin
+TreA.Presentation/App_Data/*
+TreA.Presentation/obj/*
+TreA.Presentation/bin/*
+TreA.Services/obj/*
+TreA.Services/bin/*
+TreA.Services\bin\*
 TreA.Common/obj/*
 TreA.Common/bin/*
 TreA.Data/obj/*
 TreA.Data/bin/*
-TreA.Services/obj/*
-TreA.Services/bin/*
-TreA.Presentation/obj/*
-TreA.Presentation/bin/*
-TreA.Presentation/App_Data/*
-*.pdb
-*.dll

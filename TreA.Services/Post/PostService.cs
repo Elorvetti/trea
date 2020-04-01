@@ -76,6 +76,10 @@ namespace TreA.Services.Post
             return _ctx.post.Where(p => p.categoryId == categoryId && p.argumentId == argumentId).ToList();
         }
 
+        public virtual IList<Posts> GetByCoverImage(int id){
+            return _ctx.post.Where(p => p.PhotoId == id).ToList();
+        }
+
         public virtual IList<Posts> Search(string value){
             var posts = from p in _ctx.post where EF.Functions.Like(p.title, string.Concat("%", value, "%")) select p;
             return posts.ToList();

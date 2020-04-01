@@ -77,7 +77,7 @@ var userController = (function(){
     /* GET ALL */
     var getAll = function(){
         var event = {};
-        event.data = new app.Data(false, null, '?pageSize=15&pageNumber=1', 'backoffice/User/GetAll', true, $('div.content > ul.list'));
+        event.data = new app.Data(false, null, '?pageSize=15&pageNumber=1', '/backoffice/User/GetAll', true, $('div.content > ul.list'));
 
         return app.callback(event, createUserList);
     };
@@ -106,7 +106,7 @@ var userController = (function(){
         
         element = element + '<form class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
         element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
-        element = element + '<input name="photoId" id="photoId" automplete="off" type="hidden" />'
+        element = element + '<input name="photoId" id="cover" automplete="off" type="hidden" />'
         element = element + '<input name="email" class="name" id="email" placeholder="Email" autocomplete="off" required />';
         element = element + '<input name="password" type="password" id="password" class="password" placeholder="Prassword" autocomplete="off" required />';
         element = element + '<input name="confirmPassword"  type="password" class="confirmPassword" id="confirmPassword" placeholder="Conferma Prassword" autocomplete="off" required />';
@@ -185,20 +185,24 @@ var userController = (function(){
         });
 
         if(valid){
-            event.data = new app.Data(true, null, null, 'backoffice/User/Index', false, null);
+            event.data = new app.Data(true, null, null, '/backoffice/User/Index', false, null);
             app.callback(event, updateUserList);
         };
     };
 
     /* EDIT */
-    var editUser = function(event){
+    var editUser = function(event, userId){
         //Add overlay
         var $overlay = app.createOverlay();
+        var id = "";
 
-        var id = parseInt($(event.target).parent().attr('id'));
-        var list = event.data.userList;
+        if (userId !== undefined) {
+            id = userId
+        } else {
+            id = parseInt($(event.target).parent().attr('id'));
+        }
 
-        event.data = new app.Data(false, id, null, 'backoffice/User/GetById/', false, $overlay);
+        event.data = new app.Data(false, id, null, '/backoffice/User/GetById/', false, $overlay);
 
         app.callback(event, CreateEditList);
     };
@@ -211,7 +215,7 @@ var userController = (function(){
         } else {
             element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
         }
-        element = element + '<input id="photoId" name="photoId" automplete="off" type="hidden" value="' + obj.photoId + '"/>'
+        element = element + '<input id="cover" name="photoId" automplete="off" type="hidden" value="' + obj.photoId + '"/>'
         element = element + '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
         
         if(obj.isActive === true){
@@ -235,7 +239,7 @@ var userController = (function(){
     var updateUser = function(event){
         var id = $('form').attr('id');
 
-        event.data = new app.Data(true, id, null, 'backoffice/User/Update/', false, null);
+        event.data = new app.Data(true, id, null, '/backoffice/User/Update/', false, null);
         app.callback(event, updateUserList);
     };
 
@@ -260,11 +264,20 @@ var userController = (function(){
         $overlay.after(feedback);
     };
 
+    /* GET USER EDIT FROM QUERYSTRING */
+    var editUserFormQueryString = function (event) {
+        event = {};
+        const urlParams = app.getParameterByName("id", window.location.search);
+        if (urlParams !== undefined && urlParams !== null && urlParams !== "") {
+            editUser(event, urlParams);
+        }
+    }
+
     /* DELETE */
     var deleteUser = function(event){
         var id = $('div.delete').attr('id');
         
-        event.data = new app.Data(true, id, null, 'backoffice/User/Delete/', false, null);
+        event.data = new app.Data(true, id, null, '/backoffice/User/Delete/', false, null);
         app.callback(event, updateUserList);
     };
 
@@ -287,53 +300,6 @@ var userController = (function(){
         $overlay.after(element);
     };
 
-    /* ADD USER PHOTO */
-    var addUserPhoto = function(event){
-        var element = '';
-        var element = '<div id="select" ><span class="btn close select"></span><section class="image background-color-white border-radius-small text-center padding-small margin-bottom-medium"></div>'
-        $('body').append(element)
-
-        event.data = new app.Data(false, null, '?pageSize=13&pageNumber=1', 'backoffice/Photo/GetAll', true, $('div#select > section.image'));
-        
-        app.callback(event, createAddUserPhoto);
-
-        $(document).on('click', '.btn.close.select', function(){
-            $('div#select').remove();
-        })
-    };
-
-    var createAddUserPhoto = function(obj){
-        $('div#select > section.image > *:not(div.paginator)').remove();
-
-        var id = $('input#photoId').val()
-        var element = '';
-
-        for(var i in obj.photos){
-            if(id == obj.photos[i].id ){
-                element = element + '<input type="radio" name="group" id="img-' + obj.photos[i].id + '" checked/>';
-            } else {
-                element = element + '<input type="radio" name="group" id="img-' + obj.photos[i].id + '" />';
-            }
-            
-            element  = element + '<label for="img-' + obj.photos[i].id + '" id="' + obj.photos[i].id + '" class="border-radius-small margin-bottom-xsmall" style="background-image: url(\'' + obj.photos[i].path + '\');" ></label>';    
-        }
-
-        return element;
-        
-    };
-
-    var selectedImage = function(event){
-        //Get id select and image selected
-        var id = $(this).attr('id');
-        var image = $(this).css('background-image');
-
-        $('div#overlay > form > input#photoId').val(id);
-        $('div#overlay > form > span.user-image').css('background-size', 'cover ');
-        $('div#overlay > form > span.user-image').css('background-image', image);
-        $('div#select').remove();
-
-    };
-
     /* CHANGE PAGE */
     var changePage = function(event){
         //Remove active class
@@ -346,10 +312,10 @@ var userController = (function(){
         var sectionName = $(this).attr('section');
         
         if(sectionName === 'Photo'){
-            event.data = new app.Data(false, null, href, 'backoffice/Photo/GetAll', true, $('div#select > section.image'));
+            event.data = new app.Data(false, null, href, '/backoffice/Photo/GetAll', true, $('div#select > section.image'));
             app.callback(event, createAddUserPhoto);
         } else if( sectionName === 'User' ){
-            event.data = new app.Data(false, null, href, 'backoffice/User/GetAll', true, $('div.content > ul.list'));
+            event.data = new app.Data(false, null, href, '/backoffice/User/GetAll', true, $('div.content > ul.list'));
             app.callback(event, createUserList);
         }
 
@@ -364,8 +330,7 @@ var userController = (function(){
         addNewUser: addNewUser,
         getAll: getAll,
         editUser: editUser,
-        addUserPhoto: addUserPhoto,
-        selectedImage: selectedImage,
+        editUserFormQueryString: editUserFormQueryString,
         updateUser: updateUser,
         deleteUser: deleteUser,
         changePage: changePage
@@ -379,14 +344,12 @@ var userUI = (function(){
         btnFind: '.btn#find',
         btnRemoveFilter: 'form.display-filter > span.close-filter',
         btnAdd: '.btn#add',
-        btnAddUser: '.btn#save',
+        btnAddUser: 'form.add .btn#save',
         btnUpdate: '.btn#update',
         btnDelete: '.btn#delete',
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
-        btnUserPhoto: '.btn.user-image',
-        btnAvatarImageSelect: 'section input[type="radio"] + label',
         btnChangePage: 'span.btn.paginator'
     };
 
@@ -404,6 +367,7 @@ var user = (function(userCtrl, userUI){
 
         //On document load create element list
         userCtrl.getAll(event);
+        userCtrl.editUserFormQueryString(event);
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnFilter, userCtrl.createFilterForm);
@@ -415,9 +379,6 @@ var user = (function(userCtrl, userUI){
       
         $(document).on('click', DOMElement.btnEdit, { userList: DOMElement.list }, userCtrl.editUser);
         $(document).on('click', DOMElement.btnRemove , userCtrl.createRemoveUser);
-        
-        $(document).on('click', DOMElement.btnUserPhoto, userCtrl.addUserPhoto);
-        $(document).on('click', DOMElement.btnAvatarImageSelect, userCtrl.selectedImage)
         
         $(document).on('click', DOMElement.btnUpdate, userCtrl.updateUser);
         $(document).on('click', DOMElement.btnDelete, userCtrl.deleteUser);

@@ -5,7 +5,7 @@ var photoController = (function(){
     //1. Get All Folder
     var getAllFolder = function(){
         var event = {};
-        event.data = new app.Data(false, null, null, 'Photo/GetAllFolder', true, $('div.content > ul#photo.list'));
+        event.data = new app.Data(false, null, null, '/Backoffice/Photo/GetAllFolder', true, $('div.content > ul#photo.list'));
         app.callback(event, displayFolderList);
     }
 
@@ -79,7 +79,7 @@ var photoController = (function(){
         })
 
         if(valid){
-            event.data = new app.Data(true, null, null, 'Photo/AddFolder', false, null);
+            event.data = new app.Data(true, null, null, '/Backoffice/Photo/AddFolder', false, null);
             app.callback(event, updateFolderList);
         }
         
@@ -90,7 +90,7 @@ var photoController = (function(){
         var $overlay = app.createOverlay();
         var id = $(this).parent().attr('id');
 
-        event.data = new app.Data(false, id, null, 'Photo/GetFolderById/', false, $overlay);
+        event.data = new app.Data(false, id, null, '/Backoffice/Photo/GetFolderById/', false, $overlay);
 
         app.callback(event, createUpdateFolderForm);
     }
@@ -113,7 +113,7 @@ var photoController = (function(){
     var updateFolder = function(event){
         var id = $('form').attr('id');
 
-        event.data = new app.Data(true, id, null, 'Photo/UpdateFolder/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Photo/UpdateFolder/', false, null);
         app.callback(event, updateFolderList);
     }
 
@@ -149,7 +149,7 @@ var photoController = (function(){
         $(this).addClass('active');
 
         var id = $(this).attr('id');
-        var url = 'Photo/GetPhotoByFolderId/' + id;
+        var url = '/Backoffice/Photo/GetPhotoByFolderId/' + id;
 
         fetch(url, { method: 'POST' })
         .then(function(res){
@@ -163,8 +163,7 @@ var photoController = (function(){
                     $('ul#photo').after(element);
                 })
         })
-
-
+        
     }
 
     /* PHOTO */
@@ -173,12 +172,13 @@ var photoController = (function(){
         var folderId = $('ul#child').attr('folder-id');
         $('div.content > ul#child').remove();
 
-        var url = 'Photo/GetPhotoByFolderId/' + folderId;
+        var url = '/Backoffice/Photo/GetPhotoByFolderId/' + folderId;
 
         fetch(url, { method: 'POST' })
         .then(function(res){
             res.json()
                 .then(function(data){
+                    console.log(data);
                     var element = '';
                     element = element + '<ul id="child" class="photo padding-xsmall" folder-id="' + data.folderId + '">';                     
                     element = createPhotoList(data, element);
@@ -235,7 +235,7 @@ var photoController = (function(){
         });
 
         if(error.length === 0){
-            event.data = new UploadData('input#images', id, 'Photo/Index');
+            event.data = new UploadData('input#images', id, '/Backoffice/Photo/Index');
             app.callbackUpload(event, updatePhotoList); 
         } else {
             if($('form.add > span').length === 0){
@@ -256,6 +256,11 @@ var photoController = (function(){
             element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
             element = element + '<span style="background-image: url(\'' + obj.photos[i].path + '\')"></span>';
             element = element + '<p class="text-center">' + name + '</p>';
+
+            if (obj.photosUsed[i] !== 0) {
+                element = element + '<span class="btn-used btn-circle background-color-red text-center color-white box-shadow">' + obj.photosUsed[i] + '</span>'
+            }
+
             element = element + '</li>';
         }
         
@@ -269,7 +274,7 @@ var photoController = (function(){
         var id = parseInt($(this).parent().attr('id'));
         
         var event = {};
-        event.data = new app.Data(false, id, null, 'Photo/GetById/', false, $overlay);
+        event.data = new app.Data(false, id, null, '/Backoffice/Photo/GetById/', false, $overlay);
         app.callback(event, CreatePhotoEditForm);
     };
 
@@ -295,7 +300,7 @@ var photoController = (function(){
     var updatePhoto = function(event){
         var id = $('form').attr('id');
 
-        event.data = new app.Data(true, id, null, 'Photo/Update/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Photo/Update/', false, null);
         app.callback(event, updatePhotoList);
     };
 
@@ -324,34 +329,64 @@ var photoController = (function(){
     var deletePhoto = function(event){
         var id = $(this).parent().parent().attr('id');
         
-        event.data = new app.Data(true, id, null, 'Photo/Delete/', false, null);
+        event.data = new app.Data(true, id, null, '/Backoffice/Photo/Delete/', false, null);
         app.callback(event, updatePhotoList);
     };
 
     var createRemovePhoto = function(event){
         var id = $(this).parent().attr('id');
-        var photoName = $(this).next().next().text();
-
-        var element = '';
-
-        element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white photo-delete"><p class="text-center confirm">Sei sicuro di voler eliminare la foto: ' + photoName + '?</p>';
-        
-        element = element + '<div class="text-right">';
-        element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
-        element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';    
-        element = element + '</div>';
-
-        element = element + '</div>';
+        var self = $(this);
 
         var $overlay = app.createOverlay();
-        $overlay.after(element);
-    };
 
+        //If photo is used set can't delete and show usage image
+        var url = '/Backoffice/Photo/CheckUsageImage/' + id;
+
+        fetch(url, { method: 'POST' })
+            .then(function (res) {
+                res.json()
+                    .then(function (data) {
+                        if (data.length > 0) {
+                            $("span#close").addClass('post');
+
+                            var element = '';
+                            element = element + '<div id="used-photo" class="box-shadow border-radius-small text-center background-color-white post">';
+                            element = element + '<h3 class="text-center color-blue">Immagine utilizzata nei seguenti punti: </h3>'
+                            element = element + '<p class="text-center color-red">L\'immagine verrà rimossa automaticamente dai vari album</p>'
+                            element = element + '<ul class="padding-left-small padding-right-small margin-top-small">'
+
+                            for (var i in data) {
+                                element = element + '<li class="color-black margin-bottom-xsmall text-center">'
+                                element = element + '<p class="margin-right-small">' + data[i].name + '</p>'
+                                element = element + '<a href="' + data[i].url + '" class="btn btn-circle goto background-color-blue box-shadow" target="_blank"></a>'
+                                element = element + '</li>'
+                            }
+
+                            element = element + '</ul>'
+                            element = element + '</div>';
+                        } else {
+                            var photoName = self.next().next().text();
+                            var element = '';
+
+                            element = element + '<div id="' + id + '" class="box-shadow border-radius-small text-center background-color-white photo-delete"><p class="text-center confirm">Sei sicuro di voler eliminare la foto: ' + photoName + '?</p>';
+
+                            element = element + '<div class="text-right">';
+                            element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
+                            element = element + '<input type="submit" id="delete" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-red margin-top-small" value="Elimina">';
+                            element = element + '</div>';
+
+                            element = element + '</div>';
+                        }
+                       
+                        $overlay.after(element);
+                    })
+            })
+    };
 
     //5. Display Large Image
     var cropPhoto = function(event){
         var id = parseInt($(event.target).parent().attr('id'));
-        event.data = new app.Data(false, id, null, 'Photo/GetById/', false, null);
+        event.data = new app.Data(false, id, null, '/Backoffice/Photo/GetById/', false, null);
         app.callback(event, CreateCrop);
     };
 
@@ -371,20 +406,49 @@ var photoController = (function(){
         $overlay.after(element);
 
     };
-    
+
+    //6. Check Usage Image
+    var usedPhoto = function(){
+        var id = $(this).parent().attr('id');
+
+        var url = '/Backoffice/Photo/CheckUsageImage/' + id;
+        var $overlay = app.createOverlay();
+        $("span#close").addClass('post');
 
 
+        fetch(url, { method: 'POST' })
+            .then(function (res) {
+                res.json()
+                    .then(function (data) {
+                        var element = '';
+                        element = element + '<div id="used-photo" class="box-shadow border-radius-small text-center background-color-white post">';
+                        element = element + '<h3 class="text-center color-blue">Immagine utilizzata nei seguenti punti: </h3>'
+                        element = element + '<p class="text-center color-red">L\'immagine verrà rimossa automaticamente dai vari album</p>'
+                        element = element + '<ul class="padding-left-small padding-right-small margin-top-small">'
 
+                        for (var i in data) {
+                            element = element + '<li class="color-black margin-bottom-xsmall text-center">'
+                            element = element + '<p class="margin-right-small">' + data[i].name + '</p>'
+                            element = element + '<a href="' + data[i].url + '" class="btn btn-circle goto background-color-blue box-shadow" target="_blank"></a>'
+                            element = element + '</li>'
+                        }
+
+                        element = element + '</ul>'
+                        element = element + '</div>';
+
+                        $overlay.after(element);
+                    })
+            })
+    }
 
 
     /* GET ALL */
     var getAll = function(){
         var event = {};
-        event.data = new app.Data(false, null, '?pageSize=16&pageNumber=1', 'Photo/GetAll', true, $('div.content > ul.list'));
+        event.data = new app.Data(false, null, '?pageSize=16&pageNumber=1', '/Backoffice/Photo/GetAll', true, $('div.content > ul.list'));
         app.callback(event, createPhotoList);
     };
-
-    
+   
     /* ADD NEW */
     var changeInputText = function(event){
         var files = $(this).prop('files');  
@@ -399,13 +463,6 @@ var photoController = (function(){
         $('label#files').text(filename);
 
     };
-
-    /* DELETE */
-
-
-    /* CROP PHOTO */
-
-    /* CHANGE PAGE */
 
     //Constructor
     var UploadData = function(input, id, url){
@@ -426,8 +483,8 @@ var photoController = (function(){
         editPhoto: editPhoto,
         updatePhoto: updatePhoto,
         createRemovePhoto: createRemovePhoto,
-        
         cropPhoto: cropPhoto,
+        usedPhoto: usedPhoto,
 
 
 
@@ -451,9 +508,9 @@ var photoUI = (function(){
         btnUpdatePhoto: 'form.photo-edit .btn#update',
         btnCropPhoto: 'ul#child > li > .btn.crop',
         btnRemovePhoto: 'ul#child > li > .btn.remove',
+        btnUsedPhoto: 'ul#child > li > .btn-used',
         btnDeletePhoto: 'div.photo-delete input#delete',
         
-
         list: 'div.content > ul',
         formFiles: 'input#images',
         btnChangePage: 'span.btn.paginator'
@@ -492,7 +549,8 @@ var photo = (function(photoCtrl, photoUI){
         $(document).on('click', DOMElement.btnUpdatePhoto, photoCtrl.updatePhoto);
         $(document).on('click', DOMElement.btnRemovePhoto, photoCtrl.createRemovePhoto);
         $(document).on('click', DOMElement.btnDeletePhoto, photoCtrl.deletePhoto);
-        $(document).on('click', DOMElement.btnCropPhoto , photoCtrl.cropPhoto);
+        $(document).on('click', DOMElement.btnCropPhoto, photoCtrl.cropPhoto);
+        $(document).on('click', DOMElement.btnUsedPhoto, photoCtrl.usedPhoto);
 
         //if upload a multiple file change name to input with a number of element
         $(document).on('change', DOMElement.formFiles, photoController.changeInputText);
