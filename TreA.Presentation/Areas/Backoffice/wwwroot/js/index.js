@@ -221,10 +221,18 @@ var appUI = (function(){
             .then(function(res){
                 res.json()
                     .then(function(data){
+                        var image = "";
+                        var size = "";
                         $('#username').text(data.user);
-                        var image = 'url(' + data.photoPath + ')';
+                        if(data.photoPath !== null){
+                            image = 'url(' + data.photoPath + ')';
+                            size = 'cover';
+                        } else {
+                            image = 'url(/adminroot/img/account-blue.png)';
+                            size = '48px';
+                        }
                         $('span.user-image').css('background-image', image);
-                        $('span.user-image').css('background-size', 'cover');
+                        $('span.user-image').css('background-size', size);
                 })
             })
     

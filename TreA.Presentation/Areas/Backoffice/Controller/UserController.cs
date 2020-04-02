@@ -201,7 +201,9 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             if(userContext != null){
                 var user = _userService.GetByEmail(userContext);
                 model.user = user.user;
-                model.photoPath = _photoService.GetById(user.photoId).path;
+                if(user.photoId > 0){
+                    model.photoPath = _photoService.GetById(user.photoId).path;
+                }
             }
             
             return model;
