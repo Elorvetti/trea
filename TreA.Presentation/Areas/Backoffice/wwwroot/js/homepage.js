@@ -73,7 +73,7 @@ var hpController = (function(){
         var element = '';
         element = element + '<ul class="category text-right">';
         for(var i in data.categoryMenus){
-            element = element + '<li id="' +data.categoryMenus[i].id + '" class="category margin-right-xsmall color-white" child="' + data.categoryMenus[i].hasChild  + '" display="false">' + data.categoryMenus[i].name;
+            element = element + '<li id="' +data.categoryMenus[i].id + '" class="category margin-right-xsmall" child="' + data.categoryMenus[i].hasChild  + '" display="false">' + data.categoryMenus[i].name;
             if(data.categoryMenus[i].hasChild){
                 element = element + '<span class="fake-btn"></span>'   
             }
@@ -115,9 +115,9 @@ var hpController = (function(){
                 res.json()
                     .then(function(data){
                         var element = '';
-                        element = element + '<ul class="argument text-right background-color-blue">';
+                        element = element + '<ul class="argument text-right background-color-pink-light">';
                         for(var i in data.argumentMenus){
-                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white" child="' + data.argumentMenus[i].hasChild  + '" display="false" category-id="' + data.argumentMenus[i].categoryId + '">' + data.argumentMenus[i].name        
+                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-black" child="' + data.argumentMenus[i].hasChild  + '" display="false" category-id="' + data.argumentMenus[i].categoryId + '">' + data.argumentMenus[i].name        
                             if(data.argumentMenus[i].hasChild){
                                 element = element + '<span class="fake-btn"></span>'   
                             }
@@ -243,6 +243,19 @@ var hpController = (function(){
                             element = element + '<span class="user-name">'
                             element = element + '<p class="color-black">' + images[i].user.full_name + '</p>'
                             element = element + '<p class="color-black">@' + images[i].user.username + '</p>'
+                            element = element + '</span>'
+                            element = element + '</section>'
+                            element = element + '</div>';
+                        }
+
+                        if(insta.data.length == 0){
+                            element = element + '<div class="item carousel__photo box-shadow margin-xsmall skeleton">';
+                            element = element + '<section class="image text-center background-color-grey"></section>'
+                            element = element + '<section class="user-data">'
+                            element = element + '<span class="btn-circle avatar background-color-grey"></span>'
+                            element = element + '<span class="user-name padding-left-small">'
+                            element = element + '<p class="color-black background-color-grey"></p>'
+                            element = element + '<p class="color-black background-color-grey"></p>'
                             element = element + '</span>'
                             element = element + '</section>'
                             element = element + '</div>';

@@ -35,3 +35,4 @@ TreA.Common/obj/*
 TreA.Common/bin/*
 TreA.Data/obj/*
 TreA.Data/bin/*
+*.pdb

@@ -2,6 +2,20 @@
 
 var appController = (function(){
 
+    /* DISPLAY TOOLTIP */
+    var displayTootltip = function(){
+        var self = $(this);
+        setTimeout(function(){
+
+            $('p#tooltip').remove();
+            var tooltip = self.attr('tooltip');
+            
+            var element = '';
+            element = element + '<p id="tooltip" class="border-radius-small background-color-pink-light box-shadow padding-left-xsmall padding-right-xsmall text-center">' + tooltip + '</p>';
+            self.append(element);
+        }, 500)
+    }
+
     var feedbackEvent = function(success, message){
         var element;
         
@@ -178,6 +192,7 @@ var appController = (function(){
     };
 
     return{
+        displayTootltip: displayTootltip,
         createOverlay: createOverlay,
         removeOverlay: removeOverlay, 
         Data: Data,
@@ -262,7 +277,9 @@ var appUI = (function(){
         Main: {
             btnReturn: '.btn.return',
             list: 'ul.list'
-        }
+        },
+        btnTooltip: '*[tooltip]',
+        diplayTooltip: 'p#tooltip'
     };
 
     return {
@@ -288,6 +305,11 @@ var app = (function(UICtrl, appCtrl){
 
         //Add event listerner to btn
         $(document).on('click', DOMElement.Main.btnReturn, appCtrl.removeOverlay);
+
+        //Display tooltip
+        $(document).on('mouseenter', DOMElement.btnTooltip, appCtrl.displayTootltip)
+        $(document).on('mouseout', DOMElement.btnTooltip, function(){ $(DOMElement.diplayTooltip).remove(); })
+        
     };
 
     return {

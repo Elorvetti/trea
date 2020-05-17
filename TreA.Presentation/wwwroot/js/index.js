@@ -26,11 +26,11 @@ var appController = (function(){
         var element = '';
         element = element + '<ul class="category text-right">';
         for(var i in data.categoryMenus){
-            element = element + '<li id="' + data.categoryMenus[i].id + '" class="category margin-right-xsmall color-white" child="' + data.categoryMenus[i].hasChild  + '" display="false">';
+            element = element + '<li id="' + data.categoryMenus[i].id + '" class="category margin-right-xsmall" child="' + data.categoryMenus[i].hasChild  + '" display="false">';
             if(data.categoryMenus[i].hasChild){
-                element = element + '<a class="color-white">' + data.categoryMenus[i].name + '</a>';
+                element = element + '<a>' + data.categoryMenus[i].name + '</a>';
             } else {
-                element = element + '<a class="color-white" href="' + data.categoryMenus[i].slug + '">' + data.categoryMenus[i].name + '</a>';
+                element = element + '<a href="' + data.categoryMenus[i].slug + '">' + data.categoryMenus[i].name + '</a>';
             }
         }
         element = element + '</ul>'
@@ -70,15 +70,15 @@ var appController = (function(){
                 res.json()
                     .then(function(data){
                         var element = '';
-                        element = element + '<ul class="argument padding-left-small margin-bottom-xsmall text-right background-color-blue">';
+                        element = element + '<ul class="argument padding-left-small margin-bottom-xsmall text-right background-color-pink-light">';
                         for(var i in data.argumentMenus){
-                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
-                            element = element + '<a class="color-white" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-black" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
+                            element = element + '<a class="color-black" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
                             if(data.argumentMenus[i].child.length > 0){
                                 element = element + '<ul class="padding-left-small">';
                                 for(var y in data.argumentMenus[i].child){
-                                    element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-white" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
-                                    element = element + '<a class="color-white" href="' + data.argumentMenus[i].child[y].slug + '">' + data.argumentMenus[i].child[y].name  + '</a>';
+                                    element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-black" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
+                                    element = element + '<a class="color-black" href="' + data.argumentMenus[i].child[y].slug + '">' + data.argumentMenus[i].child[y].name  + '</a>';
                                     element = element + '</li>'
                                 }
                                 element = element + '</ul>';
@@ -112,16 +112,16 @@ var appController = (function(){
                         .then(function(data){
                             var element = '';
 
-                            element = element + '<section class="argument padding-left-small margin-bottom-xsmall background-color-blue text-center">';
+                            element = element + '<section class="argument padding-left-small margin-bottom-xsmall background-color-pink-light text-center">';
                             for(var i in data.argumentMenus){
                                 element = element + '<ul>';
-                                element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-white margin-xsmall" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
-                                element = element + '<a class="color-white text-uppercase" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                                element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-black margin-xsmall" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
+                                element = element + '<a class="color-black text-uppercase" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
                                 if(data.argumentMenus[i].child.length > 0){
                                     element = element + '<ul class="padding-left-xsmall">';
                                     for(var y in data.argumentMenus[i].child){
-                                        element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-white margin-top-xsmall" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
-                                        element = element + '<a class="color-white" href="' + data.argumentMenus[i].slug + data.argumentMenus[i].child[y].name + '/">' + data.argumentMenus[i].child[y].name  + '</a>';
+                                        element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-black margin-top-xsmall" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
+                                        element = element + '<a class="color-black" href="' + data.argumentMenus[i].slug + data.argumentMenus[i].child[y].name + '/">' + data.argumentMenus[i].child[y].name  + '</a>';
                                         element = element + '</li>'
                                         console.log(data.argumentMenus[i].child[y])
                                     }

@@ -86,8 +86,8 @@ var reviewController = (function(){
             element = element + '<li class="list" id="' + obj.displayReviews[i].id +'">';
             element = element + '<p public="' + obj.displayReviews[i].acepted + '">' +  obj.displayReviews[i].email + '</p>';
             element = element + '<p>' +  obj.displayReviews[i].postTitle + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
             element = element + '</li>';
         }
          

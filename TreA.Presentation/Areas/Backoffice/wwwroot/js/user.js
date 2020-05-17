@@ -89,8 +89,8 @@ var userController = (function(){
         for(var i in obj.administrators){
             element = element + '<li class="list" id="' + obj.administrators[i].id +'">';
             element = element + '<p active="' + obj.administrators[i].isActive + '">' + obj.administrators[i].user + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light" tooltip="Modifica utente"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red" tooltip="Elimina utente"></span>';
             element = element + '</li>';
         }
         
@@ -211,9 +211,9 @@ var userController = (function(){
         var element = '';
         element = element + '<form id="' + obj.id + '" class="box-shadow border-radius-small text-center background-color-white edit" autocomplete="off">';
         if(obj.photoId > 0){
-            element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');"></span>'
+            element = element + '<span class="btn user-image background-color-white box-shadow" style="background-size: cover; background-image: url(\'' + obj.photoPath +'\');" tooltip="Foto utente"></span>'
         } else {
-            element = element + '<span class="btn user-image background-color-white box-shadow"></span>'
+            element = element + '<span class="btn user-image background-color-white box-shadow" tooltip="Foto utente"></span>'
         }
         element = element + '<input id="cover" name="photoId" automplete="off" type="hidden" value="' + obj.photoId + '"/>'
         element = element + '<input name="email" class="name" autocomplete="off" value="' + obj.user + '" disabled />';
@@ -350,7 +350,7 @@ var userUI = (function(){
         list: 'div.content > ul',
         btnEdit: '.btn.edit',
         btnRemove: '.btn.remove',
-        btnChangePage: 'span.btn.paginator'
+        btnChangePage: 'span.btn.paginator',
     };
 
     return {
@@ -364,6 +364,9 @@ var user = (function(userCtrl, userUI){
 
     var init = function(){
         console.log('user init');
+
+        //Add tooltip of Add
+        $(DOMElement.btnAdd).attr('tooltip', 'Aggiungi nuovo utente');
 
         //On document load create element list
         userCtrl.getAll(event);

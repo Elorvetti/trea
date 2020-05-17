@@ -186,7 +186,9 @@ header > h1{ position: absolute; left: 0; right: 0; top: 40%;font-size: 3em; }
 header > h2{ position: absolute; left: 0; right: 0; top: 47%; }
 
 header > div.nav-container{ position: relative; display: inline-block; width: 100%; z-index: 9999; transition: 0.4s; }
-header > div.nav-container.fixed{ position: fixed; padding: 4px; height: 50px; background-color: #1C2E3D; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
+header > div.nav-container.fixed{ position: fixed; padding: 4px; height: 50px; background-color: #FCBDB2; box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); }
+header > div.nav-container.fixed > h1, header > div.nav-container.fixed > h1 > a{ color: #000!important; }
+header > div.nav-container.fixed > span.menu > *{ background-color: #000!important; }
 header ul.social{ position: absolute; display: none; width: 35%; z-index: 9996;}
 
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
@@ -213,16 +215,15 @@ header > div.nav-container > span.menu{ position: absolute; display: inline-bloc
 header > div.nav-container > span.menu > span{ display: block; margin: 5px auto; width: 30px; height: 3px; }
 
 header > div.nav-container > span.menu.active{ z-index: 9998; }
-header > div.nav-container > span.menu.active > span:nth-child(1){transform: rotate(45deg) translate(6px, 6px); transform-style: preserve-3d; transition: .3s ease-in-out;}
+header > div.nav-container > span.menu.active > span:nth-child(1){transform: rotate(45deg) translate(6px, 6px); transform-style: preserve-3d; transition: .3s ease-in-out; background-color: #000!important;}
 header > div.nav-container > span.menu.active > span:nth-child(2){ display: none; }
-header > div.nav-container > span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out;}
+header > div.nav-container > span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out; background-color: #000!important; }
 
 header > div.nav-container + section.argument{ position: relative; z-index: 9999; }
 header > div.nav-container.fixed + section.argument{ position: fixed; top: 45px; left: 0; right: 0; }
 section.argument > ul{ position: relative; display: inline-block; width: 25%; margin: 0 auto;}
-section.argument > ul > li > a{ position: relative; display: inline-block; width: 100%; border-bottom: 1px solid #fff;; }
+section.argument > ul > li > a{ position: relative; display: inline-block; width: 100%; border-bottom: 1px solid #000; }
 section.argument > ul > li > ul > li{ border-bottom: 1px solid transparent; }
-section.argument  ul > li > a:hover, section.argument  ul > li > a:active{ color: #73AFBA!important; }
 
 header div.about-us{ position: absolute; display: inline-block; left: 20px; bottom: 175px; max-height: 250px; width: 70%; overflow: hidden; }
 header div.about-us > p{ font-size: 16px; line-height: 24px; }
@@ -257,6 +258,7 @@ section#sidebar{ position: fixed; top: 0; left: 0; right: 0; bottom: 0; margin: 
 section#sidebar > * { position: relative; display: inline-block; width: 100%; }
 section#sidebar > ul.category > li{ padding-left: 20px; line-height: 35px; cursor: pointer; background-size: 26px; background-position: 90% 5px; background-repeat: no-repeat; }
 section#sidebar.active{  transform: translateX(0); transform-style: preserve-3d; transition: .3s ease-in-out; z-index: 9999; }
+section#sidebar.active > h1, section#sidebar.active > h1 > a{ color: #000!important; }
 section#sidebar.active + header > div.nav-container.fixed{ box-shadow: none; -webkit-box-shadow: none; -moz-box-shadow: none; background-color: transparent; }
 section#sidebar.active + header > div.nav-container > h1{ display: none; }
 section#sidebar ul > li[child="true"][display="false"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
@@ -286,7 +288,7 @@ section.card-body + a.btn{ position: absolute; display: inline-block; left: 35px
 .owl-dots > .owl-dot.active{ background-color: #C3C9C7!important; border: 1px solid transparent; }
 
 /* INSTAGRAM */
-div.instagram > h2{ background-image: url('../img/social/instagram-black.png'); background-size: 48px; background-position: 15%; background-repeat: no-repeat; }
+div.instagram > h2{ background-image: url('../img/social/instagram.png'); background-size: 48px; background-position: 15%; background-repeat: no-repeat; }
 div.instagram div.item.carousel__photo{ border-top-left-radius: 5px; border-top-right-radius: 5px; }
 div.instagram section.image{ position: relative; display: inline-block; width: 100%; height: 250px; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-left-radius: 5px; border-top-right-radius: 5px; }
 div.instagram section.user-data{ position: relative; display: inline-block; width: 100%; padding: 15px 10px; }
@@ -310,10 +312,12 @@ section#podcast .owl-stage-outer{ margin-bottom: 10px; }
 section#podcast .owl-nav{ display: none; }
 
 /* YOUTUBE */
-section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
+section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
 
 @media(min-width: 1024px){
-    header > div.nav-container.open-child{ height: 45px; background-color: #1C2E3D; }
+    header > div.nav-container.open-child{ height: 45px; background-color: #FCBDB2; }
+    header > div.nav-container.open-child > h1 > a{ color: #000!important; }
+    header > div.nav-container.open-child > ul.category > li > a{ color: #000!important; }
     ul.category > li > ul.argument{ position: absolute; left: 25px; right: 0; height: auto; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
     div.instagram{ width: 100%; float: left; }
     main div.newsletter{ width: 100%; float: right; }
@@ -344,11 +348,15 @@ header input.search-bar.post-view{ margin-left: unset; left: 20px; }
     section#sidebar{ display: none; }
     main > div.newsletter > form{ position: relative; margin: 0 auto; top: 30%; right: unset; }
     header ul.category{ display: inline-block; right: 0; width: auto; }
-    header ul.social{ width: 10%; }
+    header ul.category > li > a{ color: #fff; }
+    header > div.nav-container.fixed > ul.category > li > a{ color: #000; }
+    header > div.nav-container.fixed > ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up.png'); }
+    header ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up-white.png');  }
+    header ul.social{ width: 20%; }
     header div.about-us{ max-width: 40%; left: 50px; bottom: 200px; }
     header input.search-bar{ max-width: 40%; left: 50px; bottom: 130px; }
     section#search-result{ max-width: 40%; left: 50px; top: 77%; }
-    h1.title{ left: 10%; width: 20%; }
+    h1.title{ left: 18%; width: 20%; }
     header input.search-bar.post-view{ width: 25%; }
     div.instagram > h2, section#podcast h2, section#youtube h2{ background-position: 30%; }
 }
@@ -438,7 +446,7 @@ input + span.text-danger{ background-color: transparent; }
 
 /* ALBUM */
 div.album-display{ position: relative; display: inline-block; width: 90%; height: 450px; }
-div.album-display > span{ position: relative; display: flex; background-size: cover; background-position: center center; background-repeat: no-repeat; }
+div.album-display > span{ position: relative; display: flex; background-size: contain; background-position: center center; background-repeat: no-repeat; }
 div.album-display > span.image.active{ width: 90%; height: 70%; margin: 10px auto; }
 div.album-display > ul{ position: relative; display: inline-block; width: 100%; height: 20%; }
 div.album-display > ul * { height: 100%; }
@@ -511,3 +519,7 @@ div#user-review > section > p{ font-size: 14px; line-height: 21px; }
 @media(min-width: 1440px){
     div.podcast-container > div.item{ width: 40%; }
 }
+
+
+/* FOOTER PRIVACY AND COOKIE POLICY */
+a.iubenda-white.no-brand{ background: none; color: #fff; box-shadow: none; border: none; }

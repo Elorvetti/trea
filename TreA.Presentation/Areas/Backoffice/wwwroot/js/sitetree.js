@@ -16,10 +16,10 @@ var siteTreeController = (function(){
         for(var a in obj.categories){
             element = element + '<li class="category list" id="' + obj.categories[a].id +'">';
             element = element + '<p displayOrder="' + obj.categories[a].displayOrder + '">' + obj.categories[a].name + '</p>';
-            element = element + '<span class="category btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="category btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="category btn btn-circle file-add background-color-blue box-shadow"></span>';
-            element = element + '<span class="category btn btn-circle folder-add background-color-white-light box-shadow"></span>';
+            element = element + '<span class="category btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="category btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
+            element = element + '<span class="category btn btn-circle file-add background-color-blue box-shadow" tooltip="Aggiungi Post"></span>';
+            element = element + '<span class="category btn btn-circle folder-add background-color-white-light box-shadow" tooltip="Aggiungi Categoria (sotto menu)"></span>';
             element = element + '</li>';
         }
         
@@ -234,10 +234,10 @@ var siteTreeController = (function(){
             element = element + '<li class="list argument" id="' + children[child].id +'" level="' + children[child].livello + '" >';
             element = element + '<span class="fake-btn"></span>';
             element = element + '<p>' +  children[child].name + '</p>';
-            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle folder-add background-color-white-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
+            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow" tooltip="Aggiungi Post"></span>';
+            element = element + '<span class="argument btn btn-circle folder-add background-color-white-light box-shadow" tooltip="Aggiungi sotto categoria"></span>';
             element = element + '</li>';
         }
 
@@ -252,10 +252,10 @@ var siteTreeController = (function(){
             element = element + '<li class="list argument" id="' + obj.arguments[i].id +'" level="' + obj.arguments[i].livello +'">';
             element = element + '<span class="fake-btn"></span>';
             element = element + '<p>' +  obj.arguments[i].name + '</p>';
-            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle folder-add background-color-white-light box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
+            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow" tooltip="Aggiungi Post"></span>';
+            element = element + '<span class="argument btn btn-circle folder-add background-color-white-light box-shadow" tooltip="Aggiungi sotto categoria"></span>';
             element = element + '</li>';
         }
 
@@ -504,9 +504,9 @@ var siteTreeController = (function(){
             element = element + '<li class="list argument" id="' + obj.arguments[i].id +'" level="' + obj.arguments[i].livello +'">';
             element = element + '<span class="fake-btn"></span>';
             element = element + '<p>' +  obj.arguments[i].name + '</p>';
-            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow"></span>';
+            element = element + '<span class="argument btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="argument btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
+            element = element + '<span class="argument btn btn-circle file-add background-color-blue box-shadow" tooltip="Aggiungi Post"></span>';
             element = element + '</li>';
         }
 
@@ -535,9 +535,9 @@ var siteTreeController = (function(){
         for(var child in children){
             element = element + '<li class="list post" id="' + children[child].id +'" category-id="' + children[child].categoryId + '" argument-id="' + children[child].argumentId + '">';
             element = element + '<p public="' + children[child].pubblico + '">' +  children[child].title + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
-            element = element + '<span class="btn btn-circle preview background-color-pink-light box-shadow"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
+            element = element + '<span class="btn btn-circle preview background-color-pink-light box-shadow" tooltip="Preview"></span>';
             element = element + '</li>';
         }
 
@@ -907,6 +907,8 @@ var siteTree = (function(siteTreeCtrl, siteTreeUI){
         $('span#filter').remove();
         siteTreeCtrl.getAllCategory();
         siteTreeCtrl.editFormQueryString(event);
+
+        $(DOMElement.btnAddCategory).attr('tooltip', 'Aggiungi nuovo Argomento (Menu)');
 
         //Remove scrool on main
         $(DOMElement.main).css('overflow-y', 'hidden');

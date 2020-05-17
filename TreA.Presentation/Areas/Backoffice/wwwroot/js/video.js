@@ -79,9 +79,9 @@ var videoController = (function(){
             var name = obj.videoList[i].name.replace(/\.[^/.]+$/, "");
 
             element = element + '<li class="list box-shadow border-radius-medium" id="' + obj.videoList[i].id +'">';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-            element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="btn btn-circle crop background-color-white box-shadow" tooltip="Visualizza"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
             element = element + '<video class="border-radius-small"><source src="' + obj.videoList[i].path + '"></video>';
             element = element + '<p>' + name + '</p>';
             element = element + '</li>';
@@ -332,6 +332,8 @@ var video = (function(videoCtrl, videoUI){
 
         //On document load create element list
         videoCtrl.getAll();
+
+        $(DOMElement.btnAdd).attr('tooltip', 'Aggiungi Video');
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnFilter, videoCtrl.createFilterForm);

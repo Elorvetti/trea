@@ -16,8 +16,8 @@ var photoController = (function(){
         for(var a in obj.folders){
             element = element + '<li class="argument folder list" id="' + obj.folders[a].id +'">';
             element = element + '<p>' + obj.folders[a].name + '</p>';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="btn btn-circle photo-add background-color-blue box-shadow"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="btn btn-circle photo-add background-color-blue box-shadow" tooltip="Aggiungi Foto"></span>';
             element = element + '</li>';
         }
         
@@ -251,9 +251,9 @@ var photoController = (function(){
         for(var i in obj.photos){
             var name = obj.photos[i].name.replace(/\.[^/.]+$/, "");
             element = element + '<li class="photo-list box-shadow" id="' + obj.photos[i].id +'">';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow"></span>';
-            element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red box-shadow"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="btn btn-circle crop background-color-white box-shadow" tooltip="Visualizza"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
             element = element + '<span style="background-image: url(\'' + obj.photos[i].path + '\')"></span>';
             element = element + '<p class="text-center">' + name + '</p>';
 
@@ -532,6 +532,8 @@ var photo = (function(photoCtrl, photoUI){
 
         //Remove scrool on main
         $(DOMElement.main).css('overflow-y', 'hidden');
+
+        $(DOMElement.btnAddFolder).attr('tooltip', 'Aggiungi cartella');
 
         //Display all photo folder
         photoCtrl.getAllFolder();

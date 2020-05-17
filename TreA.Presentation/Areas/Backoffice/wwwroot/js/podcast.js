@@ -78,9 +78,9 @@ var podcastController = (function(){
             var name = obj.podcastList[i].name.replace(/\.[^/.]+$/, "");
 
             element = element + '<li class="list box-shadow border-radius-medium" id="' + obj.podcastList[i].id +'">';
-            element = element + '<span class="btn btn-circle edit background-color-blue-light"></span>';
-            element = element + '<span class="btn btn-circle crop background-color-white box-shadow"></span>';
-            element = element + '<span class="btn btn-circle remove background-color-red"></span>';
+            element = element + '<span class="btn btn-circle edit background-color-blue-light box-shadow" tooltip="Modifica"></span>';
+            element = element + '<span class="btn btn-circle crop background-color-white box-shadow" tooltip="Ascolta"></span>';
+            element = element + '<span class="btn btn-circle remove background-color-red box-shadow" tooltip="Elimina"></span>';
             element = element + '<audio class="border-radius-small"><source src="' + obj.podcastList[i].path + '"></audio>' ;
             element = element + '<p>' + name + '</p>';
             element = element + '</li>';
@@ -337,6 +337,7 @@ var podcast = (function(podcastCtrl, podcastUI){
 
         //On document load create element list
         podcastCtrl.getAll();
+        $(DOMElement.btnAdd).attr('tooltip', 'Aggiungi Podcast');
 
         //Add event handler on button
         $(document).on('click', DOMElement.btnFilter, podcastCtrl.createFilterForm);

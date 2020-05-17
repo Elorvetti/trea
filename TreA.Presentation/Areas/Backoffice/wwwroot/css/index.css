@@ -126,6 +126,7 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 
 .btn{ padding: 0px; left: unset;  border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background-size: contain; background-position: center center; background-repeat: no-repeat; }
 .btn:hover{ opacity: .8; border-bottom: 1px solid transparent;}
+.btn[tooltip]:hover{ opacity: 1;}
 
 .btn.close{ background-image: url('../img/close.png'); float: unset; opacity: 1; }
 .btn.add{ background-image: url('../img/plus.png'); }
@@ -173,6 +174,11 @@ span.field-validation-error{
 }
 
 main{ position: relative; display: inline-block; margin-top: 0; width: 100%; height: 100%; overflow-x: hidden; }
+
+/*** Tooltip ***/
+p#tooltip{ position: absolute; top: 45px; margin-top: 0!important; font-size: 16px; z-index: 9999; min-width: 120px; }
+ul.list > li p#tooltip{ right: 20px; }
+form p#tooltip{ position: relative; display: block; margin: 0 auto; top: 80px; width: initial; }
 
 /*** Login ***/
 div.form-container{ position: relative; display: inline-block; width: 100%; height: 100%; }
@@ -611,6 +617,8 @@ section.header ul.social{ position: absolute; display: inline-block; width: 35%;
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
 ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
 ul.social li.instagram{ background-image: url('../img/social/instagram.png') }
+ul.social li.youtube{ background-image: url('../img/social/youtube.png') }
+ul.social li.spotify{ background-image: url('../img/social/spotify.png') }
 ul.social li.cartorange{ background-image: url('../img/sponsor/cartorange.png'); }
 ul.social li > a{ position: relative; display: inline-block; width: 100%; height: 100%; }
 
@@ -619,7 +627,7 @@ form#container h1{ position: absolute; display: inline-block; font-size: 28px; f
 form#container section.header > div.nav-container{ position: relative; display: inline-block; width: 100%; transition: 0.4s; }
 form#container section.header ul.category{ position: absolute; right: 0; z-index: 9998; }
 form#container section.header ul.category > li{ display: inline-block; padding: 0 25px; line-height: 40px; cursor: pointer; background-size: 26px; background-position: 100% 5px; background-repeat: no-repeat; }
-form#container section.header ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up.png'); max-height: 35px; overflow: hidden; }
+form#container section.header ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up-white.png'); max-height: 35px; overflow: hidden; }
 form#container section.header ul.category > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
 form#container section.header ul.category > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 35px; }
 form#container section.header ul.category > li > ul.argument{ position: absolute; left: 25px; right: 0; height: auto; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
@@ -627,11 +635,10 @@ form#container section.header ul.category > li > ul.argument > li{ width: 30%; }
 form#container section.header ul.category > li > ul.argument > li:hover, form#container section.header ul.category > li > ul.argument > li:active{ color: #73AFBA!important; }
 form#container section.header ul.argument{ border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;  }
 ul.category > li[child="open"] > ul > li:hover, ul.category > li[child="open"] > ul > li:active{ color: #73AFBA!important; }
-ul.category > li:hover, ul.category > li:active{ color: #73AFBA!important; }
 
 ul.category > li > ul.argument, ul.category > li > ul.argument > li {position: relative; display: block; cursor: pointer; background-size: 26px; background-repeat: no-repeat; background-position: 100% 0; }
 ul.category > li > ul.argument > li[child="true"][display="false"]{ background-image: url('../img/chevron-up.png'); max-height: 30px; overflow: hidden; }
-ul.category > li > ul.argument > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
+ul.category > li > ul.argument > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; }
 ul.category > li > ul.argument > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 27px; }
 
 ul.category > li > ul.argument, ul.category > li > ul.argument > li > ul{ padding-left: 10px; }
@@ -640,9 +647,9 @@ form#container span.menu{ position: absolute; display: inline-block; right: 10px
 form#container span.menu > span{ display: block; margin: 5px auto; width: 30px; height: 3px; }
 
 form#container span.menu.active{ z-index: 9998; }
-form#container span.menu.active > span:nth-child(1){transform: rotate(45deg) translate(6px, 6px); transform-style: preserve-3d; transition: .3s ease-in-out;}
+form#container span.menu.active > span:nth-child(1){transform: rotate(45deg) translate(6px, 6px); transform-style: preserve-3d; transition: .3s ease-in-out; background-color: #000!important;}
 form#container span.menu.active > span:nth-child(2){ display: none; }
-form#container span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out;}
+form#container span.menu.active > span:nth-child(3){transform: rotate(-45deg); transform-style: preserve-3d; transition: .3s ease-in-out; background-color: #000!important; } 
 
 form#container section.header span.edit{ position: absolute; right: 10px; bottom: 10px; width: 40px; height: 40px; background-size: 28px; cursor: pointer; }
 
@@ -671,6 +678,7 @@ form#container section#sidebarFE{ position: absolute; top: 0; left: 0; right: 0;
 form#container section#sidebarFE > * { position: relative; display: inline-block; width: 100%; }
 form#container section#sidebarFE  ul > li{ padding-left: 20px; line-height: 35px; cursor: pointer; background-size: 26px; background-position: 90% 5px; background-repeat: no-repeat; }
 form#container section#sidebarFE.active{  transform: translateX(0); transform-style: preserve-3d; transition: .3s ease-in-out; }
+form#container section#sidebarFE.active > h1{ color: #000!important; }
 form#container section#sidebarFE  ul > li[child="true"][display="false"]{ background-image: url('../img/chevron-down.png'); max-height: 35px; overflow: hidden; }
 form#container section#sidebarFE  ul > li[child="true"][display="true"]{ background-image: url('../img/chevron-up.png'); max-height: unset; }
 form#container section#sidebarFE  ul > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 35px; }
@@ -701,7 +709,7 @@ section.card-body + span.btn{ position: absolute; display: inline-block; left: 3
 .owl-dots > .owl-dot.active{ background-color: #C3C9C7!important; border: 1px solid transparent; }
 
 /* INSTAGRAM */
-div.instagram > h2{ background-image: url('../img/social/instagram-black.png'); background-size: 48px; background-position: 15%; background-repeat: no-repeat; width: 100%; }
+div.instagram > h2{ background-image: url('../img/social/instagram.png'); background-size: 48px; background-position: 15%; background-repeat: no-repeat; width: 100%; }
 div.instagram div.item.carousel__photo{ border-top-left-radius: 5px; border-top-right-radius: 5px; }
 div.instagram section.image{ position: relative; display: inline-block; width: 100%; height: 250px; background-size: cover; background-position: center center; background-repeat: no-repeat; border-top-left-radius: 5px; border-top-right-radius: 5px; }
 div.instagram section.user-data{ position: relative; display: inline-block; width: 100%; padding: 15px 10px; }
@@ -724,7 +732,7 @@ section#podcast .owl-stage-outer{ margin-bottom: 10px; }
 section#podcast .owl-nav{ display: none; }
 
 /* YOUTUBE */
-section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube-black.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
+section#youtube h2{ position: relative; display: inline-block; width: 100%; background-image: url('../img/social/youtube.png'); background-size: 38px; background-position: 15%; background-repeat: no-repeat; } 
 
 /* FOOTER */
 form#container section.footer{ position: relative; display: inline-block; margin-left: 0; margin-right: 0; width: 100%; height: 130px; }
@@ -749,12 +757,13 @@ form#container[device="desktop"] div.newsletter > section{ top: 30%; left: 33%; 
 form#container[device="desktop"] div.about-us{ max-width: 30%; left: 50px; bottom: 200px;}
 form#container[device="desktop"] span.search-bar{ max-width: 30%; left: 50px; bottom: 140px; }
 form#container[device="desktop"] h1{ width: 65%; }
-form#container[device="desktop"] section.main div.instagram{ width: 50%; float: left; }
-form#container[device="desktop"] section.main div.newsletter{ width: 50%; float: right; }
+form#container[device="desktop"] section.main div.instagram{ width: 100%; }
+form#container[device="desktop"] section.main div.newsletter{ width: 100%; }
 form#container[device="desktop"] section#podcast{ width: 50%; float: left; }
 form#container[device="desktop"] section#youtube{ width: 50%; float: right; }
 form#container[device="desktop"] section.header > div.nav-container.open-child{ height: 40px; background-color: #1C2E3D; }
-
+form#container[device="desktop"] div.nav-container > ul.category > li{ color: #fff; }
+form#container[device="desktop"] div.nav-container > ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up-white.png'); }
 
 @media(min-width: 768px){
     ul#home > li.tablet{ display: inline-block; }
@@ -888,7 +897,7 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
     div#addPhoto ul#child li > span.btn.edit{ right: 5px; } 
     div#addPhoto ul#child li > span.btn.remove{ right: 50px; } 
     div#addPhoto ul#child li > span.btn.crop{ left: 5px; } 
-
+    div#addPhoto ul#child li > span.btn-used{ position: absolute; right: 10px; bottom: 30px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; line-height: 30px; }
 }
 
 @media(min-width: 1440px){
@@ -896,7 +905,7 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
     div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 30%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
     div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 70%; height: 99%; overflow-y: scroll;}
     
-    div#addSiteTree ul li, div#addPhoto > ul#photo li.folder{ margin-bottom: 5px; height: auto; min-height: 45px; border-bottom: 1px solid transparent; border-radius: 5px; cursor: pointer; background-position: 0 9px; }
+    div#addSiteTree ul li, div#addPhoto > ul#photo li.folder{ position: relative; margin-bottom: 5px; height: auto; min-height: 45px; border-bottom: 1px solid transparent; border-radius: 5px; cursor: pointer; background-position: 0 9px; }
     div#addSiteTree ul li:hover, div#addSiteTree  ul  li.active,  div#addPhoto > ul#photo li.folder:hover,  
     div#addPhoto > ul#photo li.folder.active{ box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12); border: 1px solid #1C2E3D; }
     div#addSiteTree ul li p{ line-height: 46px; }
@@ -911,7 +920,6 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
     div#addPhoto ul#child li > span.btn.edit{ right: 5px; } 
     div#addPhoto ul#child li > span.btn.remove{ right: 50px; } 
     div#addPhoto ul#child li > span.btn.crop{ left: 5px; } 
-    div#addPhoto ul#child li > span.btn-used{ position: absolute; right: 10px; bottom: 30px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; line-height: 30px; }
     div#select > div#addPhoto{ margin-top: 40px; width: 90%; height: 90%; }
 }
 
