@@ -19,6 +19,6 @@ namespace TreA.Presentation.Areas.Backoffice.Models
     }
 
     public class ArgumentMenu : Arguments{
-        public bool HasChild{ get; set; }
+        public IList <Arguments> Child { get; set; } = new List<Arguments>();
     }
 }

@@ -222,7 +222,7 @@ namespace TreA.Presentation.Controllers
             var model = new List<PostDisplayModel>();
             var posts = _postService.Search(id);
 
-            if(posts.Count > 0){
+            if(posts != null && posts.Count > 0){
                 foreach(var post in posts){
                     model.Add(new PostDisplayModel(){
                         slug = _slugService.GetById(post.slugId).name,

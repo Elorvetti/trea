@@ -111,7 +111,7 @@ var appController = (function(){
                     res.json()
                         .then(function(data){
                             var element = '';
-
+                            console.log(data)
                             element = element + '<section class="argument padding-left-small margin-bottom-xsmall background-color-pink-light text-center">';
                             for(var i in data.argumentMenus){
                                 element = element + '<ul>';
@@ -123,7 +123,6 @@ var appController = (function(){
                                         element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-black margin-top-xsmall" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
                                         element = element + '<a class="color-black" href="' + data.argumentMenus[i].slug + data.argumentMenus[i].child[y].name + '/">' + data.argumentMenus[i].child[y].name  + '</a>';
                                         element = element + '</li>'
-                                        console.log(data.argumentMenus[i].child[y])
                                     }
                                     element = element + '</ul>';
                                 }

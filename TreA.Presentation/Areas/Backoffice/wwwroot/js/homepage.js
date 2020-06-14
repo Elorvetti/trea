@@ -19,13 +19,13 @@ var hpController = (function(){
         var width = "";
         switch(deviceType){
             case "mobile":
-                width = 320 + 'px';            
+                width = 375 + 'px';            
                 break;
             case "tablet":
                 width = 768 + 'px';
                 break;
             case "desktop":
-                width= 1440 + 'px';
+                width= 1024 + 'px';
                 break;
         }
 
@@ -73,9 +73,11 @@ var hpController = (function(){
         var element = '';
         element = element + '<ul class="category text-right">';
         for(var i in data.categoryMenus){
-            element = element + '<li id="' +data.categoryMenus[i].id + '" class="category margin-right-xsmall" child="' + data.categoryMenus[i].hasChild  + '" display="false">' + data.categoryMenus[i].name;
+            element = element + '<li id="' + data.categoryMenus[i].id + '" class="category margin-right-xsmall" child="' + data.categoryMenus[i].hasChild  + '" display="false">';
             if(data.categoryMenus[i].hasChild){
-                element = element + '<span class="fake-btn"></span>'   
+                element = element + '<a>' + data.categoryMenus[i].name + '</a>';
+            } else {
+                element = element + '<a>' + data.categoryMenus[i].name + '</a>';
             }
         }
         element = element + '</ul>'
@@ -85,7 +87,7 @@ var hpController = (function(){
     }
 
     var getChildMenu = function(){
-        var self = $(this).parent();
+        var self = $(this);
         var id = self.attr('id');
         var idPadre = 0;
         var livello = 1;
@@ -108,26 +110,82 @@ var hpController = (function(){
             $('div.nav-container').toggleClass('open-child');
         }
 
-        var url = 'Home/GetArgument?categoryId=' + id + '&livello=' + livello + '&idPadre=' + idPadre;
+        var url = 'Home/GetArgument?categoryId=' + id;
         
         fetch(url, {method: 'POST'})
             .then(function(res){
                 res.json()
                     .then(function(data){
                         var element = '';
-                        element = element + '<ul class="argument text-right background-color-pink-light">';
+                        element = element + '<ul class="argument padding-left-small margin-bottom-xsmall text-right background-color-pink-light">';
                         for(var i in data.argumentMenus){
-                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-black" child="' + data.argumentMenus[i].hasChild  + '" display="false" category-id="' + data.argumentMenus[i].categoryId + '">' + data.argumentMenus[i].name        
-                            if(data.argumentMenus[i].hasChild){
-                                element = element + '<span class="fake-btn"></span>'   
+                            element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-black" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
+                            element = element + '<a class="color-black" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                            if(data.argumentMenus[i].child.length > 0){
+                                element = element + '<ul class="padding-left-small">';
+                                for(var y in data.argumentMenus[i].child){
+                                    element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-black" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
+                                    element = element + '<a class="color-black" href="' + data.argumentMenus[i].child[y].slug + '">' + data.argumentMenus[i].child[y].name  + '</a>';
+                                    element = element + '</li>'
+                                }
+                                element = element + '</ul>';
                             }
                         }
                         element = element + '</ul>'
                         if(self.attr('display') == 'true'){
-                            self.append(element);
+                           self.append(element);
                         }
                     })
             })
+    }
+
+    var getChildMenuDesktop = function(){
+        var id = $(this).attr('id');
+
+        $('div.nav-container').toggleClass('open-child');
+
+        if($(this).attr('display') == 'false'){
+            $(this).attr('display', 'true');
+            
+        } else {
+            $(this).attr('display', 'false');
+        }
+        
+        var url = '/Home/GetArgument?categoryId=' + id;
+        if($('div.nav-container + section.argument').length === 0){
+            fetch(url, {method: 'POST'})
+                .then(function(res){
+                    res.json()
+                        .then(function(data){
+                            var element = '';
+                            console.log(data)
+                            element = element + '<section class="argument padding-left-small margin-bottom-xsmall background-color-pink-light text-center">';
+                            for(var i in data.argumentMenus){
+                                element = element + '<ul>';
+                                element = element + '<li id="' + data.argumentMenus[i].id + '" class="argument color-black margin-xsmall" display="false" category-id="' + data.argumentMenus[i].categoryId + '">';
+                                element = element + '<a class="color-black text-uppercase" href="' + data.argumentMenus[i].slug + '">' + data.argumentMenus[i].name  + '</a>';
+                                if(data.argumentMenus[i].child.length > 0){
+                                    element = element + '<ul class="padding-left-xsmall">';
+                                    for(var y in data.argumentMenus[i].child){
+                                        element = element + '<li id="' + data.argumentMenus[i].child[y].id + '" class="argument color-black margin-top-xsmall" display="false" category-id="' + data.argumentMenus[i].child[y].categoryId + '">';
+                                        element = element + '<a class="color-black" href="' + data.argumentMenus[i].slug + data.argumentMenus[i].child[y].name + '/">' + data.argumentMenus[i].child[y].name  + '</a>';
+                                        element = element + '</li>'
+                                    }
+                                    element = element + '</ul>';
+                                }
+                                element = element + '</li>'
+                                element = element + '</ul>';
+                            }
+                            element = element + '</section>';
+
+                            $('div.nav-container').after(element);
+                        })
+                })
+        }
+        
+        if($('div.nav-container + section.argument').length > 0){
+            $('div.nav-container + section.argument').remove();
+        }
     }
 
     /* MENU EVENT */
@@ -365,6 +423,7 @@ var hpController = (function(){
         setContainerWidth: setContainerWidth,
         getMenu: getMenu,
         getChildMenu: getChildMenu,
+        getChildMenuDesktop: getChildMenuDesktop,
         toggleMenu: toggleMenu,
         editHeader: editHeader,
         saveHeader: saveHeader,
@@ -381,8 +440,9 @@ var hpUI = (function(){
     var DOM = {
         btnDevice: 'ul#home > li',
         btnHamburger: 'span.menu',
-        btnDisplayChild: 'ul > li.category[child="true"] > span.fake-btn',
-        btnDisplayArgumentChild: 'ul > li.argument[child="true"] > span.fake-btn',
+        btnDisplayChild: 'section#sidebarFE ul > li.category[child="true"]',
+        btnDisplayChildDesktop: 'div.nav-container ul > li.category[child="true"]',
+        btnDisplayArgumentChild: 'ul > li.argument[child="true"]',
         btnEditorHeader: 'span#addEditorHeader',
         btnSaveHeader: 'input#save',
         btnSaveSetting: 'span#saveSetting',
@@ -420,6 +480,7 @@ var hp = (function(hpUI, hpCtrl){
         $(document).on('click', DOMElement.btnDevice, hpCtrl.changeDeviceView);
         $(document).on('click', DOMElement.btnHamburger, hpCtrl.toggleMenu);
         $(document).on('click', DOMElement.btnDisplayChild, hpCtrl.getChildMenu);
+        $(document).on('click', DOMElement.btnDisplayChildDesktop, hpCtrl.getChildMenuDesktop);
         $(document).on('click', DOMElement.btnDisplayArgumentChild, hpCtrl.getChildMenu);
     
         //Editor header

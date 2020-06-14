@@ -67,6 +67,10 @@ p,li,a { font-size: 18px; line-height: 27px;  color: #2E2B33; text-decoration: n
 .font-weight-600{ font-weight: 600; }
 .font-weight-500{ font-weight: 500; }
 
+.font-size-14{ font-size: 14px; }
+.font-size-16{ font-size: 16px; }
+.font-size-18{ font-size: 18px; }
+
 .margin-xsmall{ margin: 10px; }
 .margin-top-xsmall{ margin-top: 10px; }
 .margin-left-xsmall{ margin-left: 10px; }
@@ -602,7 +606,7 @@ ul#home > li.desktop{ display: none;  background-image: url('../img/desktop.png'
 form#container{ position: relative; margin: 20px auto; padding: 0; max-width: unset; }
 
 /* HEADER */
-form#container section.header{ position: relative; margin: 0; background-color: #757575; height: 570px; background-size: cover; background-position: center center; background-repeat: no-repeat; } 
+form#container section.header{ position: relative; margin: 0; background-color: #757575; height: 670px; background-size: cover; background-position: center center; background-repeat: no-repeat; } 
 form#container section.header:before {
     content: " ";
     position: absolute;
@@ -613,7 +617,7 @@ form#container section.header:before {
     background: rgb(0,0,0);
     background: linear-gradient(180deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 100%);
 }
-section.header ul.social{ position: absolute; display: inline-block; width: 35%; z-index: 9994;}
+section.header ul.social{ position: absolute; display: inline-block; width: 20%; z-index: 9994;}
 ul.social li{ position: relative; display: inline-block;  width: 40px; height: 40px; background-size: 26px; background-position: center center; background-repeat: no-repeat; cursor: pointer; }
 ul.social li.facebook{ background-image: url('../img/social/facebook.png') }
 ul.social li.instagram{ background-image: url('../img/social/instagram.png') }
@@ -626,9 +630,9 @@ form#container h1{ position: absolute; display: inline-block; font-size: 28px; f
 
 form#container section.header > div.nav-container{ position: relative; display: inline-block; width: 100%; transition: 0.4s; }
 form#container section.header ul.category{ position: absolute; right: 0; z-index: 9998; }
-form#container section.header ul.category > li{ display: inline-block; padding: 0 25px; line-height: 40px; cursor: pointer; background-size: 26px; background-position: 100% 5px; background-repeat: no-repeat; }
+form#container section.header ul.category > li{ position: relative; display: inline-block; padding: 0 25px; line-height: 40px; cursor: pointer; background-size: 26px; background-position: 100% 5px; background-repeat: no-repeat; }
 form#container section.header ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up-white.png'); max-height: 35px; overflow: hidden; }
-form#container section.header ul.category > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; color: #73AFBA!important; }
+form#container section.header ul.category > li[child="true"][display="true"]{ background-image: url('../img/chevron-down.png'); max-height: unset; }
 form#container section.header ul.category > li > span.fake-btn{ position: absolute; top: 0; left: 0; right: 0; height: 35px; }
 form#container section.header ul.category > li > ul.argument{ position: absolute; left: 25px; right: 0; height: auto; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
 form#container section.header ul.category > li > ul.argument > li{ width: 30%; }
@@ -743,6 +747,7 @@ form#container section.footer > div  p{ font-size: 16px; line-height: 24px; }
 form#container[device="mobile"]{ max-height: 568px; overflow-y: scroll; overflow-x: hidden; }
 form#container[device="mobile"] section.header ul.social{ display: none;}
 form#container[device="mobile"] div.edit{display: none; }
+form#container[device="mobile"] section.header{ height: 400px; background-size: 600px; }
 form#container[device="mobile"] section.header ul.category{ display: none;}
 
 form#container[device="tablet"] section.header ul.category{ display: none;}
@@ -750,20 +755,28 @@ form#container[device="tablet"] div.newsletter > section{ top: 30px; left: 30px;
 form#container[device="tablet"] div.about-us{ max-width: 50%; left: 50px; bottom: 180px;  }
 form#container[device="tablet"] span.search-bar{ max-width: 50%; left: 50px; bottom: 110px; }
 form#container[device="tablet"] section.card-body + span.btn{ left: 60px; right: 60px; }
+form#container[device="tablet"] section.header ul.social{ width: 25%; }
 
 form#container[device="desktop"] span.menu{display: none; }
 form#container[device="desktop"] section#sidebarFE{ display: none; }
 form#container[device="desktop"] div.newsletter > section{ top: 30%; left: 33%; right: unset; }
 form#container[device="desktop"] div.about-us{ max-width: 30%; left: 50px; bottom: 200px;}
 form#container[device="desktop"] span.search-bar{ max-width: 30%; left: 50px; bottom: 140px; }
-form#container[device="desktop"] h1{ width: 65%; }
+form#container[device="desktop"] h1{ width: 55%; }
 form#container[device="desktop"] section.main div.instagram{ width: 100%; }
 form#container[device="desktop"] section.main div.newsletter{ width: 100%; }
 form#container[device="desktop"] section#podcast{ width: 50%; float: left; }
 form#container[device="desktop"] section#youtube{ width: 50%; float: right; }
-form#container[device="desktop"] section.header > div.nav-container.open-child{ height: 40px; background-color: #1C2E3D; }
+form#container[device="desktop"] section.header > div.nav-container.open-child{ height: 40px; background-color: #FCBDB2; }
 form#container[device="desktop"] div.nav-container > ul.category > li{ color: #fff; }
+form#container[device="desktop"] div.nav-container > ul.category > li > a{ color: #fff; line-height: 40px; }
 form#container[device="desktop"] div.nav-container > ul.category > li[child="true"][display="false"]{ background-image: url('../img/chevron-up-white.png'); }
+form#container[device="desktop"] div.nav-container.open-child > ul.category > li{ color: #000!important ; }
+form#container[device="desktop"] div.nav-container.open-child > ul.category > li > a{ color: #000!important ; }
+form#container[device="desktop"] div.nav-container.open-child > h1{ color: #000!important; }
+form#container[device="desktop"] div.nav-container + section.argument{ position: relative; z-index: 9999; }
+form#container[device="desktop"] div.nav-container + section.argument > ul{ position: relative; display: inline-block; width: 25%; margin: 0 auto; }
+form#container[device="desktop"] div.nav-container + section.argument > ul > li > a{ position: relative; display: inline-block; width: 100%; border-bottom: 1px solid #000; }
 
 @media(min-width: 768px){
     ul#home > li.tablet{ display: inline-block; }
@@ -879,8 +892,8 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
 /* SITE TREE */
 @media(min-width: 1024px){
     div#addSiteTree, div#addPhoto{ display: block; margin: 20px auto 0; width: 95%; height: 95%; overflow: hidden; }
-    div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 45%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
-    div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 55%; height: 99%; overflow-y: scroll;}
+    div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 50%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
+    div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 50%; height: 99%; overflow-y: scroll;}
     
     div#addSiteTree ul li, div#addPhoto > ul#photo li.folder{ margin-bottom: 5px; height: auto; min-height: 45px; border-bottom: 1px solid transparent; border-radius: 5px; cursor: pointer; background-position: 0 9px; }
     div#addSiteTree ul li:hover, div#addSiteTree  ul  li.active,  div#addPhoto > ul#photo li.folder:hover,  
@@ -902,8 +915,8 @@ div#preview .owl-nav > button.owl-next{ right: 0; }
 
 @media(min-width: 1440px){
     div#addSiteTree, div#addPhoto{ display: block; margin: 20px auto 0; width: 95%; height: 95%; overflow: hidden; }
-    div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 30%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
-    div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 70%; height: 99%; overflow-y: scroll;}
+    div#addSiteTree > ul#siteTree, div#addPhoto > ul#photo{ display: inline-block; width: 40%; height: 99%; border-right: 2px solid #1C2E3D; overflow-y: scroll;}
+    div#addSiteTree > ul#child, div#addPhoto > ul#child{ display: inline-block; width: 60%; height: 99%; overflow-y: scroll;}
     
     div#addSiteTree ul li, div#addPhoto > ul#photo li.folder{ position: relative; margin-bottom: 5px; height: auto; min-height: 45px; border-bottom: 1px solid transparent; border-radius: 5px; cursor: pointer; background-position: 0 9px; }
     div#addSiteTree ul li:hover, div#addSiteTree  ul  li.active,  div#addPhoto > ul#photo li.folder:hover,  

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
@@ -149,24 +150,23 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 {
                     _folderService.Create(string.Concat("Content\\Images\\", folderName));
                 }
-
-                var model = new PhotoModel();
-                model.images = files;
                 
-                foreach(var image in model.images)
+                foreach(var file in files)
                 {
-                    var fileExtensionOk = _fileService.fileExtensionOk(image.ContentType, fileExtension);
+                    var fileExtensionOk = _fileService.fileExtensionOk(file.ContentType, fileExtension);
                     if (fileExtensionOk)
                     {
-                        var existFile = _fileService.exist(string.Concat("Content\\Images\\", folderName, "\\"), image.FileName);
+                        var existFile = _fileService.exist(string.Concat("Content\\Images\\", folderName, "\\"), file.FileName);
                         if(!existFile){
-
-                            await _fileService.uploadFile(string.Concat("Content\\Images\\", folderName), image);
-
-                            model.name = image.FileName;
-                            model.path = string.Concat("/App_Data/Content/Images/", folderName, "/", image.FileName);
+                            
+                            var model = new PhotoModel();
+                            model.name = file.FileName;
+                            model.path = string.Concat("/App_Data/Content/Images/", folderName, "/", file.FileName);
                             model.folderId = folderId;
                             _photoService.Insert(model);
+
+                            var image = _photoService.Crop(file, 1920, 1280);
+                            _fileService.UploadImage(string.Concat("Content\\Images\\", folderName), file.FileName, image);
                         }
                     }
                 }
@@ -174,6 +174,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
             return View();
             
         }
+
 
         [HttpPost]
         public PhotoModel GetAll(int pageSize, int pageNumber){

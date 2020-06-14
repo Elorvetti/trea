@@ -55,10 +55,7 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                     _folderService.Create("Content\\Podcast");
                 }
 
-                var model = new PodcastModel();
-                model.podcasts = files;
-                
-                foreach(var podcast in model.podcasts)
+                foreach(var podcast in files)
                 {
                     var fileExtensionOk = _fileService.fileExtensionOk(podcast.ContentType, fileExtension);
                     if (fileExtensionOk)
@@ -66,12 +63,12 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                         var existFile = _fileService.exist("Content\\Podcast", podcast.FileName);
                         if(!existFile){
 
-                            await _fileService.uploadFile("Content\\Podcast", podcast);
-
+                            var model = new PodcastModel();
                             model.name = podcast.FileName;
                             model.path = "/App_Data/Content/Podcast/" + podcast.FileName;
-
                             _podcastService.Insert(model);
+
+                            await _fileService.uploadFile("Content\\Podcast", podcast);
                             
                         }
                     }

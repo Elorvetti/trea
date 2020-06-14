@@ -96,9 +96,14 @@ var podcastController = (function(){
         var element = '';
         
         element = element + '<form enctype="multipart/form-data" class="box-shadow border-radius-small text-center background-color-white add" autocomplete="off">';
+        element = element + '<p class="text-center color-red margin-bottom-xsmall font-size-14">* &Egrave; possibile aggiungere un massimo di 3 podcast alla volta</p>';
+        
+        //file
         element = element + '<label id="files"></label>';
         element = element + '<input type="file" name="podcasts" class="name" id="podcasts" placeholder="Upload podcast" multiple>';
         element = element + '<label for="podcasts" class="btn upload text-center box-shadow border-radius-small background-color-pink-light color-white">Aggiungi podcast</label>';
+        
+        //btn return and submit
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
@@ -130,7 +135,7 @@ var podcastController = (function(){
             return element === false;
         });
 
-        if(error.length === 0){
+        if(error.length === 0  && files.length <= 3){
             event.data = new UploadData('input#podcasts', null, 'Podcast/Index');
             app.callbackUpload(event, updatePodcastList); 
         } else {

@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using TreA.Data;
 using TreA.Data.Entities;
 
@@ -57,6 +61,39 @@ namespace TreA.Services.Photo
         public virtual IList<Photos> Find(string name, int excludeRecord, int pageSize){         
             var photos = from p in _ctx.photo where EF.Functions.Like(p.name, string.Concat("%", name, "%")) select p;
             return photos.Skip(excludeRecord).Take(pageSize).ToList();
+        }
+
+        public virtual Photos GetLast(){
+            return _ctx.photo.LastOrDefault();
+        } 
+
+        public virtual Image Crop(IFormFile file, int maxWidth, int maxHeight){
+            double ratio = 0; 
+            int width = 0; 
+            int heigth = 0;
+
+            Image image = Image.FromStream(file.OpenReadStream(), true, true);
+
+            if(image.Width > maxWidth){
+                ratio = (double)maxWidth / image.Width;
+                width = maxWidth;
+                heigth = Convert.ToInt32(image.Height * ratio);
+            } else if(image.Height > maxHeight){
+                ratio = (double)maxHeight / image.Height;
+                width = Convert.ToInt32(image.Width * ratio);
+                heigth = maxHeight;
+            }
+
+            var resized = new Bitmap(width, heigth);
+            using (var g = Graphics.FromImage(resized))
+            {
+                g.CompositingQuality = CompositingQuality.HighSpeed;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.CompositingMode = CompositingMode.SourceCopy;
+                g.DrawImage(image , 0, 0, width, heigth); 
+            }
+
+            return resized;
         }
     }
 }

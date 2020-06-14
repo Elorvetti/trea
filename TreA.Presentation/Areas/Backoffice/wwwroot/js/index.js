@@ -80,7 +80,6 @@ var appController = (function(){
     };
 
     var callbackPOST = function(event, data, url, callback){
-
         $.ajax({
             method: 'POST',
             data: data,
@@ -96,13 +95,13 @@ var appController = (function(){
 
     };
 
-    var callbackGET = async function(event, url, callback){
+    var callbackGET = function(event, url, callback){
         var param = {
             father: event.data.father,
             updateList: event.data.updateList,
         };
         
-        await fetch(url,{method: 'POST'})
+        fetch(url,{method: 'POST'})
                 .then(function(res){
                     return res.json()
                         .then(function(data){

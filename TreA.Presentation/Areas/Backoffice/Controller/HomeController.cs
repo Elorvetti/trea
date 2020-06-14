@@ -92,16 +92,16 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
         }
 
         [HttpPost]
-        public HomeModel GetArgument(int categoryId, int livello, int IdPadre){
+        public HomeModel GetArgument(int categoryId, int livello = 1, int IdPadre = 0){
             var model = new HomeModel();
 
-            var arguments = _argumentService.GetByCategoryId(categoryId, livello,IdPadre);
+            var arguments = _argumentService.GetByCategoryId(categoryId, livello, IdPadre);
             foreach(var argument in arguments){
                 model.argumentMenus.Add(new ArgumentMenu(){
                     id = argument.id,
                     name = argument.name,
                     categoryId = categoryId,
-                    HasChild = _argumentService.GetByCategoryId(categoryId, 2, argument.id).Any() ? true : false
+                    Child = _argumentService.GetByCategoryId(categoryId, 2, argument.id)
                 });
             }
 

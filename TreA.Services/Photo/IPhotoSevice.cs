@@ -1,6 +1,8 @@
 using System;
+using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using TreA.Data;
 using TreA.Data.Entities;
 
@@ -16,5 +18,8 @@ namespace TreA.Services.Photo
         void Update(int id, Photos model);
         void Delete(int id);
         IList<Photos> Find(string name, int excludeRecord, int pageSize);
+        Photos GetLast();
+        Image Crop(IFormFile file, int maxWidth, int maxHeight);
+        
     }
 }

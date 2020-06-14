@@ -59,12 +59,8 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                 {
                     _folderService.Create("Content\\Videos");
                 }
-
-
-                var model = new VideoModel();
-                model.videos = files;
                 
-                foreach(var video in model.videos)
+                foreach(var video in files)
                 {
                     var fileExtensionOk = _fileService.fileExtensionOk(video.ContentType, fileExtension);
                     if (fileExtensionOk)
@@ -72,13 +68,12 @@ namespace TreA.Presentation.Areas.Backoffice.Controllers
                         var existFile = _fileService.exist("Content\\Videos", video.FileName);
                         if(!existFile){
 
-                            await _fileService.uploadFile("Content\\Videos", video);
-
+                            var model = new VideoModel();
                             model.name = video.FileName;
                             model.path = "/App_Data/Content/Videos/" + video.FileName;
-
                             _videoService.Insert(model);
                             
+                            await _fileService.uploadFile("Content\\Videos", video);
                         }
                     }
                 }

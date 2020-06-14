@@ -207,7 +207,6 @@ var siteTreeController = (function(){
                         element = element + '<ul id="child" class="list argument padding-xsmall" category-id="' + data.id + '">';                     
                         element = CreateArgumentList(data.arguments, element, 'argument');
                         
-                        
                         if(data.posts.length > 0){
                             element = CreatePostList(data.posts, element);
                         }

@@ -197,10 +197,18 @@ var photoController = (function(){
         var element = '';
         
         element = element + '<form enctype="multipart/form-data" class="box-shadow border-radius-small text-center background-color-white photo-add" autocomplete="off">';
+        element = element + '<p class="text-center color-red margin-bottom-xsmall font-size-14">* &Egrave; possibile aggiungere un massimo di 3 foto alla volta</p>';
+        
+        //file
         element = element + '<label id="files"></label>';
         element = element + '<input type="file" name="images" class="name" id="images" placeholder="Upload Immagini" multiple>';
         element = element + '<label for="images" class="btn upload text-center box-shadow border-radius-small background-color-pink-light color-white">Aggiungi immagini</label>';
         element = element + '<input type="hidden" name="folderId" class="name" id="folderId" value="' + folderId + '">';
+        
+        //Preview upload image
+        element = element + '<section id="preview-upload" class="text-center"></section>';
+    
+        //Btn return and sumit
         element = element + '<div class="text-right">';
         element = element + '<input type="button" id="return" class="btn btn-rounded return text-center color-black box-shadow background-color-white margin-top-small" value="Indietro">';
         element = element + '<input type="submit" id="save" class="btn btn-rounded save btn-submit text-center color-white box-shadow background-color-blue-light margin-top-small" value="Salva">';   
@@ -223,7 +231,6 @@ var photoController = (function(){
         //push into array if file is ok
         for(var file in files){
             if(file !== 'length' && file !== 'item'){
-                
                 //check exist && size && format
                 arrayFileOk.push(files[file] && files[file].size < 15 * 1048576 && regex.test(files[file].name)); 
             };
@@ -234,7 +241,7 @@ var photoController = (function(){
             return element === false;
         });
 
-        if(error.length === 0){
+        if(error.length === 0 && files.length <= 3){
             event.data = new UploadData('input#images', id, '/Backoffice/Photo/Index');
             app.callbackUpload(event, updatePhotoList); 
         } else {
@@ -441,7 +448,6 @@ var photoController = (function(){
             })
     }
 
-
     /* GET ALL */
     var getAll = function(){
         var event = {};
@@ -452,17 +458,39 @@ var photoController = (function(){
     /* ADD NEW */
     var changeInputText = function(event){
         var files = $(this).prop('files');  
-
         var filename = $(this).val();
-        if(files.length === 1){
-            filename = filename.replace('C:\\fakepath\\', '');
-        } else{
-            filename = files.length + ' files';
-        };
-
-        $('label#files').text(filename);
-
+        
+        if(files.length <= 3){
+            if(files.length === 1){
+                filename = filename.replace('C:\\fakepath\\', '');
+            } else{
+                filename = files.length + ' files';
+            };
+    
+            $('label#files').text(filename);
+            displayPreviewUploader(this);
+        }
     };
+
+    var displayPreviewUploader = function (input) {
+        if (input.files) {
+          var filesAmount = input.files.length;
+
+          for (var i = 0; i < filesAmount; i++) {
+              var reader = new FileReader();
+              console.log('im here')
+
+              reader.onload = function(e) {
+                  $('section#preview-upload').append('<img src="' + e.target.result + '" alt="" width="100" />');
+              }
+
+              reader.readAsDataURL(input.files[i]);
+          }
+      }
+      
+      $('section#preview-upload img').remove();
+   
+  }
 
     //Constructor
     var UploadData = function(input, id, url){
@@ -485,9 +513,6 @@ var photoController = (function(){
         createRemovePhoto: createRemovePhoto,
         cropPhoto: cropPhoto,
         usedPhoto: usedPhoto,
-
-
-
         deletePhoto: deletePhoto,
         changeInputText: changeInputText,
     };
@@ -510,7 +535,6 @@ var photoUI = (function(){
         btnRemovePhoto: 'ul#child > li > .btn.remove',
         btnUsedPhoto: 'ul#child > li > .btn-used',
         btnDeletePhoto: 'div.photo-delete input#delete',
-        
         list: 'div.content > ul',
         formFiles: 'input#images',
         btnChangePage: 'span.btn.paginator'
